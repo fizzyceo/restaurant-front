@@ -1,0 +1,154 @@
+.container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+button {
+  border: 2px solid #cbd5e0;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+button:hover {
+  transition-duration: 0.2s;
+}
+
+.bg-white {
+  background-color: #fff;
+}
+
+.text-slate-400 {
+  color: #718096;
+}
+
+.bg-green-500 {
+  background-color: #48bb78;
+}
+
+.text-white {
+  color: #fff;
+}
+
+.hover\:bg-slate-700:hover {
+  background-color: #4a5568;
+}
+
+.hover\:text-white:hover {
+  color: #fff;
+}
+
+/* General styles */
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+/* Styles for the first step */
+.relative {
+  position: relative;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.text-teal-600 {
+  color: #319795;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.transition {
+  transition-property: all;
+}
+
+.duration-500 {
+  transition-duration: 0.5s;
+}
+
+.ease-in-out {
+  transition-timing-function: ease-in-out;
+}
+
+.border-2 {
+  border-width: 2px;
+}
+
+.border-gray-300 {
+  border-color: #d1d5db;
+}
+
+.h-12 {
+  height: 3rem;
+}
+
+.w-12 {
+  width: 3rem;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+/* Styles for the description */
+.absolute {
+  position: absolute;
+}
+
+.top-0 {
+  top: 0;
+}
+
+.mt-16 {
+  margin-top: 4rem;
+}
+
+.w-32 {
+  width: 8rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+/* Styles for the line */
+.border-t-2 {
+  border-top-width: 2px;
+}
