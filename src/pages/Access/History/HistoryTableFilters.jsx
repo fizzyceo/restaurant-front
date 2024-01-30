@@ -15,7 +15,7 @@ export const HistoryTableFilters = ({
 
   return (
     <div className="pb-3 d-flex gap-2 align-items-center">
-      <h5 className="m-0">{t("Filters")}</h5>
+      <h5 className="m-0">{t("Filtres")}</h5>
 
       {filters &&
         filters.map((filter) => {
@@ -23,16 +23,17 @@ export const HistoryTableFilters = ({
             case "date":
               return (
                 <React.Fragment key={filter.name}>
-                  <span>{filter.name}</span>
+                  <span>{filter.label}</span>
 
                   <Flatpickr
-                    data-disable-time
+                    // data-disable-time
                     id={filter.name}
                     className=" form-control"
                     options={{
                       mode: "range",
                       maxDate: new Date(),
-                      dateFormat: "D-M-Y",
+                      enableTime: true,
+                      dateFormat: "Y-m-d H:i",
                     }}
                     value={range}
                     onChange={(e) => {
@@ -47,7 +48,7 @@ export const HistoryTableFilters = ({
             case "select":
               return (
                 <React.Fragment key={filter.name}>
-                  <span>{filter.name}</span>
+                  <span>{filter.label}</span>
 
                   <Input
                     name={filter.name}
@@ -88,10 +89,10 @@ export const HistoryTableFilters = ({
           }
         })}
       <Button color="secondary" onClick={onFilterButtonClick}>
-        {t("Filter")}
+        {t("Filtrer")}
       </Button>
       <Button color="danger" onClick={onCancelButtonClick}>
-        {t("Cancel")}
+        {t("Annuler")}
       </Button>
     </div>
   );

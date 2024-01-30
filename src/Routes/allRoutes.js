@@ -22,6 +22,7 @@ import Logout from "../pages/Authentication/Logout";
 import UserProfile from "../pages/Authentication/user-profile";
 import ResetPassword from "../pages/Authentication/ResetPassword";
 import { StaffsPage } from "../pages/Staffs/Staffs";
+import Example from "../pages/example/Staffs";
 import { Access, Dashboards } from "../pages";
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboards.DashboardOne /> },
@@ -30,6 +31,10 @@ const authProtectedRoutes = [
   {
     path: "/access/history",
     component: <Access.History />,
+  },
+  {
+    path: "/example",
+    component: <Example />,
   },
   {
     path: "/",

@@ -16,6 +16,7 @@ const HistoryTable = () => {
   const title = "Access History";
   const user = useAuth((state) => state.user);
   const { showConfirm } = useConfirmDialogStore((state) => state);
+  const [generalSearch, setGeneralSearch] = useState("");
 
   // API Call
   const { getStaffs, isLoading, isError, staffs, deleteDevice } = useStaffStore(
@@ -37,9 +38,9 @@ const HistoryTable = () => {
   };
   const columns = [
     {
-      name: t("#"),
+      name: t("Date"),
       // width: "100px",
-      selector: (row) => row.code,
+      selector: (row) => moment(row.date).format("DD.MM.YYYY HH:mm"),
       sortable: false,
       wrap: true,
     },
@@ -60,13 +61,7 @@ const HistoryTable = () => {
         </strong>
       ),
     },
-    {
-      name: t("Date"),
-      // width: "100px",
-      selector: (row) => moment(row.date).format("DD.MM.YYYY HH:mm"),
-      sortable: false,
-      wrap: true,
-    },
+
     {
       name: t("Transporteur"),
       // width: "100px",
@@ -85,14 +80,14 @@ const HistoryTable = () => {
       ),
     },
     {
-      name: t("Nom Chauffeur"),
+      name: t("Chauffeur"),
       // width: "100px",
       selector: (row) => row.driverName,
       sortable: false,
       wrap: true,
     },
     {
-      name: t("N. P/C"),
+      name: t("NP"),
       // width: "100px",
       selector: (row) => row.NumPC,
       sortable: false,
@@ -130,7 +125,7 @@ const HistoryTable = () => {
       ),
     },
     {
-      name: t("N. plomb"),
+      name: t("N. Plamb"),
       // width: "100px",
       selector: (row) => row.NumPlomb,
       sortable: false,
@@ -149,21 +144,31 @@ const HistoryTable = () => {
   const fillInFilters = (e) => {
     const inputName = e.target.name;
     const inputValue = e.target.value;
-    console.log(inputName, inputValue);
-    setFilters({ ...filters, [inputName]: inputValue });
+
+    if (inputName === "general") {
+      // If the inputName is "general", update the filter for general search
+      setFilters({
+        ...filters,
+        search: inputValue,
+      });
+      setGeneralSearch(inputValue);
+    } else {
+      // For other filters, update normally
+      setFilters({ ...filters, [inputName]: inputValue });
+    }
   };
   const columnsFilters = [
     {
-      name: "code",
-      colName: t("Par Identifiant"),
+      name: "general",
+      label: t("Par Identifiant"),
       onChange: fillInFilters,
-      value: filters.code,
+      value: generalSearch,
       type: "text",
     },
 
     {
       name: "charger",
-      colName: t("Chargé"),
+      label: t("Chargé"),
       onChange: fillInFilters,
       selectOptions: [
         { value: true, displayText: "oui" },
@@ -173,7 +178,7 @@ const HistoryTable = () => {
     },
     {
       name: "date",
-      colName: t("Date"),
+      label: t("Date"),
       onChange: (e) => {
         console.log(filters);
         setFilters({ ...filters, dateFrom: e[0], dateTo: e[1] });
@@ -182,16 +187,16 @@ const HistoryTable = () => {
 
       type: "date",
     },
-    {
-      name: "access",
-      colName: t("Access"),
-      onChange: fillInFilters,
-      selectOptions: [
-        { value: "IN", displayText: "Entrée" },
-        { value: "OUT", displayText: "Sortir" },
-      ],
-      type: "select",
-    },
+    // {
+    //   name: "access",
+    //   label: t("Action"),
+    //   onChange: fillInFilters,
+    //   selectOptions: [
+    //     { value: "IN", displayText: "Entrée" },
+    //     { value: "OUT", displayText: "Sortir" },
+    //   ],
+    //   type: "select",
+    // },
   ];
   const filterData = () => {
     console.log(filters);
@@ -220,7 +225,7 @@ const HistoryTable = () => {
                 onClick={toggleAddModal}
                 className="border-0 p-2 rounded-2 bg-secondary text-bg-secondary"
               >
-                Add Record
+                Ajouter
               </button>
             )}
           </div>

@@ -1,43 +1,11 @@
-.marker-gray {
-    
-    background-color: gray;
-    border-radius: 100%;
-    padding: 10px;
-    width: fit-content;
-
-
+.widgetContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
-.marker-green {
-    
-    background-color: rgb(8, 150, 8);
-    border-radius: 100%;
-    padding: 10px;
-    width: fit-content;
-
-
-}
-.marker-orange {
-    
-    background-color: rgb(251, 164, 2);
-    border-radius: 100%;
-    padding: 10px;
-    width: fit-content;
-
-
-}
-.marker-red {
-    
-    background-color: rgb(190, 43, 10);
-    border-radius: 100%;
-    padding: 10px;
-    width: fit-content;
-
-
-}
-.marker-flame{
-    background-image: url("../../../assets/imgs/flame.svg");
-    background-repeat: no-repeat;
-    background-size: contain;
-    padding: 10px;
-    width: fit-content;
+@media screen and (max-width: 750px) {
+  .widgetContainer {
+    display: flex;
+    flex-direction: column;
+  }
 }

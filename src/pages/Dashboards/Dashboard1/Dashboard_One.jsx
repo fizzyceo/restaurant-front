@@ -1,26 +1,279 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
-import Widget from "./Widget";
 import { t } from "i18next";
 import Section from "./Section";
-import CountUp from "react-countup";
-import FeatherIcon from "feather-icons-react";
-import { Link } from "react-router-dom";
+import ReactApexChart from "react-apexcharts";
+import getChartColorsArray from "../../../Components/Common/ChartsDynamicColor";
+
 import "./extra.scss";
-import HighestWidget from "./HighestWidget";
 import { useAccessHistoryStore } from "../../../stores/AccessHistory";
+import { useDatePickerStore } from "../../../stores/datePickerStore";
+import WidgetInfo from "./widgets/WidgetInfo";
+import WidgetTotal from "./widgets/WidgetTotal";
+import PieChart from "./widgets/PieChart";
+import TimeWidget from "./widgets/TimeWidget";
+import { timeAgo } from "../../../Components/Common/TimeAgo";
+import WidgetsContainer from "./WidgetsContainer";
+import HighestWidget from "./HighestWidget";
+// const SimpleDonut = ({ dataColors }) => {
+
+//   return (
+
+//   );
+// };
 
 export default function DashboardOne() {
-  const title = t("Dashboard");
-  document.title = title;
+  const title = t("EASYVAM | Dashboard");
   const [numilogInCount, setNumilogInCount] = useState(0);
   const [numilogOutCount, setNumilogOutCount] = useState(0);
   const [TotalInCount, setTotalInCount] = useState(0);
   const [totalOutCount, setTotalOutCount] = useState(0);
   const [othersInCount, setOthersInCount] = useState(0);
   const [othersOutCount, setOthersOutCount] = useState(0);
-  const { getAccessHistory, history, deleteHistory, filters, setFilters } =
-    useAccessHistoryStore((state) => state);
+  const [serieNumilog, setSerieNumilog] = useState([]);
+  const [serieOthers, setSerieOthers] = useState([]);
+  const [serieTotal, setSerieTotal] = useState([]);
+  const [chartsReady, setChartsReady] = useState(false);
+  const [avgTimeToday, setAvgTimeToday] = useState(0);
+  const [maxMatricule, setMaxMatricule] = useState(0);
+  const [minMatricule, setMinMatricule] = useState(0);
+  const [maxTime, setMaxTime] = useState(0);
+  const [minTime, setMinTime] = useState(0);
+  const { getAccessHistory, history } = useAccessHistoryStore((state) => state);
+  const { selectedDates } = useDatePickerStore((state) => state);
+
+  var chartDonutBasicColors = getChartColorsArray(
+    '[ "--vz-success", "--vz-danger", "--vz-info"]'
+  );
+
+  var options = {
+    chart: {
+      height: 300,
+      type: "donut",
+    },
+    legend: {
+      position: "bottom",
+    },
+    dataLabels: {
+      dropShadow: {
+        enabled: false,
+      },
+    },
+    colors: chartDonutBasicColors,
+    labels: ["ENTREE", "SORTIE"],
+    noData: { text: "Aucune Donnee!" },
+  };
+  useEffect(() => {
+    //favicon setup
+    document.title = title;
+    const favicon = document.querySelector('link[rel="icon"]');
+    if (favicon) {
+      favicon.href = "/logo-sm.png";
+    } else {
+      // If no favicon link exists, create a new one
+      const newFavicon = document.createElement("link");
+      newFavicon.rel = "icon";
+      newFavicon.type = "image/png";
+      newFavicon.href = "/logo-sm.png";
+      document.head.appendChild(newFavicon);
+    }
+  }, []);
+  const structuredWidgets = [
+    {
+      title: "NUMILOG",
+      entry: {
+        id: 3,
+        bgColor: "bg-primary",
+        label: "ENTRÉE(S)",
+        labelClass: "white-50",
+        counterClass: "text-white",
+        badgeClass: "badge-soft-light",
+        badge: "ri-arrow-down-line",
+        percentage: "0.24 %",
+        iconClass: "light",
+        feaIcon: "log-in",
+        decimals: 0,
+        suffix: "",
+        prefix: "",
+        subCounter: [
+          {
+            id: 1,
+            counter: numilogInCount,
+            decimals: 0,
+            suffix: "",
+            prefix: "",
+          },
+        ],
+        in: true,
+      },
+      exit: {
+        id: 3,
+        bgColor: "bg-primary",
+        label: "SORTIE(S)",
+        labelClass: "white-50",
+        counterClass: "text-white",
+        badgeClass: "badge-soft-light",
+        badge: "ri-arrow-down-line",
+        percentage: "0.24 %",
+        iconClass: "light",
+        feaIcon: "log-in",
+        decimals: 0,
+        suffix: "",
+        prefix: "",
+        subCounter: [
+          {
+            id: 1,
+            counter: numilogOutCount,
+            decimals: 0,
+            suffix: "",
+            prefix: "",
+          },
+        ],
+        in: false,
+      },
+      chart: {
+        style: {
+          bgColor: "bg-primary",
+          textColor: "text-white",
+        },
+        title: "NUMILOG STATISTIQUES",
+        options: options,
+        series: serieNumilog,
+      },
+    },
+    {
+      title: "AUTRES TRANSPORTEURS",
+      entry: {
+        id: 2,
+        label: "ENTRÉE(S)",
+        labelClass: "muted",
+        percentage: "-6 %",
+        percentageClass: "danger",
+        bgColor: "bg-primary",
+        percentageIcon: "ri-arrow-right-down-line",
+        labelClass: "white-50",
+        counterClass: "text-white",
+        badgeClass: "badge-soft-light",
+        badge: "ri-arrow-down-line",
+        percentage: "0.24 %",
+        iconClass: "light",
+        feaIcon: "log-in",
+        decimals: 0,
+        suffix: "",
+        prefix: "",
+        subCounter: [
+          {
+            id: 1,
+            counter: othersInCount,
+            decimals: 0,
+            suffix: "",
+            prefix: "",
+          },
+        ],
+        in: true,
+      },
+      exit: {
+        id: 2,
+        label: "SORTIE(S)",
+        labelClass: "muted",
+        percentage: "-6 %",
+        percentageClass: "danger",
+        bgColor: "bg-primary",
+        percentageIcon: "ri-arrow-right-down-line",
+        labelClass: "white-50",
+        counterClass: "text-white",
+        badgeClass: "badge-soft-light",
+        badge: "ri-arrow-down-line",
+        percentage: "0.24 %",
+        iconClass: "light",
+        feaIcon: "log-in",
+        decimals: 0,
+        suffix: "",
+        prefix: "",
+        subCounter: [
+          {
+            id: 1,
+            counter: othersOutCount,
+            decimals: 0,
+            suffix: "",
+            prefix: "",
+          },
+        ],
+        in: false,
+      },
+      chart: {
+        title: "AUTRES STATISTIQUES",
+        options: options,
+        series: serieOthers,
+      },
+    },
+    {
+      title: "TOTAL",
+      entry: {
+        id: 1,
+        label: "ENTRÉE(S)",
+        labelClass: "muted",
+        percentage: "-6 %",
+        percentageClass: "danger",
+        bgColor: "bg-primary",
+        percentageIcon: "ri-arrow-right-down-line",
+        labelClass: "white-50",
+        counterClass: "text-white",
+        badgeClass: "badge-soft-light",
+        badge: "ri-arrow-down-line",
+        percentage: "0.24 %",
+        iconClass: "light",
+        feaIcon: "log-in",
+        decimals: 0,
+        suffix: "",
+        prefix: "",
+        subCounter: [
+          {
+            id: 1,
+            counter: TotalInCount,
+            decimals: 0,
+            suffix: "",
+            prefix: "",
+          },
+        ],
+        in: true,
+      },
+      exit: {
+        id: 1,
+        label: "SORTIE(S)",
+        labelClass: "muted",
+        percentage: "-6 %",
+        percentageClass: "danger",
+        bgColor: "bg-primary",
+        percentageIcon: "ri-arrow-right-down-line",
+        labelClass: "white-50",
+        counterClass: "text-white",
+        badgeClass: "badge-soft-light",
+        badge: "ri-arrow-down-line",
+        percentage: "0.24 %",
+        iconClass: "light",
+        feaIcon: "log-in",
+        decimals: 0,
+        suffix: "",
+        prefix: "",
+        subCounter: [
+          {
+            id: 1,
+            counter: totalOutCount,
+            decimals: 0,
+            suffix: "",
+            prefix: "",
+          },
+        ],
+        in: false,
+      },
+      chart: {
+        title: "TOTALE STATISTIQUES",
+        options: options,
+        series: serieTotal,
+      },
+    },
+  ];
   const widgetsInfo = [
     {
       id: 3,
@@ -39,7 +292,7 @@ export default function DashboardOne() {
       subCounter: [
         {
           id: 1,
-          counter: TotalInCount,
+          counter: numilogInCount,
           decimals: 0,
           suffix: "",
           prefix: "",
@@ -64,18 +317,11 @@ export default function DashboardOne() {
       subCounter: [
         {
           id: 1,
-          counter: totalOutCount,
+          counter: numilogOutCount,
           decimals: 0,
           suffix: "",
           prefix: "",
         },
-        // {
-        //   id: 2,
-        //   counter: "40",
-        //   decimals: 0,
-        //   suffix: "sec",
-        //   prefix: "",
-        // },
       ],
       in: false,
     },
@@ -93,7 +339,6 @@ export default function DashboardOne() {
       counter: TotalInCount,
       caption: "See details",
       iconClass: "light",
-      // bgColor: "bg-info",
       counterClass: "text-white",
       captionClass: "text-white-50",
       icon: "bx bx-bar-chart-alt-2",
@@ -114,7 +359,6 @@ export default function DashboardOne() {
       counter: totalOutCount,
       caption: "See details",
       iconClass: "light",
-      // bgColor: "bg-info",
       counterClass: "text-white",
       captionClass: "text-white-50",
       icon: "bx bx-bar-chart-alt-2",
@@ -125,7 +369,7 @@ export default function DashboardOne() {
     },
     {
       id: 2,
-      label: "ENTRÉE(S) D'AUTRES",
+      label: "ENTRÉE(S)",
       labelClass: "muted",
       percentage: "-6 %",
       percentageClass: "danger",
@@ -136,7 +380,6 @@ export default function DashboardOne() {
       counter: othersInCount,
       caption: "See details",
       iconClass: "light",
-      // bgColor: "bg-info",
       counterClass: "text-white",
       captionClass: "text-white-50",
       icon: "bx bxs-truck",
@@ -148,7 +391,7 @@ export default function DashboardOne() {
     },
     {
       id: 2,
-      label: "SORTIE(s) D'AUTRES",
+      label: "SORTIE(s)",
       labelClass: "muted",
       percentage: "+2 %",
       percentageClass: "success",
@@ -170,33 +413,171 @@ export default function DashboardOne() {
       in: false,
     },
   ];
+
+  const timeWidgets = [
+    {
+      id: 3,
+      bgColor: "bg-primary",
+      label: "MOYENNE",
+      labelClass: "white-50",
+      counterClass: "text-white",
+      badgeClass: "badge-soft-light",
+      badge: "ri-arrow-down-line",
+      percentage: "0.24 %",
+      iconClass: "light",
+      feaIcon: "clock",
+      decimals: 0,
+      suffix: "",
+      prefix: "",
+      subCounter: [
+        {
+          id: 1,
+          counter: parseInt(avgTimeToday / 3600),
+          decimals: 0,
+          suffix: "h ",
+          prefix: "",
+        },
+        {
+          id: 2,
+          counter:
+            (parseFloat(avgTimeToday / 3600) - parseInt(avgTimeToday / 3600)) *
+            60,
+          decimals: 0,
+          suffix: "m ",
+          prefix: "",
+        },
+
+        // {
+        //   id: 2,
+        //   counter: parseInt(
+        //     (parseFloat(avgTimeToday / 60) - parseInt(avgTimeToday / 60)) * 60
+        //   ),
+        //   decimals: 0,
+        //   suffix: "sec",
+        //   prefix: "",
+        // },
+      ],
+    },
+    {
+      id: 4,
+      bgColor: "bg-primary",
+      label: "MAX",
+      labelClass: "white-50",
+      counterClass: "text-white",
+      badgeClass: "badge-soft-light",
+      badge: "ri-arrow-down-line",
+      percentage: "0.24 %",
+      iconClass: "light",
+      feaIcon: "clock",
+      decimals: 0,
+      suffix: "",
+      prefix: "",
+      matricule: maxMatricule,
+      subCounter: [
+        {
+          id: 1,
+          counter: parseInt(maxTime / 3600),
+          decimals: 0,
+          suffix: "h ",
+          prefix: "",
+        },
+        {
+          id: 2,
+          counter: (parseFloat(maxTime / 3600) - parseInt(maxTime / 3600)) * 60,
+          decimals: 0,
+          suffix: "m ",
+          prefix: "",
+        },
+        // {
+        //   id: 2,
+        //   counter: parseInt(
+        //     (parseFloat(maxTime / 60) - parseInt(maxTime / 60)) * 60
+        //   ),
+        //   decimals: 0,
+        //   suffix: "sec",
+        //   prefix: "",
+        // },
+      ],
+    },
+    {
+      id: 4,
+      bgColor: "bg-primary",
+      label: "MIN",
+      labelClass: "white-50",
+      counterClass: "text-white",
+      badgeClass: "badge-soft-light",
+      badge: "ri-arrow-down-line",
+      percentage: "0.24 %",
+      iconClass: "light",
+      feaIcon: "clock",
+      decimals: 0,
+      suffix: "",
+      prefix: "",
+      matricule: minMatricule,
+      subCounter: [
+        {
+          id: 1,
+          counter: parseInt(minTime / 3600),
+          decimals: 0,
+          suffix: "h ",
+          prefix: "",
+        },
+        {
+          id: 2,
+          counter: (parseFloat(minTime / 3600) - parseInt(minTime / 3600)) * 60,
+          decimals: 0,
+          suffix: "m ",
+          prefix: "",
+        },
+        // {
+        //   id: 3,
+        //   counter: parseInt(
+        //     (parseFloat(minTime / 60) - parseInt(minTime / 60)) * 60
+        //   ),
+        //   decimals: 0,
+        //   suffix: "sec",
+        //   prefix: "",
+        // },
+      ],
+    },
+  ];
   useEffect(() => {
-    getAccessHistory && getAccessHistory();
-  }, []);
+    //fetch data based on the selected date
+    const now = new Date(); // Current date and time
+    const midnightToday = new Date(now); // Clone the current date
+    midnightToday.setHours(0, 0, 0, 0); // Set time to midnight
+    const dateFrom = midnightToday.toISOString();
+    const dateTo = now.toISOString(); // Current date and time
+
+    getAccessHistory &&
+      getAccessHistory({
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+      });
+  }, [selectedDates]);
 
   useEffect(() => {
+    //update the counters everytime the data changes
+    setChartsReady(false);
     setTotalInCount(0);
     setTotalOutCount(0);
     setNumilogOutCount(0);
     setNumilogInCount(0);
     setOthersInCount(0);
     setOthersOutCount(0);
+
     if (history.length > 0) {
       history.map((record) => {
         if (record.access === "IN") {
-          console.log("IN");
           setTotalInCount((total) => total + 1);
-          console.log(TotalInCount);
+
           if (record.transporter === "NUMILOG") {
             setNumilogInCount((total) => total + 1);
           } else {
             setOthersInCount((total) => total + 1);
           }
         } else if (record.access === "OUT") {
-          console.log("OUT");
-
           setTotalOutCount((total) => total + 1);
-          console.log(TotalInCount);
 
           if (record.transporter === "NUMILOG") {
             setNumilogOutCount((total) => total + 1);
@@ -206,166 +587,155 @@ export default function DashboardOne() {
         }
       });
     }
+
+    setChartsReady(true);
   }, [history]);
 
-  // if(isLoading) return (<div>Is Loading...</div>)
+  useEffect(() => {
+    if (history.length > 0) {
+      // Create a map to store staying times for each immatriculationRemorque
+      const stayingTimesMap = new Map();
 
-  return (
-    <React.Fragment>
-      <Container fluid>
-        <Section />
+      // Iterate through each history record to fill entryDate and exitDate
+      history.forEach((record) => {
+        const { immatriculationRemorque, date, access } = record;
 
-        <div
-          className=""
-          style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
-        >
-          {(widgetsInfo || []).map((item, key) => (
-            <Col xl={4} md={6} key={key}>
-              <Card className={"card-animate " + item.bgColor}>
-                <CardBody>
-                  <div className="d-flex justify-content-between">
-                    <div>
-                      <p className={"fw-medium mb-0 text-" + item.labelClass}>
-                        {item.label}
-                      </p>
-                      <h2
-                        className={
-                          "mt-4 ff-secondary fw-semibold " + item.counterClass
-                        }
-                      >
-                        {item.subCounter.map((item, key) => (
-                          <span className="counter-value" key={key}>
-                            <CountUp
-                              start={0}
-                              prefix={item.prefix}
-                              suffix={item.suffix}
-                              separator={item.separator}
-                              end={item.counter}
-                              decimals={item.decimals}
-                              duration={1}
-                            />
-                          </span>
-                        ))}
-                      </h2>
-                      <p className={"mb-0 text-" + item.labelClass}>
-                        <span className={"mb-0 badge " + item.badgeClass}>
-                          <i className={"align-middle " + item.badge}></i>{" "}
-                          {item.percentage}
-                        </span>{" "}
-                        vs. mois précédent
-                      </p>
-                    </div>
-                    <div>
-                      <div
-                        className="avatar-sm flex-shrink-0"
-                        style={{
-                          transform: !item.in ? "scaleX(-1)" : " ",
-                        }}
-                      >
-                        <span
-                          className={
-                            "avatar-title rounded-circle fs-2 bg-soft-" +
-                            item.iconClass
-                          }
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            height="16"
-                            width="20"
-                            viewBox="0 0 640 512"
-                          >
-                            <path
-                              fill="#ffffff"
-                              d="M112 0C85.5 0 64 21.5 64 48V96H16c-8.8 0-16 7.2-16 16s7.2 16 16 16H64 272c8.8 0 16 7.2 16 16s-7.2 16-16 16H64 48c-8.8 0-16 7.2-16 16s7.2 16 16 16H64 240c8.8 0 16 7.2 16 16s-7.2 16-16 16H64 16c-8.8 0-16 7.2-16 16s7.2 16 16 16H64 208c8.8 0 16 7.2 16 16s-7.2 16-16 16H64V416c0 53 43 96 96 96s96-43 96-96H384c0 53 43 96 96 96s96-43 96-96h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V288 256 237.3c0-17-6.7-33.3-18.7-45.3L512 114.7c-12-12-28.3-18.7-45.3-18.7H416V48c0-26.5-21.5-48-48-48H112zM544 237.3V256H416V160h50.7L544 237.3zM160 368a48 48 0 1 1 0 96 48 48 0 1 1 0-96zm272 48a48 48 0 1 1 96 0 48 48 0 1 1 -96 0z"
-                            />
-                          </svg>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          ))}
+        // Parse date strings into JavaScript Date objects
+        const currentDate = new Date(date);
 
-          {(totalWidgets || []).map((item, key) => (
-            <Col xl={4} md={6} key={key}>
-              <Card className={"card-animate " + item.bgColor}>
-                <CardBody>
-                  <div className="d-flex align-items-center">
-                    <div className="flex-grow-1">
-                      <p
-                        className={
-                          "text-uppercase fw-medium mb-0 text-" +
-                          item.labelClass
-                        }
-                      >
-                        {item.label}
-                      </p>
-                    </div>
-                    <div className="flex-shrink-0">
-                      <h5 className={"fs-14 mb-0 text-" + item.percentageClass}>
-                        <i
-                          className={
-                            "fs-13 align-middle " + item.percentageIcon
-                          }
-                        ></i>{" "}
-                        {item.percentage}
-                      </h5>
-                    </div>
-                  </div>
-                  <div className="d-flex align-items-end justify-content-between mt-4">
-                    <div>
-                      <h4
-                        className={
-                          "fs-22 fw-semibold ff-secondary mb-4 " +
-                          item.counterClass
-                        }
-                      >
-                        <span className="counter-value" data-target="559.25">
-                          <CountUp
-                            start={0}
-                            prefix={item.prefix}
-                            suffix={item.suffix}
-                            separator={item.separator}
-                            end={item.counter}
-                            decimals={item.decimals}
-                            duration={1}
-                          />
-                        </span>
-                      </h4>
-                      <Link
-                        to="#"
-                        className={
-                          "text-decoration-underline " + item.captionClass
-                        }
-                      >
-                        {item.caption}
-                      </Link>
-                    </div>
-                    <div
-                      style={{
-                        transform: !item.in ? "scaleX(-1)" : " ",
-                      }}
-                      className="avatar-sm flex-shrink-0"
-                    >
-                      <span
-                        className={
-                          "avatar-title rounded fs-3 bg-soft-" + item.iconClass
-                        }
-                      >
-                        <i
-                          className={item.icon + " text-" + item.iconClass}
-                        ></i>
-                      </span>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
-          ))}
-        </div>
-      </Container>
-    </React.Fragment>
-  );
+        // Check if the immatriculationRemorque already exists in the map
+        if (!stayingTimesMap.has(immatriculationRemorque)) {
+          // If it doesn't exist, add a new entry with the current date and access type
+          stayingTimesMap.set(immatriculationRemorque, {
+            entryDate: null,
+            exitDate: null,
+            stayingTime: 0,
+          });
+        }
+
+        // Get the existing entry for the immatriculationRemorque
+        const existingEntry = stayingTimesMap.get(immatriculationRemorque);
+
+        if (access === "IN") {
+          // Update entry date for "IN" access
+          stayingTimesMap.set(immatriculationRemorque, {
+            ...existingEntry,
+            entryDate: currentDate,
+          });
+        } else if (access === "OUT") {
+          // Ensure both currentDate and existingEntry.entryDate are valid dates
+          if (!isNaN(currentDate) && !isNaN(existingEntry.entryDate)) {
+            // If "OUT" entry comes first, set exit date without calculating staying time
+            if (!existingEntry.exitDate) {
+              stayingTimesMap.set(immatriculationRemorque, {
+                ...existingEntry,
+                exitDate: currentDate,
+              });
+            }
+          } else {
+            console.error("Invalid date format");
+          }
+        }
+      });
+
+      // Calculate staying time for each entry
+      history.forEach((record) => {
+        const { immatriculationRemorque, date, access } = record;
+        const currentDate = new Date(date);
+
+        const existingEntry = stayingTimesMap.get(immatriculationRemorque);
+
+        // Ensure both currentDate and existingEntry.exitDate are valid dates
+        if (
+          existingEntry.entryDate !== null &&
+          existingEntry.exitDate !== null
+        ) {
+          // Calculate staying time and update dates
+          const stayingTime =
+            new Date(existingEntry.exitDate).getTime() -
+            new Date(existingEntry.entryDate).getTime();
+          stayingTimesMap.set(immatriculationRemorque, {
+            ...existingEntry,
+            stayingTime: stayingTime,
+          });
+        } else {
+          console.error("Invalid date format");
+        }
+      });
+
+      // Find the immatriculationRemorque with the biggest and smallest staying times
+      let maxStayingTimeRemorque = null;
+      let minStayingTimeRemorque = null;
+      let maxStayingTime = 0;
+      let minStayingTime = Infinity;
+      let avg = 0;
+      let index = 0;
+      stayingTimesMap.forEach(({ stayingTime }, immatriculationRemorque) => {
+        if (stayingTime !== 0) {
+          if (stayingTime > maxStayingTime) {
+            maxStayingTime = stayingTime;
+            maxStayingTimeRemorque = immatriculationRemorque;
+          }
+
+          if (stayingTime < minStayingTime) {
+            minStayingTime = stayingTime;
+            minStayingTimeRemorque = immatriculationRemorque;
+          }
+        }
+        avg += stayingTime;
+        index++;
+      });
+      //calculate the average time, and compare it to yesterdays
+
+      avg = avg / index;
+      setAvgTimeToday(parseInt(avg / 1000));
+
+      //set the max staying time with its plate number
+
+      setMaxTime(parseInt(maxStayingTime / 1000));
+      setMaxMatricule(maxStayingTimeRemorque);
+
+      //set the min staying time with its plate number
+
+      setMinTime(parseInt(minStayingTime / 1000));
+      setMinMatricule(minStayingTimeRemorque);
+    }
+  }, [history]);
+
+  useEffect(() => {
+    const serieN = [parseInt(numilogInCount), parseInt(numilogOutCount)];
+    const serieO = [parseInt(othersInCount), parseInt(othersOutCount)];
+    const serieT = [parseInt(TotalInCount), parseInt(totalOutCount)];
+    setSerieNumilog(serieN);
+    setSerieOthers(serieO);
+    setSerieTotal(serieT);
+  }, [numilogInCount, numilogOutCount, othersInCount, othersOutCount]);
+
+  if (chartsReady) {
+    return (
+      <React.Fragment>
+        <Container fluid>
+          <Section />
+
+          <div className="widgetContainer">
+            {(structuredWidgets || []).map((item, key) => (
+              <WidgetsContainer key={key} item={item} />
+            ))}
+          </div>
+          <Card style={{ border: "1px solid black" }}>
+            <CardHeader>
+              <h4>TEMPS PARKING</h4>
+            </CardHeader>
+            <CardBody className="widgetContainer">
+              {(timeWidgets || []).map((item, key) => (
+                <TimeWidget key={key} item={item} />
+              ))}
+            </CardBody>
+          </Card>
+        </Container>
+      </React.Fragment>
+    );
+  } else {
+    return <div>Loading...</div>;
+  }
 }
