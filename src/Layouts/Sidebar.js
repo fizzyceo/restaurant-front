@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import SimpleBar from "simplebar-react";
 //import logo
-import logoSm from "../assets/easyvam/logo-sm.png";
-import logoDark from "../assets/easyvam/logo-dark.png";
-import logoLight from "../assets/easyvam/logo-light.png";
+import logoSm from "../assets/teaboy/logo.png";
+import logoDark from "../assets/teaboy/logo.png";
+import logoLight from "../assets/teaboy/logo.png";
 
 //Import Components
 import VerticalLayout from "./VerticalLayouts";
@@ -48,19 +48,19 @@ const Sidebar = ({ layoutType }) => {
         <div className="navbar-brand-box">
           <Link to="/" className="logo logo-dark">
             <span className="logo-sm">
-              <img src={logoSm} alt="" height="22" />
+              <img src={logoSm} alt="" height="48" />
             </span>
             <span className="logo-lg">
-              <img src={logoDark} alt="" height="17" />
+              <img src={logoDark} alt="" height="48" />
             </span>
           </Link>
 
           <Link to="/" className="logo logo-light">
             <span className="logo-sm">
-              <img src={logoSm} alt="" height="22" />
+              <img src={logoSm} alt="" height="48" />
             </span>
             <span className="logo-lg">
-              <img src={logoLight} alt="" height="17" />
+              <img src={logoLight} alt="" height="48" />
             </span>
           </Link>
           <button

@@ -1,6 +1,12 @@
 // import * as Dashboards from "./Dashboards";
 
-import * as Access from "./Access";
-import * as Dashboards from "./Dashboards";
+import Dashboard from "./Dashboard";
+import Settings from "./Settings";
+import Orders from "./Orders";
+import Menus from "./Menus";
+import Sites from "./Locations/Sites";
+import Kitchens from "./Locations/Kitchens";
 
-export { Access, Dashboards };
+import Spaces from "./Locations/Spaces";
+
+export { Spaces, Menus, Sites, Kitchens, Orders, Settings, Dashboard };

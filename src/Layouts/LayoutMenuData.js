@@ -5,8 +5,11 @@ import { useNavigate } from "react-router-dom";
 const Navdata = () => {
   const history = useNavigate();
   //state data
+  const [isLocations, setisLocations] = useState(true);
+  const [isMenus, setIsMenus] = useState(false);
   const [isStaffs, setIsStaffs] = useState(false);
-  const [isAccess, setIsAccess] = useState(false);
+  const [isSettings, setIsSettings] = useState(false);
+  const [isOrders, setIsOrders] = useState(false);
   const [isDashboard, setIsDashboard] = useState(false);
 
   // const [isVisitors, setIsVisitors] = useState(false);
@@ -14,7 +17,7 @@ const Navdata = () => {
   // const [isMaintenance, setIsMaintenance] = useState(false);
   // const [isVenues, setIsVenues] = useState(false);
 
-  const [isCurrentState, setIsCurrentState] = useState("Staffs");
+  const [isCurrentState, setIsCurrentState] = useState("Dashboard");
 
   function updateIconSidebar(e) {
     if (e && e.target && e.target.getAttribute("subitems")) {
@@ -31,30 +34,24 @@ const Navdata = () => {
   }
 
   useEffect(() => {
-    if (isCurrentState !== "Access") {
-      setIsAccess(false);
+    if (isCurrentState !== "Dashboard") {
+      setIsDashboard(false);
+    }
+    if (isCurrentState !== "Locations") {
+      setisLocations(false);
+    }
+    if (isCurrentState !== "Menus") {
+      setIsMenus(false);
+    }
+    if (isCurrentState !== "Orders") {
+      setIsOrders(false);
+    }
+    if (isCurrentState !== "Settings") {
+      setIsSettings(false);
     }
     if (isCurrentState !== "Staffs") {
       setIsStaffs(false);
     }
-    // if (isCurrentState !== "Facilities") {
-    //   setIsFacilities(false);
-    // }
-    // if (isCurrentState !== "Visitors") {
-    //   setIsVisitors(false);
-    // }
-    // if (isCurrentState !== "VisitorsPasses") {
-    //   setIsVisitorsPasses(false);
-    // }
-    // if (isCurrentState !== "Maintenance") {
-    //   setIsMaintenance(false);
-    // }
-    // if (isCurrentState !== "Staffs") {
-    //   setIsStaffs(false);
-    // }
-    // if (isCurrentState !== "Venues") {
-    //   setIsVenues(false);
-    // }
   }, [isCurrentState, history]);
 
   const menuItems = [
@@ -67,7 +64,7 @@ const Navdata = () => {
       id: "dashboard",
       label: "Dashboard",
       icon: "ri-dashboard-2-line",
-      link: "",
+      link: "/dashboard",
       stateVariables: isDashboard,
       click: function (e) {
         e.preventDefault();
@@ -75,20 +72,72 @@ const Navdata = () => {
         setIsCurrentState("Dashboard");
         updateIconSidebar(e);
       },
+    },
+    {
+      id: "Locations",
+      label: "Locations",
+      icon: "ri-map-pin-2-fill",
+      link: "",
+      stateVariables: isLocations,
+      click: function (e) {
+        e.preventDefault();
+        setisLocations(!isLocations);
+        setIsCurrentState("Locations");
+        updateIconSidebar(e);
+      },
       subItems: [
         {
-          id: "dashboard1",
-          label: t("Dashboard") + "1",
-          link: "/dashboard",
-          parentId: "dashboard",
+          id: "Sites",
+          label: "Sites",
+          link: "/sites",
+          icon: "ri-building-4-fill",
+          parentId: "Locations",
+        },
+        {
+          id: "Spaces",
+          label: "Spaces",
+          link: "/spaces",
+          parentId: "Locations",
+        },
+        {
+          id: "Kitchens",
+          label: "Kitchens",
+          link: "/kitchens",
+          parentId: "Locations",
         },
       ],
+    },
+    {
+      id: "Menus",
+      label: "Menus",
+      icon: "ri-book-open-fill",
+      link: "/menus",
+      stateVariables: isMenus,
+      click: function (e) {
+        e.preventDefault();
+        setIsMenus(!isMenus);
+        setIsCurrentState("Menus");
+        updateIconSidebar(e);
+      },
+    },
+    {
+      id: "Orders",
+      label: "Orders",
+      icon: "ri-ticket-2-line",
+      link: "/orders",
+      stateVariables: isOrders,
+      click: function (e) {
+        e.preventDefault();
+        setIsOrders(!isOrders);
+        setIsCurrentState("Orders");
+        updateIconSidebar(e);
+      },
     },
     {
       id: "Staffs",
       label: "Staffs",
       icon: "ri-group-line",
-      link: "",
+      link: "/staffs",
       stateVariables: isStaffs,
       click: function (e) {
         e.preventDefault();
@@ -96,37 +145,19 @@ const Navdata = () => {
         setIsCurrentState("Staffs");
         updateIconSidebar(e);
       },
-      subItems: [
-        {
-          id: "staffs",
-          label: "Staffs",
-          link: "/staffs",
-          parentId: "Staffs",
-        },
-      ],
     },
     {
-      id: "Access",
-      label: "Access",
-      icon: "ri-group-line",
-      link: "",
-      stateVariables: isAccess,
+      id: "Settings",
+      label: "Settings",
+      icon: "ri-settings-2-line",
+      link: "/settings",
+      stateVariables: isSettings,
       click: function (e) {
         e.preventDefault();
-        setIsAccess(!isAccess);
-        setIsCurrentState("Access");
+        setIsSettings(!isSettings);
+        setIsCurrentState("Settings");
         updateIconSidebar(e);
       },
-      subItems: [
-        {
-          id: "history",
-          label: "History",
-          link: "/access/history",
-          icon: "ri-group-line",
-
-          parentId: "Access",
-        },
-      ],
     },
   ];
 

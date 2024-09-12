@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import { Dropdown, DropdownMenu, DropdownToggle, Form } from "reactstrap";
 
 //import images
-import logoSm from "../assets/easyvam/logo-sm.png";
-import logoDark from "../assets/easyvam/logo-dark.png";
-import logoLight from "../assets/easyvam/logo-light.png";
+import logoSm from "../assets/teaboy/logo.png";
+import logoDark from "../assets/teaboy/logo.png";
+import logoLight from "../assets/teaboy/logo.png";
 
 //import Components
 // import SearchOption from '../Components/Common/SearchOption';

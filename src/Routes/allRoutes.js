@@ -22,29 +22,36 @@ import Logout from "../pages/Authentication/Logout";
 import UserProfile from "../pages/Authentication/user-profile";
 import ResetPassword from "../pages/Authentication/ResetPassword";
 import { StaffsPage } from "../pages/Staffs/Staffs";
-import Example from "../pages/example/Staffs";
-import { Access, Dashboards } from "../pages";
+import {
+  Spaces,
+  Menus,
+  Sites,
+  Kitchens,
+  Orders,
+  Settings,
+  Dashboard,
+} from "../pages";
 const authProtectedRoutes = [
-  { path: "/dashboard", component: <Dashboards.DashboardOne /> },
+  { path: "/dashboard", component: <Dashboard /> },
 
   { path: "/staffs", component: <StaffsPage /> },
-  {
-    path: "/access/history",
-    component: <Access.History />,
-  },
-  {
-    path: "/example",
-    component: <Example />,
-  },
-  {
-    path: "/",
-    exact: true,
-    component: <Navigate to="/access/history" />,
-  },
+  { path: "/orders", component: <Orders /> },
+  { path: "/menus", component: <Menus /> },
+  { path: "/sites", component: <Sites /> },
+  { path: "/spaces", component: <Spaces /> },
+  { path: "/kitchens", component: <Kitchens /> },
+  { path: "/settings", component: <Settings /> },
+
   //User Profile
   { path: "/profile", component: <UserProfile /> },
 
   // this route should be at the end of all other routes
+
+  {
+    path: "/",
+    exact: true,
+    component: <Navigate to="/dashboard" />,
+  },
 ];
 
 const publicRoutes = [

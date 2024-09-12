@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 // const baseURL = "https://iot-khalidghanamy.vercel.app";
 // const baseURL = process.env.REACT_APP_API_URL;
-const baseURL = "http://localhost:5002/"; //"http://192.162.70.103/";
+const baseURL = "https://basseer-internship-backend-davh.onrender.com/"; //"http://192.162.70.103/";
 //'http://localhost:5002'
 // Create axios Instance
 export const axiosHelper = axios.create();
