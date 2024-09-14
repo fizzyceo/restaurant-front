@@ -17,8 +17,6 @@ import { useSiteStore } from "../../../../stores/Assets/site";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { convertToBase64 } from "../../../../Components/Common/convertToBase64";
-
 const customIcon = new L.Icon({
   iconUrl: require("leaflet/dist/images/marker-icon.png"),
   iconSize: [25, 41],
@@ -29,50 +27,7 @@ const customIcon = new L.Icon({
 });
 
 export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
-  const [image, setImage] = useState("");
-  const validationSchema = Yup.object({
-    name: Yup.string().required(t("Required")),
-    address: Yup.string().required(t("Required")),
-    phone: Yup.string()
-      .required(t("Required"))
-      .length(10, t("Phone number must be exactly 10 characters long"))
-      .matches(/^\d+$/, t("Phone number must be numeric")),
-    lat: Yup.number().required(t("Required")).typeError(t("Must be a number")),
-    lon: Yup.number().required(t("Required")).typeError(t("Must be a number")),
-    file: Yup.string().optional(),
-  });
-
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      address: "",
-      phone: "",
-      lat: "",
-      lon: "",
-      file: null, // Ensure this is null, not an empty string
-    },
-    validationSchema,
-    onSubmit: async (values) => {
-      // Prepare form data for multipart/form-data
-      const formData = new FormData();
-      formData.append("name", values.name);
-      formData.append("address", values.address);
-      formData.append("phone", values.phone);
-      formData.append("lat", values.lat);
-      formData.append("lon", values.lon);
-      formData.append("file", image);
-      console.log(formData, values);
-
-      // Call the API with formData
-      const result = await createSite(formData);
-      if (result) {
-        formik.resetForm();
-        toggleAddSiteModal();
-        resetStates();
-      }
-    },
-  });
-
+  const [image, setImage] = useState(null);
   const [markerPosition, setMarkerPosition] = useState({
     lat: -3.745,
     lon: -38.523,
@@ -93,19 +48,61 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
     },
     { fieldName: "lat", label: "Latitude", fullWidth: false },
     { fieldName: "lon", label: "Longitude", fullWidth: false },
-    // {
-    //   fieldName: "file",
-    //   label: "File",
-    //   type: "file",
-    //   fullWidth: false,
-    //   inputProps: {
-    //     onChange: (event) => {
-    //       const file = event.target.files[0];
-    //       formik.setFieldValue("file", file);
-    //     },
-    //   },
-    // },
   ];
+
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      address: "",
+      phone: "",
+      lat: "",
+      lon: "",
+      file: "",
+    },
+    validationSchema: Yup.object({
+      name: Yup.string().required(t("Required")),
+      address: Yup.string().required(t("Required")),
+      phone: Yup.string().required(t("Required")),
+      lat: Yup.number().required(t("Required")),
+      lon: Yup.number().required(t("Required")),
+      file: Yup.mixed().optional(),
+    }),
+    onSubmit: async (values) => {
+      console.log("Submitting form with values:", values);
+      // Your submission logic here
+    },
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(formik.values);
+    
+    if (formik.isValid) {
+      console.log("Submitting form manually with values:", formik.values);
+          const formData = new FormData();
+      formData.append("name", formik.values.name);
+      formData.append("address", formik.values.address);
+      formData.append("phone", formik.values.phone);
+      formData.append("lat", formik.values.lat);
+      formData.append("lon", formik.values.lon);
+      formData.append("file",  formik.values.file); // Note: Ensure image is a file object, not base64 string
+
+      // Debug log to see formData contents
+      for (let pair of formData.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
+      }
+
+      // Call the API with formData
+      const result = await createSite(formData);
+        formik.resetForm();
+        toggleAddSiteModal();
+        resetStates();
+      
+      // Your submission logic here
+    } else {
+      console.log("Form is invalid or not dirty");
+    }
+  };
 
   const resetStates = () => {
     setMarkerPosition({ lat: -3.745, lon: -38.523 });
@@ -144,16 +141,17 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
     ) : null;
   };
 
-  const handleFileUpload = async (e) => {
+  const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    const base64 = await convertToBase64(file);
-    setImage(base64);
+    formik.setFieldValue("file", file); // Set the file object in Formik
   };
+  
+
   return (
     <Modal isOpen={showAddSiteModal} toggle={toggleAddSiteModal}>
       <ModalHeader toggle={toggleAddSiteModal}>{t("Add New Site")}</ModalHeader>
       <ModalBody>
-        <form onSubmit={formik.handleSubmit} className="d-flex flex-wrap">
+        <form onSubmit={handleSubmit} className="d-flex flex-wrap">
           {fieldsToRender.map((field) => (
             <div
               key={field.fieldName}
@@ -163,17 +161,12 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
               {RenderFormikInput(formik, field)}
             </div>
           ))}
-
           <Label htmlFor={"image"} className="w-100 form-label mt-1">
             {t("Image")}
           </Label>
           <input
-            style={{
-              padding: "0.5rem",
-              // border: "1px black solid",
-              width: "100%",
-            }}
-            className="bg-gradient rounded-3 "
+            style={{ padding: "0.5rem", width: "100%" }}
+            className="bg-gradient rounded-3"
             type="file"
             accept="image/*"
             onChange={(e) => handleFileUpload(e)}
@@ -192,16 +185,17 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
             />
             <LocationMarker />
           </MapContainer>
+          <Button
+            type="submit"
+            color="success"
+            disabled={isLoading}
+            className="mt-2"
+          >
+            {isLoading ? <Spinner size={"sm"} /> : <span>{t("Add")}</span>}
+          </Button>
         </form>
       </ModalBody>
       <ModalFooter>
-        <Button
-          color="success"
-          onClick={formik.handleSubmit}
-          disabled={isLoading}
-        >
-          {isLoading ? <Spinner size={"sm"} /> : <span>{t("Add")}</span>}
-        </Button>
         <Button
           color="danger"
           onClick={() => {

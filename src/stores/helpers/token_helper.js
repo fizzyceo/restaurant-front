@@ -12,10 +12,19 @@ export const tokenHelper = {
     return localStorage.removeItem("AccessToken");
   },
   setUser: (user) => {
-    localStorage.setItem("user", JSON.stringify(user));
+    let test = {
+      email:"email",
+      password:"password"
+    }
+    localStorage.setItem("user", JSON.stringify(test));
   },
   getUser: () => {
-    return JSON.parse(localStorage.getItem("user"));
+    let test = {
+      email:"email",
+      password:"password"
+    }
+return test
+    // return JSON.parse(localStorage.getItem("user") || "{}") ;
   },
 
   removeUser: (key) => {

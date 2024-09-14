@@ -23,12 +23,11 @@ export const useSiteStore = create((set, get) => ({
       set({ isLoading: true });
       let response = await axiosHelper.post("/site/create",body);
       console.log(response);
-      if (response.status !== 200) {
-        return;
-      }
+     
       // console.log(response.data);
-      console.log(response.data);
-      set({ sites: response.data, isLoading: false });
+      get().getSites();
+
+      set({ isLoading: false }); //sites: response.data, 
     } catch (e) {
       console.log(e);
     } finally {
@@ -46,13 +45,9 @@ export const useSiteStore = create((set, get) => ({
     try {
       set({ isLoading: true });
       let response = await axiosHelper.get("/site");
-      console.log(response);
-      if (response.status !== 200) {
-        return;
-      }
+    
       // console.log(response.data);
-      console.log(response.data);
-      set({ sites: response.data, isLoading: false });
+      set({ sites: response, isLoading: false });
     } catch (e) {
       console.log(e);
     } finally {
@@ -74,7 +69,24 @@ export const useSiteStore = create((set, get) => ({
 
     set({ isLoading: false });
   },
+  deleteSite:async (site_id)=>{
+   try{
 
+   
+    set({isLoading:true})
+    let response = await axiosHelper.delete(`/site/${site_id}`);
+
+    // console.log(response.data);
+    get().getSites();
+
+   }catch(e){
+      console.log(e);
+      
+    }finally{
+      set({ isLoading: false });
+
+    }
+  },
   setFilters: (filters) => {
     set({ filters: filterNonFalseValues(filters) });
   },

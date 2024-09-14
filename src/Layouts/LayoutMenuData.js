@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Navdata = () => {
   const history = useNavigate();
   //state data
-  const [isLocations, setisLocations] = useState(true);
+  const [isAssets, setisAssets] = useState(true);
   const [isMenus, setIsMenus] = useState(false);
   const [isStaffs, setIsStaffs] = useState(false);
   const [isSettings, setIsSettings] = useState(false);
@@ -37,8 +37,8 @@ const Navdata = () => {
     if (isCurrentState !== "Dashboard") {
       setIsDashboard(false);
     }
-    if (isCurrentState !== "Locations") {
-      setisLocations(false);
+    if (isCurrentState !== "Assets") {
+      setisAssets(false);
     }
     if (isCurrentState !== "Menus") {
       setIsMenus(false);
@@ -74,15 +74,15 @@ const Navdata = () => {
       },
     },
     {
-      id: "Locations",
-      label: "Locations",
+      id: "Assets",
+      label: "Assets",
       icon: "ri-map-pin-2-fill",
       link: "",
-      stateVariables: isLocations,
+      stateVariables: isAssets,
       click: function (e) {
         e.preventDefault();
-        setisLocations(!isLocations);
-        setIsCurrentState("Locations");
+        setisAssets(!isAssets);
+        setIsCurrentState("Assets");
         updateIconSidebar(e);
       },
       subItems: [
@@ -91,35 +91,42 @@ const Navdata = () => {
           label: "Sites",
           link: "/sites",
           icon: "ri-building-4-fill",
-          parentId: "Locations",
+          parentId: "Assets",
         },
         {
-          id: "Spaces",
-          label: "Spaces",
-          link: "/spaces",
-          parentId: "Locations",
+          id: "Menus",
+          label: "Menus",
+          link: "/menus",
+          parentId: "Assets",
         },
         {
           id: "Kitchens",
           label: "Kitchens",
           link: "/kitchens",
-          parentId: "Locations",
+          parentId: "Assets",
         },
+         {
+          id: "Spaces",
+          label: "Spaces",
+          link: "/spaces",
+          parentId: "Assets",
+        },
+       
       ],
     },
-    {
-      id: "Menus",
-      label: "Menus",
-      icon: "ri-book-open-fill",
-      link: "/menus",
-      stateVariables: isMenus,
-      click: function (e) {
-        e.preventDefault();
-        setIsMenus(!isMenus);
-        setIsCurrentState("Menus");
-        updateIconSidebar(e);
-      },
-    },
+    // {
+    //   id: "Menus",
+    //   label: "Menus",
+    //   icon: "ri-book-open-fill",
+    //   link: "/menus",
+    //   stateVariables: isMenus,
+    //   click: function (e) {
+    //     e.preventDefault();
+    //     setIsMenus(!isMenus);
+    //     setIsCurrentState("Menus");
+    //     updateIconSidebar(e);
+    //   },
+    // },
     {
       id: "Orders",
       label: "Orders",

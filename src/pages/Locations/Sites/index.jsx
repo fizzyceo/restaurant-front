@@ -13,6 +13,7 @@ import {
 import { AddSite } from "./Components/AddSite";
 import EditSite from "./Components/EditSite";
 import { useLocation } from "react-router-dom";
+import { useConfirmDialogStore } from "../../../stores/Modal/ConfirmDialogStore";
 const Sites = () => {
   const title = "BASSEER | SITES";
   const [totalRows, setTotalRows] = useState(0);
@@ -20,7 +21,7 @@ const Sites = () => {
   document.title = title; // API Call
   const location = useLocation();
   const siteId = new URLSearchParams(location.search).get("siteId");
-  const { getSites, isLoading, sites } = useSiteStore((state) => state);
+  const { getSites, isLoading, sites,deleteSite } = useSiteStore((state) => state);
 
   useEffect(() => {
     if (siteId) {
@@ -28,53 +29,63 @@ const Sites = () => {
     }
   }, [siteId]);
   useEffect(() => {
-    getSites();
+    getSites(); 
   }, []);
 
   useEffect(() => {
     setTotalRows(sites?.length || 0);
   }, [sites]);
   const columns = [
+    
     {
       name: t("Name"),
       // width: "100px",
       selector: (row) => row?.name,
       sortable: true,
       wrap: true,
+      cell: (row) => (
+        <div className="d-flex flex-row justify-content-center align-items-center gap-2">
+        <img src={row.image_url} style={{borderRadius:"100%"}} width={28} alt="" />
+           <span>
+          
+              {row?.name}
+            </span>
+            </div>
+        ),
     },
 
     {
       name: t("location"),
       // width: "100px",
-      selector: (row) => row?.location,
+      selector: (row) => row?.address,
       sortable: true,
       wrap: true,
     },
     {
       name: t("GPS"),
       // width: "190px",
-      selector: (row) => row?.coordinates[0],
+      selector: (row) => row?.lat,
       sortable: true,
       wrap: true,
       // format: (row) =>
-      //   `lat: ${row?.location?.coordinates[0]} lng: ${row?.location?.coordinates[1]}`,
+      //   `lat: ${row?.location?.coordinates[0]} lng: ${row?.location?.lon}`,
       cell: (row) => (
         <a
-          href={`https://www.google.com/maps/search/?api=1&query=${row?.location?.coordinates[0]?.toFixed(
+          href={`https://www.google.com/maps/search/?api=1&query=${row?.gps?.lat?.toFixed(
             6
-          )},${row?.location?.coordinates[1]?.toFixed(6)}`}
+          )},${row?.gps?.lon?.toFixed(6)}`}
           target="_blank"
           className="link-style"
           rel="noopener noreferrer"
         >
           <strong>
-            {row?.location?.coordinates[0]?.toFixed(6)},{" "}
-            {row?.location?.coordinates[1]?.toFixed(6)}
+            {row?.gps?.lat?.toFixed(6)},{" "}
+            {row?.gps?.lon?.toFixed(6)}
           </strong>
         </a>
         //  <span>
-        //     {row?.location?.coordinates[0]?.toFixed(6)},
-        //     {row?.location?.coordinates[1]?.toFixed(6)}
+        //     {row?.location?.lat?.toFixed(6)},
+        //     {row?.location?.lon?.toFixed(6)}
         //   </span>
       ),
     },
@@ -86,11 +97,8 @@ const Sites = () => {
       wrap: true,
       cell: (row) => (
         <div className="cursor-normal" id={`anchor-${row?.code}`}>
-          <span
-            className={`badge   bg-soft-success text-success text-uppercase`}
-          >
-            x
-          </span>
+<span style={{fontSize:"14px"}} className={`badge bg-soft-info  cursor-pointer text-success text-uppercase`}>
+<i className="ri-external-link-line"></i>          </span>
           <UncontrolledTooltip placement="top" target={`anchor-${row?.code}`}>
             {" "}
             check Associated Kitchens
@@ -106,8 +114,8 @@ const Sites = () => {
       wrap: true,
       cell: (row) => (
         <div className="cursor-normal" id={`anchor-${row?.code}`}>
-          <span className={`badge bg-soft-success text-success text-uppercase`}>
-            x
+          <span style={{fontSize:"14px"}} className={`badge bg-soft-info cursor-pointer text-success text-uppercase`}>
+          <i className="ri-external-link-line"></i>
           </span>
           <UncontrolledTooltip placement="top" target={`anchor-${row?.code}`}>
             {" "}
@@ -119,13 +127,15 @@ const Sites = () => {
   ];
 
   const searchHandler = (searchText) => {
-    getSites({
-      search: searchText,
-    });
+    // getSites({
+    //   search: searchText,
+    // });
   };
+  const { showConfirm } = useConfirmDialogStore((state) => state);
 
   const [showAddSiteModal, setShowAddSiteModal] = useState(false);
   const [showEditSiteModal, setShowEditSiteModal] = useState(false);
+  const [showDeleteSiteModal, setShowDeleteSiteModal] = useState(false);
   const toggleAddSiteModal = () => {
     setShowAddSiteModal(!showAddSiteModal);
   };
@@ -135,12 +145,27 @@ const Sites = () => {
     setSelectedRow(row);
     setShowEditSiteModal(!showEditSiteModal);
   };
+  const toggleDeleteSiteModal= (row) => {
+    setSelectedRow(row);
+    setShowDeleteSiteModal(!showDeleteSiteModal);
+  };
 
   const onChangePage = (page) => {
     getSites({
       page: page,
     });
   };
+
+  const deleteSiteFun = async (id)=>{
+    try{
+
+
+    await deleteSite(id)
+  }catch(e){
+    console.log(e);
+    
+  }
+  }
   return (
     <>
       <DataTableBase
@@ -155,15 +180,41 @@ const Sites = () => {
         onHeaderDeleteBtnClick={() => {
           alert("Soon");
         }}
-        onRowEditBtnClick={toggleEditSiteModal}
-        // onRowDeleteBtnClick={deleteDevice}
+        // onRowEditBtnClick={toggleEditSiteModal}
+        // onRowDeleteBtnClick={toggleDeleteSiteModal}
         onSearchIconClick={searchHandler}
         actionColWidth="100px"
         showSearch={true}
         showSubHeader={true}
         showActionButtons={true}
+        customActionBtns={(row) => (
+          <>
+         
+              <button
+                className="btn btn-sm btn-warning"
+                onClick={() => {
+                 toggleEditSiteModal(row?.site_id)
+                }}
+                title="Edit"
+              >
+<i className="ri-edit-fill"></i>              </button>
+     
+           
+            <button
+              className="btn btn-sm btn-danger"
+              onClick={() => {
+                showConfirm(() => {
+                  deleteSiteFun(row.site_id);
+                });
+              }}
+              title="Delete"
+            >
+              <i className="ri-delete-bin-line"></i>
+            </button>
+          </>
+        )}
       />
-
+   
       <AddSite
         toggleAddSiteModal={toggleAddSiteModal}
         showAddSiteModal={showAddSiteModal}
