@@ -11,7 +11,7 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 import { AddSite } from "./Components/AddSite";
-import EditSite from "./Components/EditSite";
+import {EditSite} from "./Components/EditSite";
 import { useLocation } from "react-router-dom";
 import { useConfirmDialogStore } from "../../../stores/Modal/ConfirmDialogStore";
 const Sites = () => {
@@ -135,7 +135,6 @@ const Sites = () => {
 
   const [showAddSiteModal, setShowAddSiteModal] = useState(false);
   const [showEditSiteModal, setShowEditSiteModal] = useState(false);
-  const [showDeleteSiteModal, setShowDeleteSiteModal] = useState(false);
   const toggleAddSiteModal = () => {
     setShowAddSiteModal(!showAddSiteModal);
   };
@@ -145,10 +144,7 @@ const Sites = () => {
     setSelectedRow(row);
     setShowEditSiteModal(!showEditSiteModal);
   };
-  const toggleDeleteSiteModal= (row) => {
-    setSelectedRow(row);
-    setShowDeleteSiteModal(!showDeleteSiteModal);
-  };
+
 
   const onChangePage = (page) => {
     getSites({
@@ -193,7 +189,7 @@ const Sites = () => {
               <button
                 className="btn btn-sm btn-warning"
                 onClick={() => {
-                 toggleEditSiteModal(row?.site_id)
+                 toggleEditSiteModal(row)
                 }}
                 title="Edit"
               >
@@ -221,8 +217,8 @@ const Sites = () => {
       />
       {selectedRow && (
         <EditSite
-          toggleModal={toggleEditSiteModal}
-          showModal={showEditSiteModal}
+        toggleEditSiteModal={toggleEditSiteModal}
+          showEditSiteModal={showEditSiteModal}
           rowData={selectedRow}
         />
       )}

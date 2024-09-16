@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { axiosHelper } from "../helpers";
+import { axiosHelper, tokenHelper } from "../helpers";
 import { filterNonFalseValues } from "../helpers/Utlis";
 
 export const useSiteStore = create((set, get) => ({
@@ -17,23 +17,39 @@ export const useSiteStore = create((set, get) => ({
     charger: false,
   },
   // Methods
-  createSite: async (body)=>{
-
+  createSite: async (body) => {
+    set({ isLoading: true });
+  
     try {
-      set({ isLoading: true });
-      let response = await axiosHelper.post("/site/create",body);
+      // Get the access token
+      const accessToken = await tokenHelper.getToken();
+      
+      // Post the site creation request
+      const response = await axiosHelper.post(
+        "/site/create",
+        body,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      
       console.log(response);
-     
-      // console.log(response.data);
-      get().getSites();
-
-      set({ isLoading: false }); //sites: response.data, 
+      
+      // Link the site to the user
+      await axiosHelper.patch(
+        `/user/link-site?siteId=${response.site_id}`,
+        { },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      
+      // Refresh the list of sites
+      await get().getSites();
+  
     } catch (e) {
       console.log(e);
     } finally {
       set({ isLoading: false });
     }
-  },
+  }
+,  
   getSites: async (filters) => {
     // set({ filters: filterNonFalseValues(filters) });
     // console.log(filterNonFalseValues(filters));
@@ -43,8 +59,9 @@ export const useSiteStore = create((set, get) => ({
 
     // };
     try {
+      const accessToken = await tokenHelper.getToken();
       set({ isLoading: true });
-      let response = await axiosHelper.get("/site");
+      let response = await axiosHelper.get("/user/sites", { headers: { Authorization: `Bearer ${accessToken}` } });
     
       // console.log(response.data);
       set({ sites: response, isLoading: false });
@@ -54,20 +71,26 @@ export const useSiteStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
-  EditSite: async (id, info) => {
+  updateSite: async (id, info) => {
+   try{
+
+    console.log("id: ",id, " info: ", info );
+    
     set({ isLoading: true });
-    let response = await axiosHelper.post("/system/company/get", {
-      id: id,
-      info: info,
-    });
+    let response = await axiosHelper.patch(`/site/${id}`, info);
     console.log(response);
-    if (!response.result) {
-      return;
-    }
+   
     // console.log(response.data);
     get().getSites();
 
+   }catch(e){
+    console.log(e);
+    
+    }finally{
+
+    
     set({ isLoading: false });
+  }
   },
   deleteSite:async (site_id)=>{
    try{

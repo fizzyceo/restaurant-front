@@ -185,18 +185,16 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
             />
             <LocationMarker />
           </MapContainer>
+          <div className="d-flex flex-row align-items-center justify-content-center gap-2 mt-2">
+
           <Button
             type="submit"
             color="success"
             disabled={isLoading}
-            className="mt-2"
           >
             {isLoading ? <Spinner size={"sm"} /> : <span>{t("Add")}</span>}
           </Button>
-        </form>
-      </ModalBody>
-      <ModalFooter>
-        <Button
+          <Button
           color="danger"
           onClick={() => {
             toggleAddSiteModal();
@@ -207,6 +205,11 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
         >
           {t("Cancel")}
         </Button>
+</div>
+        </form>
+      </ModalBody>
+      <ModalFooter>
+       
       </ModalFooter>
     </Modal>
   );

@@ -1,11 +1,17 @@
+import { getCookie } from "../../helpers/cookies";
+import { decrypt } from "../../helpers/sessions";
+
 export const tokenHelper = {
   setToken: (accessToken) => {
     localStorage.setItem("AccessToken", accessToken);
   },
-  getToken: () => {
+  getToken:async () => {
+    const session = getCookie('session');
+    const payload = await decrypt(session);
+
     const x = localStorage.getItem("AccessToken");
     
-    return localStorage.getItem("AccessToken");
+    return payload?.accessToken;
   },
 
   removeToken: (key) => {
