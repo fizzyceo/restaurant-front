@@ -64,7 +64,7 @@ const Menu = () => {
       sortable: true,
       wrap: true,
       cell: (row) => (
-        <div onClick={()=>ShowItemsModel(row?.menu_id)} className="cursor-normal" id={`anchor-${row?.menu_id}`}>
+        <a href={`/menu-items/${row?.menu_id}`} className="cursor-pointer" id={`anchor-${row?.menu_id}`}>
           <span style={{fontSize:"14px"}} className={`badge bg-soft-info cursor-pointer text-success text-uppercase`}>
 
           <i className="ri-external-link-line"></i>
@@ -74,7 +74,7 @@ const Menu = () => {
             {" "}
             check Associated Items
           </UncontrolledTooltip>
-        </div>
+        </a>
       ),
     },
   ];

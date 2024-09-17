@@ -25,6 +25,7 @@ import { StaffsPage } from "../pages/Staffs/Staffs";
 import {
   Spaces,
   Menus,
+  MenuItems,
   Sites,
   Kitchens,
   Orders,
@@ -37,6 +38,7 @@ const authProtectedRoutes = [
   { path: "/staffs", component: <StaffsPage /> },
   { path: "/orders", component: <Orders /> },
   { path: "/menus", component: <Menus /> },
+  { path: "/menu-items/:menuid", component: <MenuItems /> },
   { path: "/sites", component: <Sites /> },
   { path: "/spaces", component: <Spaces /> },
   { path: "/kitchens", component: <Kitchens /> },
