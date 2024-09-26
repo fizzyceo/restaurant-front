@@ -11,7 +11,7 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 import { AddSite } from "./Components/AddSite";
-import {EditSite} from "./Components/EditSite";
+import { EditSite } from "./Components/EditSite";
 import { useLocation } from "react-router-dom";
 import { useConfirmDialogStore } from "../../../stores/Modal/ConfirmDialogStore";
 const Sites = () => {
@@ -21,7 +21,9 @@ const Sites = () => {
   document.title = title; // API Call
   const location = useLocation();
   const siteId = new URLSearchParams(location.search).get("siteId");
-  const { getSites, isLoading, sites,deleteSite } = useSiteStore((state) => state);
+  const { getSites, isLoading, sites, deleteSite } = useSiteStore(
+    (state) => state
+  );
 
   useEffect(() => {
     if (siteId) {
@@ -29,14 +31,15 @@ const Sites = () => {
     }
   }, [siteId]);
   useEffect(() => {
-    getSites(); 
+    getSites();
   }, []);
 
   useEffect(() => {
+    console.log(sites);
+
     setTotalRows(sites?.length || 0);
   }, [sites]);
   const columns = [
-    
     {
       name: t("Name"),
       // width: "100px",
@@ -45,13 +48,15 @@ const Sites = () => {
       wrap: true,
       cell: (row) => (
         <div className="d-flex flex-row justify-content-center align-items-center gap-2">
-        <img src={row.image_url} style={{borderRadius:"100%"}} width={28} alt="" />
-           <span>
-          
-              {row?.name}
-            </span>
-            </div>
-        ),
+          <img
+            src={row.image_url}
+            style={{ borderRadius: "100%" }}
+            width={28}
+            alt=""
+          />
+          <span>{row?.name}</span>
+        </div>
+      ),
     },
 
     {
@@ -71,16 +76,15 @@ const Sites = () => {
       //   `lat: ${row?.location?.coordinates[0]} lng: ${row?.location?.lon}`,
       cell: (row) => (
         <a
-          href={`https://www.google.com/maps/search/?api=1&query=${row?.gps?.lat?.toFixed(
+          href={`https://www.google.com/maps/search/?api=1&query=${row?.latitude?.toFixed(
             6
-          )},${row?.gps?.lon?.toFixed(6)}`}
+          )},${row?.longitude?.toFixed(6)}`}
           target="_blank"
           className="link-style"
           rel="noopener noreferrer"
         >
           <strong>
-            {row?.gps?.lat?.toFixed(6)},{" "}
-            {row?.gps?.lon?.toFixed(6)}
+            {row?.latitude?.toFixed(6)}, {row?.longitude?.toFixed(6)}
           </strong>
         </a>
         //  <span>
@@ -97,8 +101,12 @@ const Sites = () => {
       wrap: true,
       cell: (row) => (
         <div className="cursor-normal" id={`anchor-${row?.code}`}>
-<span style={{fontSize:"14px"}} className={`badge bg-soft-info  cursor-pointer text-success text-uppercase`}>
-<i className="ri-external-link-line"></i>          </span>
+          <span
+            style={{ fontSize: "14px" }}
+            className={`badge bg-soft-info  cursor-pointer text-success text-uppercase`}
+          >
+            <i className="ri-external-link-line"></i>{" "}
+          </span>
           <UncontrolledTooltip placement="top" target={`anchor-${row?.code}`}>
             {" "}
             check Associated Kitchens
@@ -113,15 +121,25 @@ const Sites = () => {
       sortable: true,
       wrap: true,
       cell: (row) => (
-        <div className="cursor-normal" id={`anchor-${row?.code}`}>
-          <span style={{fontSize:"14px"}} className={`badge bg-soft-info cursor-pointer text-success text-uppercase`}>
-          <i className="ri-external-link-line"></i>
+        <a
+          href={`/spaces?siteId=${row?.site_id}`}
+          className="cursor-normal"
+          id={`anchor-${row?.site_id}`}
+        >
+          <span
+            style={{ fontSize: "14px" }}
+            className={`badge bg-soft-info cursor-pointer text-success text-uppercase`}
+          >
+            <i className="ri-external-link-line"></i>
           </span>
-          <UncontrolledTooltip placement="top" target={`anchor-${row?.code}`}>
+          <UncontrolledTooltip
+            placement="top"
+            target={`anchor-${row?.site_id}`}
+          >
             {" "}
             check Associated Spaces
           </UncontrolledTooltip>
-        </div>
+        </a>
       ),
     },
   ];
@@ -145,23 +163,19 @@ const Sites = () => {
     setShowEditSiteModal(!showEditSiteModal);
   };
 
-
   const onChangePage = (page) => {
     getSites({
       page: page,
     });
   };
 
-  const deleteSiteFun = async (id)=>{
-    try{
-
-
-    await deleteSite(id)
-  }catch(e){
-    console.log(e);
-    
-  }
-  }
+  const deleteSiteFun = async (id) => {
+    try {
+      await deleteSite(id);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <>
       <DataTableBase
@@ -185,17 +199,16 @@ const Sites = () => {
         showActionButtons={true}
         customActionBtns={(row) => (
           <>
-         
-              <button
-                className="btn btn-sm btn-warning"
-                onClick={() => {
-                 toggleEditSiteModal(row)
-                }}
-                title="Edit"
-              >
-<i className="ri-edit-fill"></i>              </button>
-     
-           
+            <button
+              className="btn btn-sm btn-warning"
+              onClick={() => {
+                toggleEditSiteModal(row);
+              }}
+              title="Edit"
+            >
+              <i className="ri-edit-fill"></i>{" "}
+            </button>
+
             <button
               className="btn btn-sm btn-danger"
               onClick={() => {
@@ -210,14 +223,14 @@ const Sites = () => {
           </>
         )}
       />
-   
+
       <AddSite
         toggleAddSiteModal={toggleAddSiteModal}
         showAddSiteModal={showAddSiteModal}
       />
       {selectedRow && (
         <EditSite
-        toggleEditSiteModal={toggleEditSiteModal}
+          toggleEditSiteModal={toggleEditSiteModal}
           showEditSiteModal={showEditSiteModal}
           rowData={selectedRow}
         />

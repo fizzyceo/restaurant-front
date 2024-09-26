@@ -46,8 +46,8 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
         maxLength: 10,
       },
     },
-    { fieldName: "lat", label: "Latitude", fullWidth: false },
-    { fieldName: "lon", label: "Longitude", fullWidth: false },
+    { fieldName: "latitude", label: "Latitude", fullWidth: false },
+    { fieldName: "longitude", label: "Longitude", fullWidth: false },
   ];
 
   const formik = useFormik({
@@ -55,16 +55,16 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
       name: "",
       address: "",
       phone: "",
-      lat: "",
-      lon: "",
+      latitude: "",
+      longitude: "",
       file: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required(t("Required")),
       address: Yup.string().required(t("Required")),
       phone: Yup.string().required(t("Required")),
-      lat: Yup.number().required(t("Required")),
-      lon: Yup.number().required(t("Required")),
+      latitude: Yup.number().required(t("Required")),
+      longitude: Yup.number().required(t("Required")),
       file: Yup.mixed().optional(),
     }),
     onSubmit: async (values) => {
@@ -76,16 +76,16 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formik.values);
-    
+
     if (formik.isValid) {
       console.log("Submitting form manually with values:", formik.values);
-          const formData = new FormData();
+      const formData = new FormData();
       formData.append("name", formik.values.name);
       formData.append("address", formik.values.address);
       formData.append("phone", formik.values.phone);
-      formData.append("lat", formik.values.lat);
-      formData.append("lon", formik.values.lon);
-      formData.append("file",  formik.values.file); // Note: Ensure image is a file object, not base64 string
+      formData.append("latitude", formik.values.latitude);
+      formData.append("longitude", formik.values.longitude);
+      formData.append("file", formik.values.file); // Note: Ensure image is a file object, not base64 string
 
       // Debug log to see formData contents
       for (let pair of formData.entries()) {
@@ -94,10 +94,10 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
 
       // Call the API with formData
       const result = await createSite(formData);
-        formik.resetForm();
-        toggleAddSiteModal();
-        resetStates();
-      
+      formik.resetForm();
+      toggleAddSiteModal();
+      resetStates();
+
       // Your submission logic here
     } else {
       console.log("Form is invalid or not dirty");
@@ -113,14 +113,14 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
       click(e) {
         const { lat, lng } = e.latlng;
         setMarkerPosition({ lat, lon: lng });
-        formik.setFieldValue("lat", lat);
-        formik.setFieldValue("lon", lng);
+        formik.setFieldValue("latitude", lat);
+        formik.setFieldValue("longitude", lng);
       },
       dragend(e) {
         const { lat, lng } = e.target.getLatLng();
         setMarkerPosition({ lat, lon: lng });
-        formik.setFieldValue("lat", lat);
-        formik.setFieldValue("lon", lng);
+        formik.setFieldValue("latitude", lat);
+        formik.setFieldValue("longitude", lng);
       },
     });
 
@@ -133,8 +133,8 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
           dragend: (e) => {
             const { lat, lng } = e.target.getLatLng();
             setMarkerPosition({ lat, lon: lng });
-            formik.setFieldValue("lat", lat);
-            formik.setFieldValue("lon", lng);
+            formik.setFieldValue("latitude", lat);
+            formik.setFieldValue("longitude", lng);
           },
         }}
       />
@@ -145,7 +145,6 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
     const file = e.target.files[0];
     formik.setFieldValue("file", file); // Set the file object in Formik
   };
-  
 
   return (
     <Modal isOpen={showAddSiteModal} toggle={toggleAddSiteModal}>
@@ -186,31 +185,24 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
             <LocationMarker />
           </MapContainer>
           <div className="d-flex flex-row align-items-center justify-content-center gap-2 mt-2">
-
-          <Button
-            type="submit"
-            color="success"
-            disabled={isLoading}
-          >
-            {isLoading ? <Spinner size={"sm"} /> : <span>{t("Add")}</span>}
-          </Button>
-          <Button
-          color="danger"
-          onClick={() => {
-            toggleAddSiteModal();
-            formik.resetForm();
-            resetStates();
-          }}
-          disabled={isLoading}
-        >
-          {t("Cancel")}
-        </Button>
-</div>
+            <Button type="submit" color="success" disabled={isLoading}>
+              {isLoading ? <Spinner size={"sm"} /> : <span>{t("Add")}</span>}
+            </Button>
+            <Button
+              color="danger"
+              onClick={() => {
+                toggleAddSiteModal();
+                formik.resetForm();
+                resetStates();
+              }}
+              disabled={isLoading}
+            >
+              {t("Cancel")}
+            </Button>
+          </div>
         </form>
       </ModalBody>
-      <ModalFooter>
-       
-      </ModalFooter>
+      <ModalFooter></ModalFooter>
     </Modal>
   );
 };

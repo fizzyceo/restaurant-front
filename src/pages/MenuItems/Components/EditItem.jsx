@@ -23,6 +23,7 @@ import {
   CarouselControl,
   CarouselIndicators,
 } from "reactstrap";
+import { FormControlLabel, Switch } from "@mui/material";
 
 // Custom Leaflet icon
 const customIcon = new L.Icon({
@@ -75,26 +76,24 @@ const EditItem = ({ rowData, showEditItemModal, toggleEditItemModal }) => {
     }),
     onSubmit: async (values) => {
       console.log("Submitting form with values:", values);
-      const formData = new FormData();
-      if (values.title) {
-        formData.append("title", values.title);
-      }
-      if (values.description) {
-        formData.append("description", values.description);
-      }
-      if (values.price) {
-        formData.append("price", values.price);
-      }
-      if (values.available) {
-        formData.append("available", values.available);
-      }
+      console.log("Submitting form with values:", values);
+
+      // Create a JSON object directly from values
+      const json = {
+        title: values.title,
+        description: values.description,
+        price: values.price || 0,
+        available: values.available,
+      };
+
+      console.log("JSON data:", json);
 
       // formData.append("description", values.description);
       // formData.append("price", Number(values.price));
       // formData.append("available", Number(values.available));
 
       try {
-        await updateItem(rowData.menu_item_id, formData);
+        await updateItem(rowData?.menu_id, rowData?.menu_item_id, json);
         formik.resetForm();
         toggleEditItemModal();
       } catch (error) {
@@ -180,26 +179,17 @@ const EditItem = ({ rowData, showEditItemModal, toggleEditItemModal }) => {
             {...formik.getFieldProps("price")}
             placeholder={t("Enter item price")}
           />
-          <FormGroup check className="mt-2">
-            <Label check>
-              <Input
-                type="checkbox"
-                id="availability"
-                name="availability"
-                {...formik.getFieldProps("availability")}
-                checked={formik.values.available}
-                onChange={() =>
-                  formik.setFieldValue(
-                    "availability",
-                    !formik.values.availability
-                  )
+          <FormControlLabel
+            control={
+              <Switch
+                checked={formik.values.available} // Use 'checked' prop instead of 'value'
+                onChange={(event) =>
+                  formik.setFieldValue("available", event.target.checked)
                 }
-                className="custom-switch"
               />
-              <span className="custom-switch-slider" />
-              {t("Available")}
-            </Label>
-          </FormGroup>
+            }
+            label="Available"
+          />
           <div className="d-flex flex-row align-items-center justify-content-center gap-2 mt-2">
             <Button type="submit" color="success" disabled={isLoading}>
               {isLoading ? <Spinner size={"sm"} /> : <span>{t("Save")}</span>}

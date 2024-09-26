@@ -19,37 +19,33 @@ export const useSiteStore = create((set, get) => ({
   // Methods
   createSite: async (body) => {
     set({ isLoading: true });
-  
+
     try {
       // Get the access token
       const accessToken = await tokenHelper.getToken();
-      
+
       // Post the site creation request
-      const response = await axiosHelper.post(
-        "/site/create",
-        body,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      
+      const response = await axiosHelper.post("/site/create", body, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
       console.log(response);
-      
+
       // Link the site to the user
       await axiosHelper.patch(
         `/user/link-site?siteId=${response.site_id}`,
-        { },
+        {},
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
-      
+
       // Refresh the list of sites
       await get().getSites();
-  
     } catch (e) {
       console.log(e);
     } finally {
       set({ isLoading: false });
     }
-  }
-,  
+  },
   getSites: async (filters) => {
     // set({ filters: filterNonFalseValues(filters) });
     // console.log(filterNonFalseValues(filters));
@@ -61,10 +57,13 @@ export const useSiteStore = create((set, get) => ({
     try {
       const accessToken = await tokenHelper.getToken();
       set({ isLoading: true });
-      let response = await axiosHelper.get("/user/sites", { headers: { Authorization: `Bearer ${accessToken}` } });
-    
+      let response = await axiosHelper.get("/user/sites", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
       // console.log(response.data);
       set({ sites: response, isLoading: false });
+      return response;
     } catch (e) {
       console.log(e);
     } finally {
@@ -72,42 +71,32 @@ export const useSiteStore = create((set, get) => ({
     }
   },
   updateSite: async (id, info) => {
-   try{
+    try {
+      console.log("id: ", id, " info: ", info);
 
-    console.log("id: ",id, " info: ", info );
-    
-    set({ isLoading: true });
-    let response = await axiosHelper.patch(`/site/${id}`, info);
-    console.log(response);
-   
-    // console.log(response.data);
-    get().getSites();
+      set({ isLoading: true });
+      let response = await axiosHelper.patch(`/site/${id}`, info);
+      console.log(response);
 
-   }catch(e){
-    console.log(e);
-    
-    }finally{
-
-    
-    set({ isLoading: false });
-  }
-  },
-  deleteSite:async (site_id)=>{
-   try{
-
-   
-    set({isLoading:true})
-    let response = await axiosHelper.delete(`/site/${site_id}`);
-
-    // console.log(response.data);
-    get().getSites();
-
-   }catch(e){
+      // console.log(response.data);
+      get().getSites();
+    } catch (e) {
       console.log(e);
-      
-    }finally{
+    } finally {
       set({ isLoading: false });
+    }
+  },
+  deleteSite: async (site_id) => {
+    try {
+      set({ isLoading: true });
+      let response = await axiosHelper.delete(`/site/${site_id}`);
 
+      // console.log(response.data);
+      get().getSites();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      set({ isLoading: false });
     }
   },
   setFilters: (filters) => {

@@ -3,9 +3,7 @@ import axios from "axios";
 import { tokenHelper } from "./token_helper";
 import { toast } from "react-toastify";
 
-// const baseURL = "https://iot-khalidghanamy.vercel.app";
-// const baseURL = process.env.REACT_APP_API_URL;
-const baseURL = "https://basseer-internship-backend-davh.onrender.com/"; //"http://192.162.70.103/";
+const baseURL = "https://qa.teaboy.io/api/"; //https://qa.teaboy.io/api/ https://basseer-internship-backend-davh.onrender.com/
 //'http://localhost:5002'
 // Create axios Instance
 export const axiosHelper = axios.create();

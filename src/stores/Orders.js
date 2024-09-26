@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { axiosHelper, tokenHelper } from "../helpers";
-import { filterNonFalseValues } from "../helpers/Utlis";
+import { axiosHelper, tokenHelper } from "./helpers";
+import { filterNonFalseValues } from "./helpers/Utlis";
 
-export const useMenuStore = create((set, get) => ({
-  menus: [],
+export const useOrderStore = create((set, get) => ({
+  orders: [],
   isLoading: false,
   isError: false,
   error: undefined,
@@ -17,7 +17,7 @@ export const useMenuStore = create((set, get) => ({
     charger: false,
   },
   // Methods
-  createMenu: async (body) => {
+  createOrder: async (body) => {
     set({ isLoading: true });
 
     try {
@@ -25,7 +25,7 @@ export const useMenuStore = create((set, get) => ({
       const accessToken = await tokenHelper.getToken();
 
       // Post the site creation request
-      const response = await axiosHelper.post("/menu/create", body, {
+      const response = await axiosHelper.post("/order/create", body, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
@@ -39,7 +39,7 @@ export const useMenuStore = create((set, get) => ({
       //   );
 
       //   // Refresh the list of sites
-      await get().getMenus();
+      await get().getOrders();
       return true;
     } catch (e) {
       console.log(e);
@@ -48,7 +48,7 @@ export const useMenuStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
-  getMenus: async (filters) => {
+  getOrders: async (filters) => {
     // set({ filters: filterNonFalseValues(filters) });
     // console.log(filterNonFalseValues(filters));
     // const filtering = {
@@ -59,39 +59,38 @@ export const useMenuStore = create((set, get) => ({
     try {
       const accessToken = await tokenHelper.getToken();
       set({ isLoading: true });
-      let response = await axiosHelper.get("/menu/list/a", {
+      let response = await axiosHelper.get("/order", {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
       // console.log(response.data);
-      set({ menus: response, isLoading: false });
-      return response;
+      set({ orders: response, isLoading: false });
     } catch (e) {
       console.log(e);
     } finally {
       set({ isLoading: false });
     }
   },
-  updateMenu: async (id, info) => {
+  updateOrder: async (id, info) => {
     try {
       console.log("id: ", id, " info: ", info);
       const accessToken = await tokenHelper.getToken();
 
       set({ isLoading: true });
-      let response = await axiosHelper.patch(`/menu/${id}`, info, {
+      let response = await axiosHelper.patch(`/order/${id}`, info, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       console.log(response);
 
       // console.log(response.data);
-      get().getMenus();
+      get().getOrders();
     } catch (e) {
       console.log(e);
     } finally {
       set({ isLoading: false });
     }
   },
-  deleteMenu: async (menuId) => {
+  deleteOrder: async (menuId) => {
     try {
       set({ isLoading: true });
       const accessToken = await tokenHelper.getToken();
@@ -101,7 +100,7 @@ export const useMenuStore = create((set, get) => ({
       });
 
       // console.log(response.data);
-      get().getMenus();
+      get().getOrders();
     } catch (e) {
       console.log(e);
     } finally {

@@ -112,7 +112,7 @@ const Layout = (props) => {
 
   // Turn DarkMode after login
   useEffect(() => {
-    dispatch(changeLayoutMode(layoutModeTypes.DARKMODE));
+    dispatch(changeLayoutMode(layoutModeTypes.LIGHTMODE));
   }, []);
 
   return (

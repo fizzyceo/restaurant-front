@@ -21,25 +21,27 @@ const Menu = () => {
   document.title = title; // API Call
   const location = useLocation();
   const menuId = new URLSearchParams(location.search).get("menuId");
-  const { getMenus, isLoading, menus,deleteMenu } = useMenuStore((state) => state);
-  const ShowItemsModel =(menu_id)=>{
+  const { getMenus, isLoading, menus, deleteMenu } = useMenuStore(
+    (state) => state
+  );
+  const ShowItemsModel = (menu_id) => {
     console.log("display items");
-    
-  }
+  };
   // useEffect(() => {
   //   if (menuId) {
   //     getMenus({ search: menuId });
   //   }
   // }, [menuId]);
   useEffect(() => {
-    getMenus(); 
+    getMenus();
   }, []);
 
   useEffect(() => {
+    console.log(menus);
+
     setTotalRows(menus?.length || 0);
   }, [menus]);
   const columns = [
-    
     {
       name: t("Name"),
       // width: "100px",
@@ -48,15 +50,59 @@ const Menu = () => {
       wrap: true,
       cell: (row) => (
         <div className="d-flex flex-row justify-content-center align-items-center gap-2">
-           <span>
-          
-              {row?.name}
-            </span>
-            </div>
-        ),
+          <span>{row?.name}</span>
+        </div>
+      ),
+    },
+    {
+      name: t("Ask For Table"),
+      // width: "100px",
+      selector: (row) => row?.ask_for_table,
+      sortable: true,
+      wrap: true,
+      cell: (row) => (
+        <div className="d-flex flex-row justify-content-center align-items-center gap-2">
+          <span>
+            {row?.ask_for_table ? (
+              <i
+                className="ri-checkbox-circle-fill text-success "
+                style={{ fontSize: "28px" }}
+              ></i>
+            ) : (
+              <i
+                className="ri-close-circle-fill text-danger"
+                style={{ fontSize: "28px" }}
+              ></i>
+            )}
+          </span>
+        </div>
+      ),
+    },
+    {
+      name: t("Ask For Name"),
+      // width: "100px",
+      selector: (row) => row?.ask_for_name,
+      sortable: true,
+      wrap: true,
+      cell: (row) => (
+        <div className="d-flex flex-row justify-content-center align-items-center gap-2">
+          <span>
+            {row?.ask_for_name ? (
+              <i
+                className="ri-checkbox-circle-fill text-success "
+                style={{ fontSize: "28px" }}
+              ></i>
+            ) : (
+              <i
+                className="ri-close-circle-fill text-danger"
+                style={{ fontSize: "28px" }}
+              ></i>
+            )}
+          </span>
+        </div>
+      ),
     },
 
-    
     {
       name: t("Items"),
       // width: "95px",
@@ -64,13 +110,22 @@ const Menu = () => {
       sortable: true,
       wrap: true,
       cell: (row) => (
-        <a href={`/menu-items/${row?.menu_id}`} className="cursor-pointer" id={`anchor-${row?.menu_id}`}>
-          <span style={{fontSize:"14px"}} className={`badge bg-soft-info cursor-pointer text-success text-uppercase`}>
-
-          <i className="ri-external-link-line"></i>
-          Check
+        <a
+          href={`/menu-items/${row?.menu_id}`}
+          className="cursor-pointer"
+          id={`anchor-${row?.menu_id}`}
+        >
+          <span
+            style={{ fontSize: "14px" }}
+            className={`badge bg-soft-info cursor-pointer text-success text-uppercase`}
+          >
+            <i className="ri-external-link-line"></i>
+            Check
           </span>
-          <UncontrolledTooltip placement="top" target={`anchor-${row?.menu_id}`}>
+          <UncontrolledTooltip
+            placement="top"
+            target={`anchor-${row?.menu_id}`}
+          >
             {" "}
             check Associated Items
           </UncontrolledTooltip>
@@ -98,23 +153,19 @@ const Menu = () => {
     setShowEditMenuModal(!showEditMenuModal);
   };
 
-
   const onChangePage = (page) => {
     getMenus({
       page: page,
     });
   };
 
-  const deleteMenuFun = async (id)=>{
-    try{
-
-
-    await deleteMenu(id)
-  }catch(e){
-    console.log(e);
-    
-  }
-  }
+  const deleteMenuFun = async (id) => {
+    try {
+      await deleteMenu(id);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <>
       <DataTableBase
@@ -138,17 +189,16 @@ const Menu = () => {
         showActionButtons={true}
         customActionBtns={(row) => (
           <>
-         
-              <button
-                className="btn btn-sm btn-warning"
-                onClick={() => {
-                 toggleEditMenuModal(row)
-                }}
-                title="Edit"
-              >
-<i className="ri-edit-fill"></i>              </button>
-     
-           
+            <button
+              className="btn btn-sm btn-warning"
+              onClick={() => {
+                toggleEditMenuModal(row);
+              }}
+              title="Edit"
+            >
+              <i className="ri-edit-fill"></i>{" "}
+            </button>
+
             <button
               className="btn btn-sm btn-danger"
               onClick={() => {
@@ -163,14 +213,16 @@ const Menu = () => {
           </>
         )}
       />
-   
-      <AddMenu
-        toggleAddMenuModal={toggleAddMenuModal}
-        showAddMenuModal={showAddMenuModal}
-      />
+      {showAddMenuModal && (
+        <AddMenu
+          toggleAddMenuModal={toggleAddMenuModal}
+          showAddMenuModal={showAddMenuModal}
+        />
+      )}
+
       {selectedRow && (
         <EditMenu
-        toggleEditMenuModal={toggleEditMenuModal}
+          toggleEditMenuModal={toggleEditMenuModal}
           showEditMenuModal={showEditMenuModal}
           rowData={selectedRow}
         />

@@ -31,8 +31,8 @@ const AddItem = ({ menuId, showAddItemModal, toggleAddItemModal }) => {
     },
     validationSchema: Yup.object({
       title: Yup.string().required(t("Required")),
-      description: Yup.string().required(t("Required")),
-      price: Yup.number().required(t("Required")),
+      description: Yup.string().optional(),
+      price: Yup.number().optional(),
       available: Yup.boolean().required(t("Required")),
       menu_id: Yup.number().required(t("Required")),
       item_images: Yup.array()
@@ -44,8 +44,8 @@ const AddItem = ({ menuId, showAddItemModal, toggleAddItemModal }) => {
       // Prepare formData
       const formData = new FormData();
       formData.append("title", values.title);
-      formData.append("description", values.description);
-      formData.append("price", values.price);
+      formData.append("description", values.description || "");
+      formData.append("price", values.price || 0);
       formData.append("available", values.available);
       formData.append("menu_id", menuId);
 
@@ -100,10 +100,14 @@ const AddItem = ({ menuId, showAddItemModal, toggleAddItemModal }) => {
               </div>
             ))}
             <FormControlLabel
-              onChange={(checked) => formik.setFieldValue("available", checked)}
-              value={formik.values.available}
-              required
-              control={<Switch />}
+              control={
+                <Switch
+                  checked={formik.values.available} // Use 'checked' prop instead of 'value'
+                  onChange={(event) =>
+                    formik.setFieldValue("available", event.target.checked)
+                  }
+                />
+              }
               label="Available"
             />
           </div>

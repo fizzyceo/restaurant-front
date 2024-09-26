@@ -39,7 +39,7 @@ export const useMenuItemsStore = create((set, get) => ({
       //   );
 
       //   // Refresh the list of sites
-      await get().getItems();
+      await get().getItems(menuid);
     } catch (e) {
       console.log(e);
     } finally {
