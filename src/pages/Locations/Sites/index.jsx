@@ -41,6 +41,30 @@ const Sites = () => {
   }, [sites]);
   const columns = [
     {
+      name: t("ID"),
+      // width: "100px",
+      selector: (row) => row?.site_id,
+      sortable: true,
+      wrap: true,
+    },
+
+    {
+      name: t("LOGO"),
+      // width: "100px",
+      selector: (row) => row.image_url,
+      sortable: true,
+      wrap: true,
+      cell: (row) => (
+        <img
+          src={row.image_url}
+          style={{ borderRadius: "100%" }}
+          width={28}
+          alt=""
+        />
+      ),
+    },
+
+    {
       name: t("Name"),
       // width: "100px",
       selector: (row) => row?.name,
@@ -48,21 +72,41 @@ const Sites = () => {
       wrap: true,
       cell: (row) => (
         <div className="d-flex flex-row justify-content-center align-items-center gap-2">
-          <img
-            src={row.image_url}
-            style={{ borderRadius: "100%" }}
-            width={28}
-            alt=""
-          />
           <span>{row?.name}</span>
         </div>
       ),
     },
 
     {
+      name: t("Name (AR)"),
+      // width: "100px", //row?.name
+      selector: (row) => row?.name,
+      sortable: true,
+      wrap: true,
+      cell: (row) => (
+        <div className="d-flex flex-row justify-content-center align-items-center gap-2">
+          <span>{""}</span>
+        </div>
+      ),
+    },
+    {
       name: t("location"),
       // width: "100px",
       selector: (row) => row?.address,
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: t("location (AR)"),
+      // width: "100px",
+      selector: (row) => row?.address,
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: t("Phone"),
+      // width: "100px",
+      selector: (row) => row?.phone,
       sortable: true,
       wrap: true,
     },
@@ -93,27 +137,27 @@ const Sites = () => {
         //   </span>
       ),
     },
-    {
-      name: t("Kitchens"),
-      // width: "95px",
-      // selector: (row) => row?.status,
-      sortable: true,
-      wrap: true,
-      cell: (row) => (
-        <div className="cursor-normal" id={`anchor-${row?.code}`}>
-          <span
-            style={{ fontSize: "14px" }}
-            className={`badge bg-soft-info  cursor-pointer text-success text-uppercase`}
-          >
-            <i className="ri-external-link-line"></i>{" "}
-          </span>
-          <UncontrolledTooltip placement="top" target={`anchor-${row?.code}`}>
-            {" "}
-            check Associated Kitchens
-          </UncontrolledTooltip>
-        </div>
-      ),
-    },
+    // {
+    //   name: t("Kitchens"),
+    //   // width: "95px",
+    //   // selector: (row) => row?.status,
+    //   sortable: true,
+    //   wrap: true,
+    //   cell: (row) => (
+    //     <div className="cursor-normal" id={`anchor-${row?.code}`}>
+    //       <span
+    //         style={{ fontSize: "14px" }}
+    //         className={`badge bg-soft-info  cursor-pointer text-success text-uppercase`}
+    //       >
+    //         <i className="ri-external-link-line"></i>{" "}
+    //       </span>
+    //       <UncontrolledTooltip placement="top" target={`anchor-${row?.code}`}>
+    //         {" "}
+    //         check Associated Kitchens
+    //       </UncontrolledTooltip>
+    //     </div>
+    //   ),
+    // },
     {
       name: t("Spaces"),
       // width: "95px",

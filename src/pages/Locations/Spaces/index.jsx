@@ -94,6 +94,12 @@ const Spaces = () => {
       wrap: true,
     },
     {
+      name: t("Name (AR)"),
+      selector: (row) => row?.nameAR,
+      sortable: true,
+      wrap: true,
+    },
+    {
       name: t("Type"),
       selector: (row) => row?.type,
       sortable: true,

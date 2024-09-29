@@ -63,6 +63,17 @@ const Menu = () => {
       ),
     },
     {
+      name: t("Title (AR)"),
+      selector: (row) => row?.title,
+      sortable: true,
+      wrap: true,
+      cell: (row) => (
+        <div className="d-flex flex-row justify-content-center align-items-center gap-2">
+          <span>{""}</span>
+        </div>
+      ),
+    },
+    {
       name: t("Options"),
       selector: (row) => row?.menuItem_options.length,
       sortable: true,
@@ -99,7 +110,7 @@ const Menu = () => {
       selector: (row) => row?.price,
       sortable: true,
       wrap: true,
-      cell: (row) => <span>${row?.price?.toFixed(2)}</span>,
+      cell: (row) => <span>{row?.price?.toFixed(2)}</span>,
     },
     {
       name: t("Available"),

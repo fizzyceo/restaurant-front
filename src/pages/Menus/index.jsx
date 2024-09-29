@@ -45,6 +45,18 @@ const Menu = () => {
   }, [menus]);
   const columns = [
     {
+      name: t("ID"),
+      // width: "100px",
+      selector: (row) => row?.menu_id,
+      sortable: true,
+      wrap: true,
+      cell: (row) => (
+        <div className="d-flex flex-row justify-content-center align-items-center gap-2">
+          <span>{row?.menu_id}</span>
+        </div>
+      ),
+    },
+    {
       name: t("Name"),
       // width: "100px",
       selector: (row) => row?.name,
@@ -53,6 +65,18 @@ const Menu = () => {
       cell: (row) => (
         <div className="d-flex flex-row justify-content-center align-items-center gap-2">
           <span>{row?.name}</span>
+        </div>
+      ),
+    },
+    {
+      name: t("Name (AR)"),
+      // width: "100px",
+      selector: (row) => row?.name,
+      sortable: true,
+      wrap: true,
+      cell: (row) => (
+        <div className="d-flex flex-row justify-content-center align-items-center gap-2">
+          <span>{""}</span>
         </div>
       ),
     },
@@ -134,7 +158,6 @@ const Menu = () => {
         </a>
       ),
     },
- 
   ];
 
   const searchHandler = (searchText) => {
