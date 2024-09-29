@@ -117,7 +117,7 @@ const AddSpace = ({
             >
               {menuList.map((menu) => (
                 <option key={menu.menu_id} value={menu.menu_id}>
-                  {menu.name}
+                  {menu.menu_id} - {menu.name}
                 </option>
               ))}
             </select>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DataTableBase from "../../../Components/Common/DataTableBase/DataTableBase";
 import { t } from "i18next";
-import { Button } from "reactstrap";
+import { Button, UncontrolledTooltip } from "reactstrap";
 import { useLocation } from "react-router-dom";
 import { useConfirmDialogStore } from "../../../stores/Modal/ConfirmDialogStore";
 import { useSpaceStore } from "../../../stores/Assets/space";
@@ -10,6 +10,8 @@ import EditSpace from "./Components/EditSpace";
 import { useSiteStore } from "../../../stores/Assets/site";
 import { useMenuStore } from "../../../stores/Assets/menu";
 import { useKitchenStore } from "../../../stores/Assets/kitchen";
+import { QRCode } from "react-qrcode-logo";
+import QRmodal from "./Components/QRmodal";
 
 const Spaces = () => {
   const title = "BASSEER | SPACES";
@@ -21,7 +23,8 @@ const Spaces = () => {
   const [selectedSiteId, setSelectedSiteId] = useState(null);
   const [selectedMenuId, setSelectedMenuId] = useState(null);
   const [selectedKitchenId, setSelectedKitchenId] = useState(null);
-
+  const [showQRCode, setShowQRCode] = useState(false);
+  const [selectedRowQR, setselectedRowQR] = useState(false);
   const { getSites } = useSiteStore((state) => state);
   const { getMenus } = useMenuStore((state) => state);
   const { getKitchens } = useKitchenStore((state) => state);
@@ -78,7 +81,11 @@ const Spaces = () => {
 
     fetchKitchens();
   }, [getSites, location.search, getSpaces]);
+  const handleQRClick = (row) => {
+    setselectedRowQR(row);
 
+    setShowQRCode(!showQRCode);
+  };
   const columns = [
     {
       name: t("Name"),
@@ -91,6 +98,48 @@ const Spaces = () => {
       selector: (row) => row?.type,
       sortable: true,
       wrap: true,
+    },
+    {
+      name: t("QR Code"),
+      // width: "95px",
+      // selector: (row) => row?.status,
+      sortable: true,
+      wrap: true,
+      cell: (row) => (
+        <div className="cursor-pointer">
+          <span
+            style={{ fontSize: "14px" }}
+            className={`badge bg-soft-success cursor-pointer text-success text-uppercase`}
+            onClick={() => handleQRClick(row)}
+          >
+            {<i className="ri-external-link-line"></i>} View QRCODE
+          </span>
+        </div>
+      ),
+      // cell: (row) => (
+      //   <a
+      //     href={`/menu/${row?.encrypted}`}
+      //     className="cursor-pointer"
+      //     id={`anchor-${row?.space_id}`}
+      //   >
+      //     <QRCode
+      //       value={`https://qa.teaboy.io/menu/${row?.encrypted}`}
+      //       size={45}
+      //       eyeRadius={10}
+      //       ecLevel="H"
+      //       logoPaddingStyle="circle"
+      //       bgColor="#0000"
+      //       logoImage={row?.site_image_url}
+      //     />
+      //     <UncontrolledTooltip
+      //       placement="top"
+      //       target={`anchor-${row?.space_id}`}
+      //     >
+      //       {" "}
+      //       Scan or Click
+      //     </UncontrolledTooltip>
+      //   </a>
+      // ),
     },
   ];
 
@@ -195,6 +244,13 @@ const Spaces = () => {
           toggleEditSpaceModal={toggleEditSpaceModal}
           showEditSpaceModal={showEditSpaceModal}
           rowData={selectedRow}
+        />
+      )}
+      {selectedRowQR && (
+        <QRmodal
+          info={selectedRowQR}
+          showQRCode={showQRCode}
+          toggleQRModal={() => setShowQRCode(!showQRCode)}
         />
       )}
     </>

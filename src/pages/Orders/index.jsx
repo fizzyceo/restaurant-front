@@ -17,7 +17,7 @@ import { useOrderStore } from "../../stores/Orders";
 const Orders = () => {
   const title = "BASSEER | OrderS";
   const [totalRows, setTotalRows] = useState(0);
-
+  const [orderList, setOrderList] = useState([]);
   document.title = title; // API Call
   const { getOrders, isLoading, orders, deleteOrder } = useOrderStore(
     (state) => state
@@ -36,8 +36,16 @@ const Orders = () => {
 
   useEffect(() => {
     console.log(orders);
+    let organizedOrders = orders.flatMap((order) =>
+      order.order_items.map((item) => ({
+        ...item,
+        ...order,
+      }))
+    );
+    console.log(organizedOrders);
 
-    setTotalRows(orders?.length || 0);
+    setOrderList(organizedOrders);
+    setTotalRows(organizedOrders?.length || 0);
   }, [orders]);
   const columns = [
     {
@@ -76,57 +84,46 @@ const Orders = () => {
         </div>
       ),
     },
+    // {
+    //   name: t("User ID"),
+    //   // width: "100px",
+    //   selector: (row) => row?.userId,
+    //   sortable: true,
+    //   wrap: true,
+    //   cell: (row) => (
+    //     <div className="d-flex flex-row justify-content-center align-items-center gap-2">
+    //       <span>{row?.user_id}</span>
+    //     </div>
+    //   ),
+    // },
     {
-      name: t("User ID"),
+      name: t("Quantity"),
       // width: "100px",
-      selector: (row) => row?.user_id,
+      selector: (row) => row?.quantity,
       sortable: true,
       wrap: true,
       cell: (row) => (
         <div className="d-flex flex-row justify-content-center align-items-center gap-2">
-          <span>{row?.user_id}</span>
+          <span>{row?.quantity}</span>
         </div>
       ),
     },
+
     {
-      name: t("Table Number"),
+      name: t("Item"),
       // width: "100px",
-      selector: (row) => row?.table_number,
+      selector: (row) => row?.menu_item?.title,
       sortable: true,
       wrap: true,
       cell: (row) => (
         <div className="d-flex flex-row justify-content-center align-items-center gap-2">
-          <span>{row?.table_number}</span>
+          <img
+            src={row?.menu_item?.item_images[0].image_url}
+            width={48}
+            alt=""
+          />
+          <span>{row?.menu_item?.title}</span>
         </div>
-      ),
-    },
-    {
-      name: t("Items"),
-      // width: "95px",
-      // selector: (row) => row?.status,
-      sortable: true,
-      wrap: true,
-      cell: (row) => (
-        <a
-          href={`/order-items/${row?.order_id}`}
-          className="cursor-pointer"
-          id={`anchor-${row?.order_id}`}
-        >
-          <span
-            style={{ fontSize: "14px" }}
-            className={`badge bg-soft-info cursor-pointer text-success text-uppercase`}
-          >
-            <i className="ri-external-link-line"></i>
-            Check
-          </span>
-          <UncontrolledTooltip
-            placement="top"
-            target={`anchor-${row?.order_id}`}
-          >
-            {" "}
-            check Associated Items
-          </UncontrolledTooltip>
-        </a>
       ),
     },
   ];
@@ -167,13 +164,13 @@ const Orders = () => {
     <>
       <DataTableBase
         tableTitle={"ORDERS"}
-        data={orders}
+        data={orderList}
         columns={columns}
         loading={isLoading}
         paginationTotalRows={totalRows}
         onChangePage={onChangePage}
         // onChangeRowsPerPage={onChangeRowsPerPage}
-        onHeaderAddBtnClick={toggleAddOrderModal}
+        // onHeaderAddBtnClick={toggleAddOrderModal}
         onHeaderDeleteBtnClick={() => {
           alert("Soon");
         }}
@@ -181,9 +178,9 @@ const Orders = () => {
         // onRowDeleteBtnClick={toggleDeleteOrderModal}
         onSearchIconClick={searchHandler}
         actionColWidth="100px"
-        showSearch={true}
-        showSubHeader={true}
-        showActionButtons={true}
+        // showSearch={true}
+        // showSubHeader={true}
+        // showActionButtons={true}
         customActionBtns={(row) => (
           <>
             <button

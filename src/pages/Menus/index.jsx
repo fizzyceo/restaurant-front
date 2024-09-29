@@ -14,6 +14,8 @@ import AddMenu from "./Components/AddMenu";
 import EditMenu from "./Components/EditMenu";
 import { useLocation } from "react-router-dom";
 import { useConfirmDialogStore } from "../../stores/Modal/ConfirmDialogStore";
+import { QRCode } from "react-qrcode-logo";
+
 const Menu = () => {
   const title = "BASSEER | MENUS";
   const [totalRows, setTotalRows] = useState(0);
@@ -132,6 +134,7 @@ const Menu = () => {
         </a>
       ),
     },
+ 
   ];
 
   const searchHandler = (searchText) => {

@@ -76,13 +76,14 @@ const ShowToken = ({
           <div className="token-display  d-flex align-items-center justify-content-between ">
             <Input
               name="token"
-              className="form-control rounded-pill w-75"
+              className="form-control rounded-pill rounded-end w-75"
               placeholder="Enter token"
               type="token"
               value={token || ""}
             />
             <Button
               color="primary"
+              className=" rounded-pill rounded-start "
               onClick={regenerateToken}
               disabled={isRegenerating}
             >

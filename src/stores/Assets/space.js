@@ -74,12 +74,31 @@ export const useSpaceStore = create((set, get) => ({
         return;
       }
       const accessToken = await tokenHelper.getToken();
+
+      // Fetch data from the existing endpoint
       let response = await axiosHelper.get(`/site/${siteID}/spaces`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
-      // console.log(response.data);
-      set({ spaces: response, isLoading: false });
+      // Fetch data from the new endpoint
+      let newResponse = await axiosHelper.get(
+        "https://basseer-internship-backend-davh.onrender.com/menu/links/a"
+      );
+
+      // Combine results based on space_id
+      const combinedSpaces = response.map((space) => {
+        // Find matching item in the new response
+        const matchingItem = newResponse.find(
+          (item) => item?.space_id === space?.space_id
+        );
+
+        // If a match is found, merge the objects
+        return matchingItem ? { ...space, ...matchingItem } : space;
+      });
+      console.log(combinedSpaces);
+
+      // Update state with combined results
+      set({ spaces: combinedSpaces, isLoading: false });
     } catch (e) {
       console.log(e);
     } finally {
