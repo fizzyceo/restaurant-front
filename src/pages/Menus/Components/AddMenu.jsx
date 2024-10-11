@@ -21,11 +21,13 @@ const AddMenu = ({ showAddMenuModal, toggleAddMenuModal }) => {
   const formik = useFormik({
     initialValues: {
       name: "",
+      name_ar: "",
       ask_for_table: false,
       ask_for_name: true,
     },
     validationSchema: Yup.object({
       name: Yup.string().required(t("Required")),
+      name_ar: Yup.string().required(t("Required")),
       ask_for_table: Yup.boolean().required(t("Required")),
       ask_for_name: Yup.boolean().required(t("Required")),
     }),
@@ -35,6 +37,7 @@ const AddMenu = ({ showAddMenuModal, toggleAddMenuModal }) => {
       // Prepare JSON object
       const json = {
         name: values.name,
+        name_ar: values.name_ar,
         ask_for_table: values.ask_for_table,
         ask_for_name: values.ask_for_name,
       };
@@ -63,6 +66,13 @@ const AddMenu = ({ showAddMenuModal, toggleAddMenuModal }) => {
               {RenderFormikInput(formik, {
                 fieldName: "name",
                 label: "Menu Name",
+                fullWidth: true,
+              })}
+            </div>
+            <div className="flex-fill mb-2 w-100">
+              {RenderFormikInput(formik, {
+                fieldName: "name_ar",
+                label: "Menu Name (AR)",
                 fullWidth: true,
               })}
             </div>

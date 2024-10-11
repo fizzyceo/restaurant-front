@@ -50,6 +50,7 @@ const EditItem = ({ rowData, showEditItemModal, toggleEditItemModal }) => {
       // Set initial values if rowData changes
       formik.setValues({
         title: rowData?.title || "",
+        title_ar: rowData?.title_ar || "",
         description: rowData?.description || "",
         price: rowData?.price || "",
         available: rowData?.available,
@@ -62,6 +63,7 @@ const EditItem = ({ rowData, showEditItemModal, toggleEditItemModal }) => {
   const formik = useFormik({
     initialValues: {
       title: rowData?.title || "",
+      title_ar: rowData?.title_ar || "",
       description: rowData?.description || "",
       price: rowData?.price || "",
       available: rowData?.available,
@@ -70,6 +72,7 @@ const EditItem = ({ rowData, showEditItemModal, toggleEditItemModal }) => {
     },
     validationSchema: Yup.object({
       title: Yup.string().optional(),
+      title_ar: Yup.string().optional(),
       description: Yup.string().optional(),
       price: Yup.number().optional(),
       available: Yup.boolean().optional(),
@@ -81,6 +84,7 @@ const EditItem = ({ rowData, showEditItemModal, toggleEditItemModal }) => {
       // Create a JSON object directly from values
       const json = {
         title: values.title,
+        title_ar: values.title_ar,
         description: values.description,
         price: values.price || 0,
         available: values.available,
@@ -162,6 +166,15 @@ const EditItem = ({ rowData, showEditItemModal, toggleEditItemModal }) => {
             {...formik.getFieldProps("title")}
             invalid={formik.touched.title && Boolean(formik.errors.title)}
             placeholder={t("Enter item title")}
+          />
+          <Label for="title_ar">{t("Title")}</Label>
+          <Input
+            type="text"
+            id="title_ar"
+            name="title_ar"
+            {...formik.getFieldProps("title_ar")}
+            invalid={formik.touched.title_ar && Boolean(formik.errors.title_ar)}
+            placeholder={t("Enter item title_ar")}
           />
           <Label for="description">{t("Description")}</Label>
           <Input

@@ -23,6 +23,7 @@ const AddItem = ({ menuId, showAddItemModal, toggleAddItemModal }) => {
   const formik = useFormik({
     initialValues: {
       title: "",
+      title_ar: "",
       description: "",
       price: "",
       available: false,
@@ -31,6 +32,7 @@ const AddItem = ({ menuId, showAddItemModal, toggleAddItemModal }) => {
     },
     validationSchema: Yup.object({
       title: Yup.string().required(t("Required")),
+      title_ar: Yup.string().required(t("Required")),
       description: Yup.string().optional(),
       price: Yup.number().optional(),
       available: Yup.boolean().required(t("Required")),
@@ -44,6 +46,7 @@ const AddItem = ({ menuId, showAddItemModal, toggleAddItemModal }) => {
       // Prepare formData
       const formData = new FormData();
       formData.append("title", values.title);
+      formData.append("title_ar", values.title_ar);
       formData.append("description", values.description || "");
       formData.append("price", values.price || 0);
       formData.append("available", values.available);
@@ -71,6 +74,7 @@ const AddItem = ({ menuId, showAddItemModal, toggleAddItemModal }) => {
   });
   const fieldsToRender = [
     { fieldName: "title", label: "Title", fullWidth: true },
+    { fieldName: "title_ar", label: "Title (AR)", fullWidth: true },
     {
       fieldName: "description",
       label: "Description",

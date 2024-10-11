@@ -21,14 +21,12 @@ import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
-import logoLight from "../../assets/easyvam/logo-light.png";
-import logoSm from "../../assets/easyvam/logo-sm-1.png";
-
+import logoLight from "../../assets/teaboy/logo-dark.png";
 import withRouter from "../../Components/Common/withRouter";
 import { useAuth } from "../../stores/Auth/Auth";
 
 const Login = (props) => {
-  document.title = "BASSEER EASYVAM";
+  document.title = "BASSEER CLICKORDER";
 
   const login = useAuth((state) => state.login);
   const error = useAuth((state) => state.error);
@@ -70,7 +68,7 @@ const Login = (props) => {
                     </Link>
                   </div>
                   <p className="mt-3 fs-15 fw-medium">
-                    Improving the management of vehicules
+                    Improving the management Orders
                   </p>
                 </div>
               </Col>
@@ -83,7 +81,7 @@ const Login = (props) => {
                     <div className="text-center mt-2">
                       <h5 className="text-primary">Welcome Back !</h5>
                       <p className="text-muted">
-                        Sign in to continue to EasyVAM.
+                        Manage your orders with ClickOrder.
                       </p>
                     </div>
                     {errorMsg && errorMsg ? (

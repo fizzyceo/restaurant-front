@@ -95,13 +95,19 @@ const Spaces = () => {
     },
     {
       name: t("Name (AR)"),
-      selector: (row) => row?.nameAR,
+      selector: (row) => row?.name_ar,
       sortable: true,
       wrap: true,
     },
     {
       name: t("Type"),
       selector: (row) => row?.type,
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: t("Default LANG"),
+      selector: (row) => row?.default_lang,
       sortable: true,
       wrap: true,
     },

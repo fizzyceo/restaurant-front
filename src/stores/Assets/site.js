@@ -61,7 +61,6 @@ export const useSiteStore = create((set, get) => ({
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
-      // console.log(response.data);
       set({ sites: response, isLoading: false });
       return response;
     } catch (e) {

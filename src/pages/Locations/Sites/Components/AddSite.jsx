@@ -37,7 +37,9 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
 
   const fieldsToRender = [
     { fieldName: "name", label: "Name", fullWidth: false },
+    { fieldName: "name_ar", label: "Name (AR)", fullWidth: false },
     { fieldName: "address", label: "Address", fullWidth: false },
+    { fieldName: "address_ar", label: "Address (AR)", fullWidth: false },
     {
       fieldName: "phone",
       label: "Phone",
@@ -53,7 +55,9 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
   const formik = useFormik({
     initialValues: {
       name: "",
+      name_ar: "",
       address: "",
+      address_ar: "",
       phone: "",
       latitude: "",
       longitude: "",
@@ -61,7 +65,9 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
     },
     validationSchema: Yup.object({
       name: Yup.string().required(t("Required")),
+      name_ar: Yup.string().required(t("Required")),
       address: Yup.string().required(t("Required")),
+      address_ar: Yup.string().required(t("Required")),
       phone: Yup.string().required(t("Required")),
       latitude: Yup.number().required(t("Required")),
       longitude: Yup.number().required(t("Required")),
@@ -81,7 +87,9 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
       console.log("Submitting form manually with values:", formik.values);
       const formData = new FormData();
       formData.append("name", formik.values.name);
+      formData.append("name_ar", formik.values.name_ar);
       formData.append("address", formik.values.address);
+      formData.append("address_ar", formik.values.address_ar);
       formData.append("phone", formik.values.phone);
       formData.append("latitude", formik.values.latitude);
       formData.append("longitude", formik.values.longitude);

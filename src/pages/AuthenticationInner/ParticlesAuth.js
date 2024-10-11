@@ -29,7 +29,7 @@ const ParticlesAuth = ({ children }) => {
               <div className="col-lg-12">
                 <div className="text-center">
                   <p className="mb-0 text-muted">
-                    &copy; {new Date().getFullYear()} BASSEER EasyVAM.
+                    &copy; {new Date().getFullYear()} BASSEER CLICKORDER.
                   </p>
                 </div>
               </div>

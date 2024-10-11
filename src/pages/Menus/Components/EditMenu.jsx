@@ -33,6 +33,7 @@ const EditMenu = ({ rowData, showEditMenuModal, toggleEditMenuModal }) => {
       // Set initial values if rowData changes
       formik.setValues({
         name: rowData?.name || "",
+        name_ar: rowData?.name_ar || "",
         ask_for_table: rowData?.ask_for_table,
         ask_for_name: rowData?.ask_for_name,
       });
@@ -42,17 +43,20 @@ const EditMenu = ({ rowData, showEditMenuModal, toggleEditMenuModal }) => {
   const formik = useFormik({
     initialValues: {
       name: rowData?.name || "",
+      name_ar: rowData?.name_ar || "",
       ask_for_table: rowData?.ask_for_table,
       ask_for_name: rowData?.ask_for_name,
     },
     validationSchema: Yup.object({
       name: Yup.string().required(t("Required")),
+      name_ar: Yup.string().required(t("Required")),
       ask_for_table: Yup.boolean(),
       ask_for_name: Yup.boolean(),
     }),
     onSubmit: async (values) => {
       const json = {
         name: values.name,
+        name_ar: values.name_ar,
         ask_for_table: values.ask_for_table,
         ask_for_name: values.ask_for_name,
       };
@@ -105,6 +109,16 @@ const EditMenu = ({ rowData, showEditMenuModal, toggleEditMenuModal }) => {
             invalid={formik.touched.name && Boolean(formik.errors.name)}
             placeholder={t("Enter menu name")}
           />
+          <Label for="name">{t("Menu Name (AR)")}</Label>
+          <Input
+            type="text"
+            id="name_ar"
+            name="name_ar"
+            {...formik.getFieldProps("name_ar")}
+            invalid={formik.touched.name_ar && Boolean(formik.errors.name_ar)}
+            placeholder={t("Enter menu name (ar)")}
+          />
+
           <FormControlLabel
             control={
               <Switch

@@ -80,12 +80,12 @@ const Sites = () => {
     {
       name: t("Name (AR)"),
       // width: "100px", //row?.name
-      selector: (row) => row?.name,
+      selector: (row) => row?.name_ar,
       sortable: true,
       wrap: true,
       cell: (row) => (
         <div className="d-flex flex-row justify-content-center align-items-center gap-2">
-          <span>{""}</span>
+          <span>{row?.name_ar}</span>
         </div>
       ),
     },

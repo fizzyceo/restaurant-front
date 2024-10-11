@@ -37,10 +37,14 @@ const AddSpace = ({
   const formik = useFormik({
     initialValues: {
       name: "",
+      name_ar: "",
+      default_lang: "",
       type: "",
     },
     validationSchema: Yup.object({
       name: Yup.string().required(t("Required")),
+      name_ar: Yup.string().required(t("Required")),
+      default_lang: Yup.string().optional(),
       type: Yup.string()
         .oneOf(validTypes, t("Invalid type"))
         .required(t("Required")),
@@ -48,6 +52,8 @@ const AddSpace = ({
     onSubmit: async (values) => {
       const spaceData = {
         name: values.name,
+        name_ar: values.name_ar,
+        default_lang: values.default_lang,
         type: values.type,
       };
 
@@ -137,6 +143,37 @@ const AddSpace = ({
               <div className="text-danger">{formik.errors.name}</div>
             )}
           </div>
+          <div className="flex-fill mb-2">
+            <Label for="name_ar">{t("Name (AR)")}</Label>
+            <input
+              type="text"
+              id="name_ar"
+              name="name_ar"
+              onChange={formik.handleChange}
+              value={formik.values.name_ar}
+              className="form-control"
+            />
+            {formik.errors.name_ar && (
+              <div className="text-danger">{formik.errors.name_ar}</div>
+            )}
+          </div>
+          <div className="flex-fill mb-2">
+            <Label for="default_lang">{t("Default Language")}</Label>
+            <select
+              id="default_lang"
+              name="default_lang"
+              onChange={formik.handleChange}
+              value={formik.values.default_lang}
+              className="form-control"
+            >
+              <option value="EN">English</option>
+              <option value="AR">Arabic</option>
+            </select>
+            {formik.errors.default_lang && (
+              <div className="text-danger">{formik.errors.default_lang}</div>
+            )}
+          </div>
+
           <div className="flex-fill mb-2">
             <Label for="type">{t("Type")}</Label>
             <select

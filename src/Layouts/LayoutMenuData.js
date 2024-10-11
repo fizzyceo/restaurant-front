@@ -105,13 +105,18 @@ const Navdata = () => {
           link: "/kitchens",
           parentId: "Assets",
         },
-         {
+        {
           id: "Spaces",
           label: "Spaces",
           link: "/spaces",
           parentId: "Assets",
         },
-       
+        {
+          id: "Users",
+          label: "Users",
+          link: "/staffs",
+          parentId: "Assets",
+        },
       ],
     },
     // {
@@ -140,19 +145,19 @@ const Navdata = () => {
         updateIconSidebar(e);
       },
     },
-    {
-      id: "Staffs",
-      label: "Staffs",
-      icon: "ri-group-line",
-      link: "/staffs",
-      stateVariables: isStaffs,
-      click: function (e) {
-        e.preventDefault();
-        setIsStaffs(!isStaffs);
-        setIsCurrentState("Staffs");
-        updateIconSidebar(e);
-      },
-    },
+    // {
+    //   id: "Staffs",
+    //   label: "Staffs",
+    //   icon: "ri-group-line",
+    //   link: "/staffs",
+    //   stateVariables: isStaffs,
+    //   click: function (e) {
+    //     e.preventDefault();
+    //     setIsStaffs(!isStaffs);
+    //     setIsCurrentState("Staffs");
+    //     updateIconSidebar(e);
+    //   },
+    // },
     {
       id: "Settings",
       label: "Settings",

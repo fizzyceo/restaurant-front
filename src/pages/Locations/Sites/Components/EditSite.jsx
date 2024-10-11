@@ -26,7 +26,11 @@ const customIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-export const EditSite = ({ rowData, showEditSiteModal, toggleEditSiteModal }) => {
+export const EditSite = ({
+  rowData,
+  showEditSiteModal,
+  toggleEditSiteModal,
+}) => {
   const [image, setImage] = useState(null);
   const [markerPosition, setMarkerPosition] = useState({
     lat: -3.745,
@@ -37,7 +41,9 @@ export const EditSite = ({ rowData, showEditSiteModal, toggleEditSiteModal }) =>
 
   const fieldsToRender = [
     { fieldName: "name", label: "Name", fullWidth: false },
+    { fieldName: "name_ar", label: "Name (AR)", fullWidth: false },
     { fieldName: "address", label: "Address", fullWidth: false },
+    { fieldName: "address_ar", label: "Address (AR)", fullWidth: false },
     {
       fieldName: "phone",
       label: "Phone",
@@ -55,7 +61,9 @@ export const EditSite = ({ rowData, showEditSiteModal, toggleEditSiteModal }) =>
       site_id: rowData?.site_id || "", // Include the id in the initial values
 
       name: rowData?.name || "",
+      name_ar: rowData?.name_ar || "",
       address: rowData?.address || "",
+      address_ar: rowData?.address || "",
       phone: rowData?.phone || "",
       lat: rowData?.lat || "",
       lon: rowData?.lon || "",
@@ -63,7 +71,9 @@ export const EditSite = ({ rowData, showEditSiteModal, toggleEditSiteModal }) =>
     },
     validationSchema: Yup.object({
       name: Yup.string().optional(),
+      name_ar: Yup.string().optional(),
       address: Yup.string().optional(),
+      address_ar: Yup.string().optional(),
       phone: Yup.string().optional(),
       lat: Yup.number().optional(),
       lon: Yup.number().optional(),
@@ -78,7 +88,7 @@ export const EditSite = ({ rowData, showEditSiteModal, toggleEditSiteModal }) =>
   // const handleSubmit = async (e) => {
   //   e.preventDefault();
   //   console.log(formik.values);
-    
+
   //   if (formik.isValid) {
   //     console.log("Submitting form manually with values:", formik.values);
   //         const formData = new FormData();
@@ -90,13 +100,13 @@ export const EditSite = ({ rowData, showEditSiteModal, toggleEditSiteModal }) =>
   //     formData.append("file",  formik.values.file); // Note: Ensure image is a file object, not base64 string
 
   //     // Debug log to see formData contents
-    
+
   //     // Call the API with formData
   //     const result = await updateSite(formik.values.site_id,formData);
   //       formik.resetForm();
   //       toggleEditSiteModal();
   //       resetStates();
-      
+
   //     // Your submission logic here
   //   } else {
   //     console.log("Form is invalid or not dirty");
@@ -104,53 +114,57 @@ export const EditSite = ({ rowData, showEditSiteModal, toggleEditSiteModal }) =>
   // };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  console.log(formik.values);
+    e.preventDefault();
+    console.log(formik.values);
 
-  if (formik.isValid) {
-    const formData = new FormData();
+    if (formik.isValid) {
+      const formData = new FormData();
 
-    // Conditionally append values that are not null or empty
-    if (formik.values.name) {
-      formData.append("name", formik.values.name);
-    }
-    if (formik.values.address) {
-      formData.append("address", formik.values.address);
-    }
-    if (formik.values.phone) {
-      formData.append("phone", formik.values.phone);
-    }
-    if (formik.values.lat) {
-      formData.append("lat", String(formik.values.lat)); // Convert to string if necessary
-    }
-    if (formik.values.lon) {
-      formData.append("lon", String(formik.values.lon)); // Convert to string if necessary
-    }
-    if (formik.values.file) {
-      formData.append("file", formik.values.file); // Ensure this is a File object
-    }
+      // Conditionally append values that are not null or empty
+      if (formik.values.name) {
+        formData.append("name", formik.values.name);
+      }
+      if (formik.values.name_ar) {
+        formData.append("name_ar", formik.values.name_ar);
+      }
+      if (formik.values.address) {
+        formData.append("address", formik.values.address);
+      }
+      if (formik.values.address_ar) {
+        formData.append("address_ar", formik.values.address_ar);
+      }
+      if (formik.values.phone) {
+        formData.append("phone", formik.values.phone);
+      }
+      if (formik.values.lat) {
+        formData.append("lat", String(formik.values.lat)); // Convert to string if necessary
+      }
+      if (formik.values.lon) {
+        formData.append("lon", String(formik.values.lon)); // Convert to string if necessary
+      }
+      if (formik.values.file) {
+        formData.append("file", formik.values.file); // Ensure this is a File object
+      }
 
-    // Log FormData contents for debugging
-  for (let pair of formData.entries()) {
+      // Log FormData contents for debugging
+      for (let pair of formData.entries()) {
         console.log(`${pair[0]}: ${pair[1]}`);
       }
-      
 
-    try {
-      // Call updateSite with id and formData
-      await updateSite(formik.values.site_id, formData);
-      formik.resetForm();
-      resetStates();
-      toggleEditSiteModal();
-    } catch (error) {
-      console.error("Error updating site:", error);
+      try {
+        // Call updateSite with id and formData
+        await updateSite(formik.values.site_id, formData);
+        formik.resetForm();
+        resetStates();
+        toggleEditSiteModal();
+      } catch (error) {
+        console.error("Error updating site:", error);
+      }
+    } else {
+      console.log("Form is invalid or not dirty");
     }
-  } else {
-    console.log("Form is invalid or not dirty");
-  }
-};
+  };
 
-   
   const resetStates = () => {
     setMarkerPosition({ lat: -3.745, lon: -38.523 });
   };
@@ -192,11 +206,12 @@ export const EditSite = ({ rowData, showEditSiteModal, toggleEditSiteModal }) =>
     const file = e.target.files[0];
     formik.setFieldValue("file", file); // Set the file object in Formik
   };
-  
 
   return (
     <Modal isOpen={showEditSiteModal} toggle={toggleEditSiteModal}>
-      <ModalHeader toggle={toggleEditSiteModal}>{t("Modify Site: ", rowData?.name)}</ModalHeader>
+      <ModalHeader toggle={toggleEditSiteModal}>
+        {t("Modify Site: ", rowData?.name, " - ", rowData?.name_ar)}
+      </ModalHeader>
       <ModalBody>
         <form onSubmit={handleSubmit} className="d-flex flex-wrap">
           {fieldsToRender.map((field) => (
@@ -234,31 +249,24 @@ export const EditSite = ({ rowData, showEditSiteModal, toggleEditSiteModal }) =>
           </MapContainer>
 
           <div className="d-flex flex-row align-items-center justify-content-center gap-2 mt-2">
-          <Button
-            type="submit"
-            color="success"
-            disabled={isLoading}
-          >
-            {isLoading ? <Spinner size={"sm"} /> : <span>{t("Edit")}</span>}
-          </Button>
-          <Button
-          color="danger"
-          onClick={() => {
-            toggleEditSiteModal();
-            formik.resetForm();
-            resetStates();
-          }}
-          disabled={isLoading}
-        >
-          {t("Cancel")}
-        </Button>
+            <Button type="submit" color="success" disabled={isLoading}>
+              {isLoading ? <Spinner size={"sm"} /> : <span>{t("Edit")}</span>}
+            </Button>
+            <Button
+              color="danger"
+              onClick={() => {
+                toggleEditSiteModal();
+                formik.resetForm();
+                resetStates();
+              }}
+              disabled={isLoading}
+            >
+              {t("Cancel")}
+            </Button>
           </div>
-        
         </form>
       </ModalBody>
-      <ModalFooter>
-       
-      </ModalFooter>
+      <ModalFooter></ModalFooter>
     </Modal>
   );
 };

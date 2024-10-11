@@ -64,12 +64,12 @@ const Menu = () => {
     },
     {
       name: t("Title (AR)"),
-      selector: (row) => row?.title,
+      selector: (row) => row?.title_ar,
       sortable: true,
       wrap: true,
       cell: (row) => (
         <div className="d-flex flex-row justify-content-center align-items-center gap-2">
-          <span>{""}</span>
+          <span>{row?.title_ar}</span>
         </div>
       ),
     },
