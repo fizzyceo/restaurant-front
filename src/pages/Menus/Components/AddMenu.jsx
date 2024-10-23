@@ -27,7 +27,7 @@ const AddMenu = ({ showAddMenuModal, toggleAddMenuModal }) => {
     },
     validationSchema: Yup.object({
       name: Yup.string().required(t("Required")),
-      name_ar: Yup.string().required(t("Required")),
+      name_ar: Yup.string().optional(),
       ask_for_table: Yup.boolean().required(t("Required")),
       ask_for_name: Yup.boolean().required(t("Required")),
     }),

@@ -15,7 +15,7 @@ const QRmodal = ({ info, showQRCode, toggleQRModal }) => {
           {info?.encrypted ? (
             <>
               <QRCode
-                value={`https://qa.teaboy.io/menu/${info?.encrypted}`}
+                value={`https://prod.teaboy.io/menu/${info?.encrypted}`}
                 size={300}
                 eyeRadius={10}
                 ecLevel="H"

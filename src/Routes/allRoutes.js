@@ -32,12 +32,14 @@ import {
   Settings,
   Dashboard,
 } from "../pages";
+import Links from "../pages/Locations/Links";
 const authProtectedRoutes = [
   { path: "/dashboard", component: <Dashboard /> },
 
   { path: "/staffs", component: <StaffsPage /> },
   { path: "/orders", component: <Orders /> },
   { path: "/menus", component: <Menus /> },
+  { path: "/links", component: <Links /> },
   { path: "/menu-items/:menuid", component: <MenuItems /> },
   { path: "/sites", component: <Sites /> },
   { path: "/spaces", component: <Spaces /> },

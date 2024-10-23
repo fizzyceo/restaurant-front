@@ -21,12 +21,12 @@ import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
-import logoLight from "../../assets/teaboy/logo-dark.png";
+import logoLight from "../../assets/teaboy/logo-light.png";
 import withRouter from "../../Components/Common/withRouter";
 import { useAuth } from "../../stores/Auth/Auth";
 
 const Login = (props) => {
-  document.title = "BASSEER CLICKORDER";
+  document.title = "ClickOrder Admin";
 
   const login = useAuth((state) => state.login);
   const error = useAuth((state) => state.error);
@@ -68,7 +68,7 @@ const Login = (props) => {
                     </Link>
                   </div>
                   <p className="mt-3 fs-15 fw-medium">
-                    Improving the management Orders
+                    Elevating next level hospitality.
                   </p>
                 </div>
               </Col>
@@ -81,7 +81,7 @@ const Login = (props) => {
                     <div className="text-center mt-2">
                       <h5 className="text-primary">Welcome Back !</h5>
                       <p className="text-muted">
-                        Manage your orders with ClickOrder.
+                        Manage your Clickorder account and assets{" "}
                       </p>
                     </div>
                     {errorMsg && errorMsg ? (

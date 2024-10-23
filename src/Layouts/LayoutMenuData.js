@@ -112,6 +112,12 @@ const Navdata = () => {
           parentId: "Assets",
         },
         {
+          id: "Links",
+          label: "Links",
+          link: "/links",
+          parentId: "Assets",
+        },
+        {
           id: "Users",
           label: "Users",
           link: "/staffs",

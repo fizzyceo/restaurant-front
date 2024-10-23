@@ -81,9 +81,7 @@ export const useSpaceStore = create((set, get) => ({
       });
 
       // Fetch data from the new endpoint
-      let newResponse = await axiosHelper.get(
-        "https://basseer-internship-backend-davh.onrender.com/menu/links/a"
-      );
+      let newResponse = await axiosHelper.get("/menu/links/a");
 
       // Combine results based on space_id
       const combinedSpaces = response.map((space) => {

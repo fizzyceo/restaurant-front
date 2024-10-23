@@ -167,7 +167,7 @@ const EditItem = ({ rowData, showEditItemModal, toggleEditItemModal }) => {
             invalid={formik.touched.title && Boolean(formik.errors.title)}
             placeholder={t("Enter item title")}
           />
-          <Label for="title_ar">{t("Title")}</Label>
+          <Label for="title_ar">{t("Title (AR)")}</Label>
           <Input
             type="text"
             id="title_ar"

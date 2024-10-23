@@ -18,11 +18,10 @@ import { useConfirmDialogStore } from "../../stores/Modal/ConfirmDialogStore";
 import { useMenuItemsStore } from "../../stores/Assets/menuItems";
 import { OptionsModal } from "./Components/OptionsModal";
 const Menu = () => {
-  const title = "BASSEER | ITEMS";
   const [totalRows, setTotalRows] = useState(0);
   const { menuid } = useParams();
 
-  document.title = title; // API Call
+  document.title = "ClickOrder Admin";
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(null);
 
@@ -51,6 +50,12 @@ const Menu = () => {
   };
 
   const columns = [
+    {
+      name: t("ID"),
+      selector: (row) => row?.menu_item_id,
+      sortable: true,
+      wrap: true,
+    },
     {
       name: t("Title"),
       selector: (row) => row?.title,

@@ -3,8 +3,8 @@ import axios from "axios";
 import { tokenHelper } from "./token_helper";
 import { toast } from "react-toastify";
 
-const baseURL = "https://qa.teaboy.io/api/"; //https://qa.teaboy.io/api/ https://basseer-internship-backend-davh.onrender.com/
-//'http://localhost:5002'
+const baseURL = "http://localhost:8000"; //https://qa.teaboy.io/api/ https://basseer-internship-backend-davh.onrender.com/
+//'http://localhost:8000'
 // Create axios Instance
 export const axiosHelper = axios.create();
 

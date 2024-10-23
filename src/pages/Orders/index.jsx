@@ -17,7 +17,6 @@ import Flatpickr from "react-flatpickr";
 import { useConfirmDialogStore } from "../../stores/Modal/ConfirmDialogStore";
 import { useOrderStore } from "../../stores/Orders";
 const Orders = () => {
-  const title = "BASSEER | OrderS";
   const [totalRows, setTotalRows] = useState(0);
   const [orderList, setOrderList] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("ALL");
@@ -28,7 +27,7 @@ const Orders = () => {
   ); // 24 hours ago
   const [endDate, setEndDate] = useState(new Date()); // current time
 
-  document.title = title; // API Call
+  document.title = "ClickOrder Admin";
   const { getOrders, isLoading, orders, deleteOrder } = useOrderStore(
     (state) => state
   );

@@ -38,8 +38,8 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
   const fieldsToRender = [
     { fieldName: "name", label: "Name", fullWidth: false },
     { fieldName: "name_ar", label: "Name (AR)", fullWidth: false },
-    { fieldName: "address", label: "Address", fullWidth: false },
-    { fieldName: "address_ar", label: "Address (AR)", fullWidth: false },
+    { fieldName: "address", label: "City", fullWidth: false },
+    { fieldName: "address_ar", label: "City (AR)", fullWidth: false },
     {
       fieldName: "phone",
       label: "Phone",
@@ -65,9 +65,9 @@ export const AddSite = ({ showAddSiteModal, toggleAddSiteModal }) => {
     },
     validationSchema: Yup.object({
       name: Yup.string().required(t("Required")),
-      name_ar: Yup.string().required(t("Required")),
+      name_ar: Yup.string().optional(),
       address: Yup.string().required(t("Required")),
-      address_ar: Yup.string().required(t("Required")),
+      address_ar: Yup.string().optional(),
       phone: Yup.string().required(t("Required")),
       latitude: Yup.number().required(t("Required")),
       longitude: Yup.number().required(t("Required")),

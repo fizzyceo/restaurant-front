@@ -32,7 +32,7 @@ const AddItem = ({ menuId, showAddItemModal, toggleAddItemModal }) => {
     },
     validationSchema: Yup.object({
       title: Yup.string().required(t("Required")),
-      title_ar: Yup.string().required(t("Required")),
+      title_ar: Yup.string().optional(),
       description: Yup.string().optional(),
       price: Yup.number().optional(),
       available: Yup.boolean().required(t("Required")),

@@ -15,10 +15,9 @@ import { EditSite } from "./Components/EditSite";
 import { useLocation } from "react-router-dom";
 import { useConfirmDialogStore } from "../../../stores/Modal/ConfirmDialogStore";
 const Sites = () => {
-  const title = "BASSEER | SITES";
   const [totalRows, setTotalRows] = useState(0);
 
-  document.title = title; // API Call
+  document.title = "ClickOrder Admin";
   const location = useLocation();
   const siteId = new URLSearchParams(location.search).get("siteId");
   const { getSites, isLoading, sites, deleteSite } = useSiteStore(
@@ -90,16 +89,16 @@ const Sites = () => {
       ),
     },
     {
-      name: t("location"),
+      name: t("City"),
       // width: "100px",
       selector: (row) => row?.address,
       sortable: true,
       wrap: true,
     },
     {
-      name: t("location (AR)"),
+      name: t("City (AR)"),
       // width: "100px",
-      selector: (row) => row?.address,
+      selector: (row) => row?.address_ar,
       sortable: true,
       wrap: true,
     },

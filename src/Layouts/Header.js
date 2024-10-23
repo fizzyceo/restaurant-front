@@ -4,8 +4,8 @@ import { Dropdown, DropdownMenu, DropdownToggle, Form } from "reactstrap";
 
 //import images
 import logoSm from "../assets/teaboy/logo.png";
-import logoDark from "../assets/teaboy/logo.png";
-import logoLight from "../assets/teaboy/logo.png";
+import logoDark from "../assets/teaboy/logo-dark.png";
+import logoLight from "../assets/teaboy/logo-light.png";
 
 //import Components
 // import SearchOption from '../Components/Common/SearchOption';

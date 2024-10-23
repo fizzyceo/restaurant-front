@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import SimpleBar from "simplebar-react";
 //import logo
 import logoSm from "../assets/teaboy/logo.png";
-import logoDark from "../assets/teaboy/logo.png";
-import logoLight from "../assets/teaboy/logo.png";
+import logoSmLight from "../assets/teaboy/logo-sm-light.png";
+import logoDark from "../assets/teaboy/logo-dark.png";
+import logoLight from "../assets/teaboy/logo-light.png";
 
 //Import Components
 import VerticalLayout from "./VerticalLayouts";
@@ -51,16 +52,16 @@ const Sidebar = ({ layoutType }) => {
               <img src={logoSm} alt="" height="48" />
             </span>
             <span className="logo-lg">
-              <img src={logoDark} alt="" height="48" />
+              <img src={logoDark} alt="" height="28" />
             </span>
           </Link>
 
           <Link to="/" className="logo logo-light">
             <span className="logo-sm">
-              <img src={logoSm} alt="" height="48" />
+              <img src={logoSmLight} alt="" height="48" />
             </span>
             <span className="logo-lg">
-              <img src={logoLight} alt="" height="48" />
+              <img src={logoLight} alt="" height="28" />
             </span>
           </Link>
           <button

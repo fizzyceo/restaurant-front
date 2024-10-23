@@ -22,7 +22,7 @@ import { useAuth } from "../../stores";
 import withRouter from "../../Components/Common/withRouter";
 
 const ResetPassword = (props) => {
-  document.title = "Create New Password | BASSEER WILDFIRE ";
+  document.title = "ClickOrder Admin";
 
   const [passwordShow, setPasswordShow] = useState(false);
   const [confrimPasswordShow, setConfrimPasswordShow] = useState(false);

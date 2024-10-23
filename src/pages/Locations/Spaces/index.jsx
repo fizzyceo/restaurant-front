@@ -82,11 +82,19 @@ const Spaces = () => {
     fetchKitchens();
   }, [getSites, location.search, getSpaces]);
   const handleQRClick = (row) => {
+    console.log(row);
+
     setselectedRowQR(row);
 
     setShowQRCode(!showQRCode);
   };
   const columns = [
+    {
+      name: t("ID"),
+      selector: (row) => row?.space_id,
+      sortable: true,
+      wrap: true,
+    },
     {
       name: t("Name"),
       selector: (row) => row?.name,

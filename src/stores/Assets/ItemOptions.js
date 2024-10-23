@@ -23,6 +23,7 @@ export const useOptionStore = create((set, get) => ({
     try {
       // Get the access token
       const accessToken = await tokenHelper.getToken();
+      console.log(body);
 
       // Post the site creation request
       const response = await axiosHelper.post(
@@ -33,14 +34,6 @@ export const useOptionStore = create((set, get) => ({
 
       console.log(response);
 
-      //   // Link the site to the user
-      //   await axiosHelper.patch(
-      //     `/user/link-site?siteId=${response.site_id}`,
-      //     { },
-      //     { headers: { Authorization: `Bearer ${accessToken}` } }
-      //   );
-
-      //   // Refresh the list of sites
       await get().getOptions(id);
     } catch (e) {
       console.log(e);
@@ -48,14 +41,54 @@ export const useOptionStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
-  getOptions: async (id) => {
-    // set({ filters: filterNonFalseValues(filters) });
-    // console.log(filterNonFalseValues(filters));
-    // const filtering = {
-    //   // search: filterNonFalseValues(filters) || "",
-    //   ...filters,
+  updateOption: async (id, body, idoption) => {
+    set({ isLoading: true });
 
-    // };
+    try {
+      // Get the access token
+      const accessToken = await tokenHelper.getToken();
+      console.log(body);
+
+      // Post the site creation request
+      const response = await axiosHelper.put(
+        `/menu-item/${id}/options/${idoption}`,
+        body,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+
+      console.log(response);
+
+      await get().getOptions(id);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  deleteOption: async (id, idoption) => {
+    set({ isLoading: true });
+
+    try {
+      // Get the access token
+      const accessToken = await tokenHelper.getToken();
+      // Post the site creation request
+      const response = await axiosHelper.delete(
+        `/menu-item/${id}/options/${idoption}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+
+      console.log(response);
+
+      await get().getOptions(id);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  getOptions: async (id) => {
     try {
       const accessToken = await tokenHelper.getToken();
       set({ isLoading: true });

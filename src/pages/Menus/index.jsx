@@ -17,10 +17,9 @@ import { useConfirmDialogStore } from "../../stores/Modal/ConfirmDialogStore";
 import { QRCode } from "react-qrcode-logo";
 
 const Menu = () => {
-  const title = "BASSEER | MENUS";
   const [totalRows, setTotalRows] = useState(0);
 
-  document.title = title; // API Call
+  document.title = "ClickOrder Admin";
   const location = useLocation();
   const menuId = new URLSearchParams(location.search).get("menuId");
   const { getMenus, isLoading, menus, deleteMenu } = useMenuStore(

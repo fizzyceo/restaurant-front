@@ -81,7 +81,7 @@ const UserProfile = () => {
     },
   });
 
-  document.title = "Profile | BASSEER WILDFIRE";
+  document.title = "ClickOrder Admin";
   return (
     <React.Fragment>
       <div className="page-content">

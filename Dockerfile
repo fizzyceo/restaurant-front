@@ -10,6 +10,11 @@ COPY . .
 # Install dependencies (if you have a package.json file)
 RUN npm install --force
 
+
+RUN npm run build
+
+
+
 # Specify the port your application will listen on
 EXPOSE 3000
 

@@ -43,7 +43,7 @@ const AddSpace = ({
     },
     validationSchema: Yup.object({
       name: Yup.string().required(t("Required")),
-      name_ar: Yup.string().required(t("Required")),
+      name_ar: Yup.string().optional(),
       default_lang: Yup.string().optional(),
       type: Yup.string()
         .oneOf(validTypes, t("Invalid type"))

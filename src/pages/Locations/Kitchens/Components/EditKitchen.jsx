@@ -27,11 +27,13 @@ const EditKitchen = ({
   const formik = useFormik({
     initialValues: {
       name: info?.name,
+      name_ar: info?.name_ar,
       isOpen: info?.isOpen,
       isWeeklyTimingOn: info?.isWeeklyTimingOn,
     },
     validationSchema: Yup.object({
       name: Yup.string().optional(),
+      name_ar: Yup.string().optional(),
       isOpen: Yup.boolean().optional(),
       isWeeklyTimingOn: Yup.boolean().optional(),
     }),
@@ -47,6 +49,7 @@ const EditKitchen = ({
 
       let kitchenData = {
         name: values.name,
+        name_ar: values.name_ar,
         isOpen: values.isOpen,
         isWeeklyTimingOn: values.isWeeklyTimingOn,
         openingHours: values.isWeeklyTimingOn ? openingHours : [],
@@ -122,6 +125,20 @@ const EditKitchen = ({
             />
             {formik.errors.name && (
               <div className="text-danger">{formik.errors.name}</div>
+            )}
+          </div>
+          <div className="flex-fill mb-2">
+            <Label for="name_ar">{t("Name (AR)")}</Label>
+            <input
+              type="text"
+              id="name_ar"
+              name="name_ar"
+              onChange={formik.handleChange}
+              value={formik.values.name_ar}
+              className="form-control"
+            />
+            {formik.errors.name && (
+              <div className="text-danger">{formik.errors.name_ar}</div>
             )}
           </div>
 
@@ -239,7 +256,7 @@ const EditKitchen = ({
               {isLoading ? (
                 <Spinner size="sm" />
               ) : (
-                <span>{t("Add Kitchen")}</span>
+                <span>{t("Edit Kitchen")}</span>
               )}
             </Button>
             <Button

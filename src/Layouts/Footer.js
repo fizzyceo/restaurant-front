@@ -7,9 +7,7 @@ const Footer = () => {
       <footer className="footer">
         <Container fluid>
           <Row>
-            <Col sm={6}>
-              {new Date().getFullYear()} © SARL BASSEER Technology Innovation.
-            </Col>
+            <Col sm={6}>{new Date().getFullYear()} © ClickOrder.io</Col>
             <Col sm={6}>
               <div className="text-sm-end d-none d-sm-block">
                 Developed with ♥

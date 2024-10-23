@@ -29,7 +29,7 @@ const AddKitchen = ({ menuId, showAddKitchenModal, toggleAddKitchenModal }) => {
     },
     validationSchema: Yup.object({
       name: Yup.string().required(t("Required")),
-      name_ar: Yup.string().required(t("Required")),
+      name_ar: Yup.string().optional(),
       isOpen: Yup.boolean().required(t("Required")),
       isWeeklyTimingOn: Yup.boolean().required(t("Required")),
     }),

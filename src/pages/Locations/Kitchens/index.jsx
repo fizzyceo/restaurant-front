@@ -17,10 +17,9 @@ import { useConfirmDialogStore } from "../../../stores/Modal/ConfirmDialogStore"
 import { OpeningHours } from "./Components/OpeningHours";
 import ShowToken from "./Components/ShowToken";
 const Kitchens = () => {
-  const title = "BASSEER | KitchenS";
   const [totalRows, setTotalRows] = useState(0);
 
-  document.title = title; // API Call
+  document.title = "ClickOrder Admin";
   const location = useLocation();
   // const KitchenId = new URLSearchParams(location.search).get("KitchenId");
   const [showOpeningHoursModal, setshowOpeningHoursModal] = useState(false);
@@ -55,6 +54,13 @@ const Kitchens = () => {
   }, [kitchens]);
   const columns = [
     //add id column
+    {
+      name: t("ID"),
+      // width: "100px",
+      selector: (row) => row?.kitchen_id,
+      sortable: true,
+      wrap: true,
+    },
     {
       name: t("Name"),
       // width: "100px",
