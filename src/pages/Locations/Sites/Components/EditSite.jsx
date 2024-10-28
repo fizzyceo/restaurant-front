@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { t } from "i18next";
@@ -33,8 +33,8 @@ export const EditSite = ({
 }) => {
   const [image, setImage] = useState(null);
   const [markerPosition, setMarkerPosition] = useState({
-    lat: -3.745,
-    lon: -38.523,
+    lat: 25.3915064012387,
+    lon: 51.52052143438087,
   });
 
   const { updateSite, isLoading } = useSiteStore((state) => state);
@@ -42,8 +42,8 @@ export const EditSite = ({
   const fieldsToRender = [
     { fieldName: "name", label: "Name", fullWidth: false },
     { fieldName: "name_ar", label: "Name (AR)", fullWidth: false },
-    { fieldName: "address", label: "Address", fullWidth: false },
-    { fieldName: "address_ar", label: "Address (AR)", fullWidth: false },
+    { fieldName: "address", label: "City", fullWidth: false },
+    { fieldName: "address_ar", label: "City (AR)", fullWidth: false },
     {
       fieldName: "phone",
       label: "Phone",
@@ -55,7 +55,27 @@ export const EditSite = ({
     { fieldName: "lat", label: "Latitude", fullWidth: false },
     { fieldName: "lon", label: "Longitude", fullWidth: false },
   ];
+  useEffect(() => {
+    if (rowData) {
+      console.log(rowData);
 
+      // Set initial values if rowData changes
+      formik.setValues({
+        name: rowData?.name || "",
+        name_ar: rowData?.name_ar || "",
+        address: rowData?.address || "",
+        address_ar: rowData?.address_ar || "",
+        phone: rowData?.phone || "",
+        lat: rowData?.latitude || "",
+        lon: rowData?.longitude || "",
+      });
+
+      setMarkerPosition({
+        lat: rowData.latitude || 25.39,
+        lon: rowData.longitude || 51.52,
+      });
+    }
+  }, [rowData]);
   const formik = useFormik({
     initialValues: {
       site_id: rowData?.site_id || "", // Include the id in the initial values
@@ -63,10 +83,10 @@ export const EditSite = ({
       name: rowData?.name || "",
       name_ar: rowData?.name_ar || "",
       address: rowData?.address || "",
-      address_ar: rowData?.address || "",
+      address_ar: rowData?.address_ar || "",
       phone: rowData?.phone || "",
-      lat: rowData?.lat || "",
-      lon: rowData?.lon || "",
+      latitude: rowData?.latitude || "",
+      longitude: rowData?.longitude || "",
       file: null,
     },
     validationSchema: Yup.object({
@@ -75,8 +95,8 @@ export const EditSite = ({
       address: Yup.string().optional(),
       address_ar: Yup.string().optional(),
       phone: Yup.string().optional(),
-      lat: Yup.number().optional(),
-      lon: Yup.number().optional(),
+      latitude: Yup.number().optional(),
+      longitude: Yup.number().optional(),
       file: Yup.mixed().optional(),
     }),
     onSubmit: async (values) => {
@@ -84,34 +104,6 @@ export const EditSite = ({
       // Your submission logic here
     },
   });
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   console.log(formik.values);
-
-  //   if (formik.isValid) {
-  //     console.log("Submitting form manually with values:", formik.values);
-  //         const formData = new FormData();
-  //     formData.append("name", formik.values.name);
-  //     formData.append("address", formik.values.address);
-  //     formData.append("phone", formik.values.phone);
-  //     formData.append("lat", formik.values.lat);
-  //     formData.append("lon", formik.values.lon);
-  //     formData.append("file",  formik.values.file); // Note: Ensure image is a file object, not base64 string
-
-  //     // Debug log to see formData contents
-
-  //     // Call the API with formData
-  //     const result = await updateSite(formik.values.site_id,formData);
-  //       formik.resetForm();
-  //       toggleEditSiteModal();
-  //       resetStates();
-
-  //     // Your submission logic here
-  //   } else {
-  //     console.log("Form is invalid or not dirty");
-  //   }
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -136,11 +128,11 @@ export const EditSite = ({
       if (formik.values.phone) {
         formData.append("phone", formik.values.phone);
       }
-      if (formik.values.lat) {
-        formData.append("lat", String(formik.values.lat)); // Convert to string if necessary
+      if (formik.values.latitude) {
+        formData.append("latitude", String(formik.values.latitude)); // Convert to string if necessary
       }
-      if (formik.values.lon) {
-        formData.append("lon", String(formik.values.lon)); // Convert to string if necessary
+      if (formik.values.longitude) {
+        formData.append("longitude", String(formik.values.longitude)); // Convert to string if necessary
       }
       if (formik.values.file) {
         formData.append("file", formik.values.file); // Ensure this is a File object
@@ -166,7 +158,7 @@ export const EditSite = ({
   };
 
   const resetStates = () => {
-    setMarkerPosition({ lat: -3.745, lon: -38.523 });
+    setMarkerPosition({ lat: 21.39, lon: 51.52 });
   };
 
   const LocationMarker = () => {
@@ -174,14 +166,14 @@ export const EditSite = ({
       click(e) {
         const { lat, lng } = e.latlng;
         setMarkerPosition({ lat, lon: lng });
-        formik.setFieldValue("lat", lat);
-        formik.setFieldValue("lon", lng);
+        formik.setFieldValue("latitude", lat);
+        formik.setFieldValue("longitude", lng);
       },
       dragend(e) {
         const { lat, lng } = e.target.getLatLng();
         setMarkerPosition({ lat, lon: lng });
-        formik.setFieldValue("lat", lat);
-        formik.setFieldValue("lon", lng);
+        formik.setFieldValue("latitude", lat);
+        formik.setFieldValue("longitude", lng);
       },
     });
 
@@ -194,8 +186,8 @@ export const EditSite = ({
           dragend: (e) => {
             const { lat, lng } = e.target.getLatLng();
             setMarkerPosition({ lat, lon: lng });
-            formik.setFieldValue("lat", lat);
-            formik.setFieldValue("lon", lng);
+            formik.setFieldValue("latitude", lat);
+            formik.setFieldValue("longitude", lng);
           },
         }}
       />
@@ -238,7 +230,7 @@ export const EditSite = ({
           </Label>
           <MapContainer
             center={[markerPosition.lat, markerPosition.lon]}
-            zoom={10}
+            zoom={8}
             style={{ height: "200px", width: "100%" }}
           >
             <TileLayer

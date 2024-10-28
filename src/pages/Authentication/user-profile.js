@@ -26,6 +26,7 @@ import profilePic from "../../assets/imgs/profile-pic.jpg";
 // actions
 import { editProfile, resetProfileFlag } from "../../store/actions";
 import { useAuth } from "../../stores";
+import { tokenHelper } from "../../stores/helpers";
 
 const UserProfile = () => {
   const dispatch = useDispatch();
@@ -33,12 +34,20 @@ const UserProfile = () => {
   const [email, setemail] = useState("admin@gmail.com");
   const [idx, setidx] = useState("1");
 
-  // const [userName, setUserName] = useState("Admin");
-  const userName = useAuth(
-    (state) => `${state.user?.firstName} ${state.user?.lastName}`
-  );
-  const userEmail = useAuth((state) => state.user?.email);
+  const [userName, setUserName] = useState(undefined);
+  const [userEmail, setuserEmail] = useState(undefined);
 
+  useEffect(() => {
+    const info = async () => {
+      const user = await tokenHelper.getUser();
+      setUserName(user.name);
+      setidx(user.user_id || "1");
+
+      setuserEmail(user.email);
+    };
+
+    info();
+  }, []);
   const { user, success, error } = useSelector((state) => ({
     user: state.Profile.user,
     success: state.Profile.success,

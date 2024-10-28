@@ -22,12 +22,16 @@ const AddMenu = ({ showAddMenuModal, toggleAddMenuModal }) => {
     initialValues: {
       name: "",
       name_ar: "",
+      currency: "",
+      currency_ar: "",
       ask_for_table: false,
       ask_for_name: true,
     },
     validationSchema: Yup.object({
       name: Yup.string().required(t("Required")),
       name_ar: Yup.string().optional(),
+      currency: Yup.string().required(),
+      currency_ar: Yup.string().optional(),
       ask_for_table: Yup.boolean().required(t("Required")),
       ask_for_name: Yup.boolean().required(t("Required")),
     }),
@@ -38,6 +42,8 @@ const AddMenu = ({ showAddMenuModal, toggleAddMenuModal }) => {
       const json = {
         name: values.name,
         name_ar: values.name_ar,
+        currency: values.currency,
+        currency_ar: values.currency_ar,
         ask_for_table: values.ask_for_table,
         ask_for_name: values.ask_for_name,
       };
@@ -76,6 +82,21 @@ const AddMenu = ({ showAddMenuModal, toggleAddMenuModal }) => {
                 fullWidth: true,
               })}
             </div>
+            <div className="flex-fill mb-2 w-100">
+              {RenderFormikInput(formik, {
+                fieldName: "currency",
+                label: "Currency",
+                fullWidth: true,
+              })}
+            </div>
+            <div className="flex-fill mb-2 w-100">
+              {RenderFormikInput(formik, {
+                fieldName: "currency_ar",
+                label: "Currency (AR)",
+                fullWidth: true,
+              })}
+            </div>
+
             <FormControlLabel
               control={
                 <Switch

@@ -70,12 +70,12 @@ export const OptionsModal = ({ isOpen, toggle, itemId }) => {
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Option name is required"),
-      name_ar: Yup.string().required("Option name in Arabic is required"),
+      name_ar: Yup.string().optional(),
       choices: Yup.array()
         .of(
           Yup.object({
             name: Yup.string().required("Choice name is required"),
-            name_ar: Yup.string().required("Choice name in Arabic is required"),
+            name_ar: Yup.string().optional(),
           })
         )
         .min(1, "At least one choice is required"),
@@ -86,8 +86,7 @@ export const OptionsModal = ({ isOpen, toggle, itemId }) => {
 
       if (
         !defaultChoice?.name ||
-        !defaultChoice?.name_ar ||
-        (!editingOptionId && !defaultChoice.menu_item_option_choice_id)
+        (editingOptionId && !defaultChoice.menu_item_option_choice_id)
       ) {
         toast.error("Select a default choice please.");
         setCreating(false);
@@ -242,7 +241,7 @@ export const OptionsModal = ({ isOpen, toggle, itemId }) => {
                         </div>
                         <div className="d-flex flex-row align-items-center justify-content-between">
                           <CardTitle tag="h6" className="mb-2">
-                            {opt?.name} - {opt?.name_ar}
+                            {opt?.name} {opt?.name_ar && "-"} {opt?.name_ar}
                           </CardTitle>
                           <div className="d-flex flex-row align-items-center gap-2">
                             <div className="d-flex flex-row flex-wrap gap-2">
@@ -266,7 +265,8 @@ export const OptionsModal = ({ isOpen, toggle, itemId }) => {
                                   }`}
                                   // onClick={() => handleSetDefaultChoice(choice)}
                                 >
-                                  {choice?.name} - {choice?.name_ar}
+                                  {choice?.name} {choice?.name_ar && "-"}{" "}
+                                  {choice?.name_ar}
                                 </Button>
                               ))}
                             </div>

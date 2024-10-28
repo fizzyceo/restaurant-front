@@ -80,6 +80,20 @@ const Menu = () => {
       ),
     },
     {
+      name: t("Currency"),
+      // width: "100px",
+      selector: (row) => row?.currency,
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: t("Currency (AR)"),
+      // width: "100px",
+      selector: (row) => row?.currency_ar,
+      sortable: true,
+      wrap: true,
+    },
+    {
       name: t("Ask For Table"),
       // width: "100px",
       selector: (row) => row?.ask_for_table,

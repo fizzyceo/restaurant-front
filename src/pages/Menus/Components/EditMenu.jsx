@@ -36,6 +36,8 @@ const EditMenu = ({ rowData, showEditMenuModal, toggleEditMenuModal }) => {
         name_ar: rowData?.name_ar || "",
         ask_for_table: rowData?.ask_for_table,
         ask_for_name: rowData?.ask_for_name,
+        currency: rowData?.currency || "",
+        currency_ar: rowData?.currency_ar || "",
       });
     }
   }, [rowData]);
@@ -44,12 +46,16 @@ const EditMenu = ({ rowData, showEditMenuModal, toggleEditMenuModal }) => {
     initialValues: {
       name: rowData?.name || "",
       name_ar: rowData?.name_ar || "",
+      currency: rowData?.currency || "",
+      currency_ar: rowData?.currency_ar || "",
       ask_for_table: rowData?.ask_for_table,
       ask_for_name: rowData?.ask_for_name,
     },
     validationSchema: Yup.object({
       name: Yup.string().required(t("Required")),
-      name_ar: Yup.string().required(t("Required")),
+      name_ar: Yup.string().optional(),
+      currency: Yup.string().required(t("Required")),
+      currency_ar: Yup.string().optional(),
       ask_for_table: Yup.boolean(),
       ask_for_name: Yup.boolean(),
     }),
@@ -57,6 +63,8 @@ const EditMenu = ({ rowData, showEditMenuModal, toggleEditMenuModal }) => {
       const json = {
         name: values.name,
         name_ar: values.name_ar,
+        currency: values.currency,
+        currency_ar: values.currency_ar,
         ask_for_table: values.ask_for_table,
         ask_for_name: values.ask_for_name,
       };
@@ -117,6 +125,26 @@ const EditMenu = ({ rowData, showEditMenuModal, toggleEditMenuModal }) => {
             {...formik.getFieldProps("name_ar")}
             invalid={formik.touched.name_ar && Boolean(formik.errors.name_ar)}
             placeholder={t("Enter menu name (ar)")}
+          />
+          <Label for="currency">{t("Currency")}</Label>
+          <Input
+            type="text"
+            id="currency"
+            name="currency"
+            {...formik.getFieldProps("currency")}
+            invalid={formik.touched.currency && Boolean(formik.errors.currency)}
+            placeholder={t("Enter currency")}
+          />
+          <Label for="currency_ar">{t("Currency (AR)")}</Label>
+          <Input
+            type="text"
+            id="currency_ar"
+            name="currency_ar"
+            {...formik.getFieldProps("currency_ar")}
+            invalid={
+              formik.touched.currency_ar && Boolean(formik.errors.currency_ar)
+            }
+            placeholder={t("Enter Currency (ar)")}
           />
 
           <FormControlLabel

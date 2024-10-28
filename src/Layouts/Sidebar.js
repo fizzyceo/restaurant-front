@@ -82,7 +82,7 @@ const Sidebar = ({ layoutType }) => {
               </ul>
             </Container>
           </SimpleBar>
-          <div className="sidebar-background"></div>
+          <div className="sidebar-background "></div>
         </React.Fragment>
       </div>
       <div className="vertical-overlay"></div>

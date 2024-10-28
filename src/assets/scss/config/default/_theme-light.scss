@@ -1,33 +1,32 @@
 // :root CSS variables
 
-:root{
+:root {
+  //vertical light
+  --#{$prefix}vertical-menu-bg: #ce9558;
+  --#{$prefix}vertical-menu-item-color: #{darken($gray-600, 10%)};
+  --#{$prefix}vertical-menu-item-hover-color: #{$primary};
+  --#{$prefix}vertical-menu-item-active-color: #{$primary};
+  --#{$prefix}vertical-menu-sub-item-color: #{darken($gray-600, 4%)};
+  --#{$prefix}vertical-menu-sub-item-hover-color: #{$primary};
+  --#{$prefix}vertical-menu-sub-item-active-color: #{$primary};
+  --#{$prefix}vertical-menu-title-color: #919da9;
 
-    //vertical light
-  --#{$prefix}vertical-menu-bg:                      #{$white};
-  --#{$prefix}vertical-menu-item-color:              #{darken($gray-600, 10%)};
-  --#{$prefix}vertical-menu-item-hover-color:        #{$primary};
-  --#{$prefix}vertical-menu-item-active-color:       #{$primary};
-  --#{$prefix}vertical-menu-sub-item-color:          #{darken($gray-600, 4%)};
-  --#{$prefix}vertical-menu-sub-item-hover-color:    #{$primary};
-  --#{$prefix}vertical-menu-sub-item-active-color:   #{$primary};
-  --#{$prefix}vertical-menu-title-color:             #919da9;
-  
   //vertical dark
-  --#{$prefix}vertical-menu-bg-dark:                 #{$primary};
-  --#{$prefix}vertical-menu-item-color-dark:         #abb9e8;
-  --#{$prefix}vertical-menu-item-hover-color-dark:   #{$white};
-  --#{$prefix}vertical-menu-item-active-color-dark:  #{$white};
-  --#{$prefix}vertical-menu-sub-item-color-dark:     #abb9e8;
+  --#{$prefix}vertical-menu-bg-dark: #a46624;
+  --#{$prefix}vertical-menu-item-color-dark: #edeff6;
+  --#{$prefix}vertical-menu-item-hover-color-dark: #{$white};
+  --#{$prefix}vertical-menu-item-active-color-dark: #{$white};
+  --#{$prefix}vertical-menu-sub-item-color-dark: #edeff6;
   --#{$prefix}vertical-menu-sub-item-hover-color-dark: #{$white};
   --#{$prefix}vertical-menu-sub-item-active-color-dark: #{$white};
-  --#{$prefix}vertical-menu-title-color-dark:         #838fb9;
+  --#{$prefix}vertical-menu-title-color-dark: #edeff6;
 
   // Topbar - (Default Light)
-  --#{$prefix}header-bg:  #{$white};
-  --#{$prefix}header-item-color:  #e9ecef;
+  --#{$prefix}header-bg: #{$white};
+  --#{$prefix}header-item-color: #e9ecef;
   // Topbar - Dark
-  --#{$prefix}header-bg-dark:  #{$primary};
-  --#{$prefix}header-item-color-dark:  #b0c4d9;
+  --#{$prefix}header-bg-dark: #{$primary};
+  --#{$prefix}header-item-color-dark: #b0c4d9;
 
   // Topbar Search
   --#{$prefix}topbar-search-bg: #f3f3f9;
@@ -46,27 +45,31 @@
 
   // twocolumn menu
   --#{$prefix}twocolumn-menu-iconview-bg: #{$white};
-  --#{$prefix}twocolumn-menu-bg:  #{$white};
+  --#{$prefix}twocolumn-menu-bg: #{$white};
   // two column dark
-  --#{$prefix}twocolumn-menu-iconview-bg-dark: var(--#{$prefix}vertical-menu-bg-dark);
-  --#{$prefix}twocolumn-menu-bg-dark:  #{lighten($primary, 2%)};
-  --#{$prefix}twocolumn-menu-item-color-dark: var(--#{$prefix}vertical-menu-item-color-dark);
-  --#{$prefix}twocolumn-menu-item-active-color-dark:  #{$white};
-  --#{$prefix}twocolumn-menu-item-active-bg-dark:  #{rgba($white, .15)};
+  --#{$prefix}twocolumn-menu-iconview-bg-dark: var(
+    --#{$prefix}vertical-menu-bg-dark
+  );
+  --#{$prefix}twocolumn-menu-bg-dark: #{lighten($primary, 2%)};
+  --#{$prefix}twocolumn-menu-item-color-dark: var(
+    --#{$prefix}vertical-menu-item-color-dark
+  );
+  --#{$prefix}twocolumn-menu-item-active-color-dark: #{$white};
+  --#{$prefix}twocolumn-menu-item-active-bg-dark: #{rgba($white, 0.15)};
 
-  // boxed 
+  // boxed
   --#{$prefix}boxed-body-bg: #{darken($body-bg, 4%)};
 
   // heading-color
   --#{$prefix}heading-color: #{$gray-700};
-  
+
   // component variable
   // link
   --#{$prefix}link-color: #{$primary};
   --#{$prefix}link-hover-color: #{$primary};
 
   // Border variable
-  --#{$prefix}border-color:  #{$gray-300};
+  --#{$prefix}border-color: #{$gray-300};
 
   // card
   --#{$prefix}card-bg-custom: #{$white};
@@ -75,15 +78,20 @@
 
   // nav tabs
   .nav-tabs {
-    --#{$prefix}nav-tabs-link-active-bg:           #{$body-bg};
+    --#{$prefix}nav-tabs-link-active-bg: #{$body-bg};
   }
 
-  //choices 
-  .choices, .flatpickr-calendar, .ck, .ql-toolbar, .select2-container, .menu-dropdown{
-    --#{$prefix}choices-bg:                        #{$white};
-    --#{$prefix}choices-link-color:                #{$gray-900};
-    --#{$prefix}choices-link-hover-bg:             #{$gray-100};
-    --#{$prefix}choices-link-active-color:         #{shade-color($gray-900, 10%)};
+  //choices
+  .choices,
+  .flatpickr-calendar,
+  .ck,
+  .ql-toolbar,
+  .select2-container,
+  .menu-dropdown {
+    --#{$prefix}choices-bg: #{$white};
+    --#{$prefix}choices-link-color: #{$gray-900};
+    --#{$prefix}choices-link-hover-bg: #{$gray-100};
+    --#{$prefix}choices-link-active-color: #{shade-color($gray-900, 10%)};
   }
 
   //list

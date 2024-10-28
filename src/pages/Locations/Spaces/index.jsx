@@ -19,7 +19,6 @@ const Spaces = () => {
   const [sites, setSites] = useState([]);
   const [kitchens, setKitchens] = useState([]);
   const [menus, setMenus] = useState([]);
-
   const [selectedSiteId, setSelectedSiteId] = useState(null);
   const [selectedMenuId, setSelectedMenuId] = useState(null);
   const [selectedKitchenId, setSelectedKitchenId] = useState(null);
@@ -58,6 +57,7 @@ const Spaces = () => {
     const fetchMenus = async () => {
       const menuList = await getMenus();
       setMenus(menuList);
+      console.log(menuList);
 
       // Extract siteId from the URL query parameters
       if (menuList.length > 0) {
@@ -72,15 +72,17 @@ const Spaces = () => {
     const fetchKitchens = async () => {
       const kitchenList = await getKitchens();
       setKitchens(kitchenList);
+      console.log(kitchenList);
 
-      if (kitchenList.length > 0) {
+      if (kitchenList?.length > 0) {
         // Set default to first site if no siteId in URL
-        setSelectedSiteId(kitchenList[0].kitchen_id);
+        setSelectedKitchenId(kitchenList[0].kitchen_id);
       }
     };
 
     fetchKitchens();
   }, [getSites, location.search, getSpaces]);
+
   const handleQRClick = (row) => {
     console.log(row);
 
@@ -92,6 +94,13 @@ const Spaces = () => {
     {
       name: t("ID"),
       selector: (row) => row?.space_id,
+      width: "70px",
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: t("Site"),
+      selector: (row) => row?.site_name, // Assuming `site_name` is the property
       sortable: true,
       wrap: true,
     },
@@ -120,6 +129,34 @@ const Spaces = () => {
       wrap: true,
     },
     {
+      name: t("Menu ID"),
+      selector: (row) => row?.menu_id, // Assuming `menu_name` is the property
+      width: "110px",
+
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: t("Menu Name"),
+      selector: (row) => row?.menu_name, // Assuming `menu_name` is the property
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: t("Kitchen ID"),
+      selector: (row) => row?.kitchen_id,
+      width: "120px",
+
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: t("Kitchen Name"),
+      selector: (row) => row?.kitchen_name, // Assuming `kitchen_name` is the property
+      sortable: true,
+      wrap: true,
+    },
+    {
       name: t("QR Code"),
       // width: "95px",
       // selector: (row) => row?.status,
@@ -132,7 +169,7 @@ const Spaces = () => {
             className={`badge bg-soft-success cursor-pointer text-success text-uppercase`}
             onClick={() => handleQRClick(row)}
           >
-            {<i className="ri-external-link-line"></i>} View QRCODE
+            {<i className="ri-external-link-line"></i>} View
           </span>
         </div>
       ),
@@ -175,7 +212,9 @@ const Spaces = () => {
     setSelectedRow(row);
     setShowEditSpaceModal(!showEditSpaceModal);
   };
-
+  useEffect(() => {
+    console.log(spaces);
+  }, [spaces]);
   const deleteSpaceFun = async (id) => {
     try {
       await deleteSpace(id);
@@ -183,7 +222,9 @@ const Spaces = () => {
       console.log(e);
     }
   };
-
+  useEffect(() => {
+    console.log(spaces);
+  }, [spaces]);
   const handleSiteSelect = (e) => {
     const id = e.target.value;
     setSelectedSiteId(id);

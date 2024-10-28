@@ -23,7 +23,6 @@ export const useSpaceStore = create((set, get) => ({
     try {
       // Get the access token
       const accessToken = await tokenHelper.getToken();
-      console.log(siteID, body);
 
       // Post the site creation request
       const response = await axiosHelper.post(`/site/${siteID}/spaces`, body, {
@@ -44,8 +43,6 @@ export const useSpaceStore = create((set, get) => ({
           headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
-
-      console.log(response);
 
       // Refresh the list of spaces
       await get().getSpaces(siteID);
@@ -93,7 +90,6 @@ export const useSpaceStore = create((set, get) => ({
         // If a match is found, merge the objects
         return matchingItem ? { ...space, ...matchingItem } : space;
       });
-      console.log(combinedSpaces);
 
       // Update state with combined results
       set({ spaces: combinedSpaces, isLoading: false });
@@ -105,11 +101,8 @@ export const useSpaceStore = create((set, get) => ({
   },
   updateSite: async (id, info) => {
     try {
-      console.log("id: ", id, " info: ", info);
-
       set({ isLoading: true });
       let response = await axiosHelper.patch(`/site/${id}`, info);
-      console.log(response);
 
       // console.log(response.data);
       get().getspaces();

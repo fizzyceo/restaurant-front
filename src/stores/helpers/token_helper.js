@@ -5,12 +5,12 @@ export const tokenHelper = {
   setToken: (accessToken) => {
     localStorage.setItem("AccessToken", accessToken);
   },
-  getToken:async () => {
-    const session = getCookie('session');
+  getToken: async () => {
+    const session = getCookie("session");
     const payload = await decrypt(session);
 
     const x = localStorage.getItem("AccessToken");
-    
+
     return payload?.accessToken;
   },
 
@@ -19,18 +19,16 @@ export const tokenHelper = {
   },
   setUser: (user) => {
     let test = {
-      email:"email",
-      password:"password"
-    }
+      email: "email",
+      password: "password",
+    };
     localStorage.setItem("user", JSON.stringify(test));
   },
-  getUser: () => {
-    let test = {
-      email:"email",
-      password:"password"
-    }
-return test
-    // return JSON.parse(localStorage.getItem("user") || "{}") ;
+  getUser: async () => {
+    const session = getCookie("session");
+    const payload = await decrypt(session);
+
+    return payload?.user;
   },
 
   removeUser: (key) => {

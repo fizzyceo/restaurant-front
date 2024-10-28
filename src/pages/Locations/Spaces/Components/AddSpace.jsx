@@ -14,7 +14,16 @@ import {
 import { useSpaceStore } from "../../../../stores/Assets/space";
 
 const validTypes = ["MAJLISS", "OFFICE", "DEPARTMENT"];
-
+const languages = [
+  {
+    label: "ENGLISH",
+    value: "EN",
+  },
+  {
+    label: "ARABIC",
+    value: "AR",
+  },
+];
 const AddSpace = ({
   kitchenList,
   menuList,
@@ -44,7 +53,7 @@ const AddSpace = ({
     validationSchema: Yup.object({
       name: Yup.string().required(t("Required")),
       name_ar: Yup.string().optional(),
-      default_lang: Yup.string().optional(),
+      default_lang: Yup.string().required(t("Required")),
       type: Yup.string()
         .oneOf(validTypes, t("Invalid type"))
         .required(t("Required")),
@@ -56,6 +65,7 @@ const AddSpace = ({
         default_lang: values.default_lang,
         type: values.type,
       };
+      console.log(spaceData);
 
       const result = await createSpace(
         selectedSiteId,
@@ -166,8 +176,14 @@ const AddSpace = ({
               value={formik.values.default_lang}
               className="form-control"
             >
-              <option value="EN">English</option>
-              <option value="AR">Arabic</option>
+              <option value="" label={t("Select Lang")} />
+              {languages.map((type) => (
+                <option
+                  key={type.value}
+                  value={type.value}
+                  label={type.label}
+                />
+              ))}
             </select>
             {formik.errors.default_lang && (
               <div className="text-danger">{formik.errors.default_lang}</div>

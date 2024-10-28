@@ -10,12 +10,18 @@ import {
 //import images
 import profilePic from "../../assets/imgs/profile-pic.jpg";
 import { useAuth } from "../../stores";
+import { tokenHelper } from "../../stores/helpers";
 
 const ProfileDropdown = () => {
-  const userName = useAuth(
-    (state) => `${state.user?.firstName} ${state.user?.lastName}`
-  );
+  const [userName, setUserName] = useState(undefined);
+  useEffect(() => {
+    const info = async () => {
+      const user = await tokenHelper.getUser();
+      setUserName(user.name);
+    };
 
+    info();
+  }, []);
   //Dropdown Toggle
   const [isProfileDropdown, setIsProfileDropdown] = useState(false);
   const toggleProfileDropdown = () => {

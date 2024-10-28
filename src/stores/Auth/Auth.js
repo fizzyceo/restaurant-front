@@ -23,7 +23,6 @@ export const useAuth = create((set) => ({
       .then((response) => {
         // Extract the accessToken from the response
         const { accessToken } = response;
-        console.log(response);
 
         // If the accessToken is missing or invalid, handle it
         if (!accessToken) {
@@ -38,10 +37,7 @@ export const useAuth = create((set) => ({
             },
           })
           .then((response2) => {
-            console.log(response2);
-
             // Print the accessToken and response2 for debugging
-            console.log(accessToken, response2);
 
             // Calculate the expiration date
             const expiresAt = new Date(Date.now() + 60 * 60 * 1000);

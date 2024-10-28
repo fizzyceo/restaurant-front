@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { verifySession } from '../helpers/sessions'; // Update the path as needed
+import React, { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
+import { verifySession } from "../helpers/sessions"; // Update the path as needed
 
 export const AuthProtected = (props) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -9,12 +9,10 @@ export const AuthProtected = (props) => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      setIsLoading(true)
-      console.log("before");
-      
+      setIsLoading(true);
+
       const result = await verifySession();
 
-      console.log(result);
       if (result.isAuth) {
         setUser(result.userId); // Assuming you get userId or user object
         setIsAuth(true);
