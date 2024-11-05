@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { t } from "i18next";
@@ -15,6 +15,7 @@ import { FormControlLabel, Switch } from "@mui/material";
 import { useKitchenStore } from "../../../../stores/Assets/kitchen";
 
 const EditKitchen = ({
+  siteList,
   info,
   showEditKitchenModal,
   toggleEditKitchenModal,
@@ -23,7 +24,21 @@ const EditKitchen = ({
     { dayOfWeek: "MONDAY", openTime: "", closeTime: "", timezone: "+00:00" },
   ]);
   const { updateKitchen, isLoading } = useKitchenStore((state) => state);
+  const [selectedSiteId, setSelectedSiteId] = useState(
+    siteList[0]?.site_id || null
+  );
 
+  useEffect(() => {
+    if (info) {
+      // Set initial values if info changes
+      formik.setValues({
+        name: info?.name,
+        name_ar: info?.name_ar,
+        isOpen: info?.isOpen,
+        isWeeklyTimingOn: info?.isWeeklyTimingOn,
+      });
+    }
+  }, [info]);
   const formik = useFormik({
     initialValues: {
       name: info?.name,
@@ -50,6 +65,7 @@ const EditKitchen = ({
       let kitchenData = {
         name: values.name,
         name_ar: values.name_ar,
+        site_id: parseInt(selectedSiteId),
         isOpen: values.isOpen,
         isWeeklyTimingOn: values.isWeeklyTimingOn,
         openingHours: values.isWeeklyTimingOn ? openingHours : [],
@@ -140,6 +156,24 @@ const EditKitchen = ({
             {formik.errors.name && (
               <div className="text-danger">{formik.errors.name_ar}</div>
             )}
+          </div>
+          <div className="flex-fill mb-2">
+            <Label for="site_id">{t("Select Site")}</Label>
+            <select
+              id="site_id"
+              onChange={(e) => setSelectedSiteId(e.target.value)}
+              value={selectedSiteId}
+              className="form-control"
+            >
+              {formik.errors.name && (
+                <div className="text-danger">{formik.errors.site_id}</div>
+              )}
+              {siteList.map((site) => (
+                <option key={site.site_id} value={site.site_id}>
+                  {site.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <FormControlLabel

@@ -200,7 +200,7 @@ export default function DataTableBase({
           persistTableHead={true}
           // noDataComponent={<NoDataAvailable />}
           sortServer={sortServer}
-          pagination
+          pagination={false}
           // paginationComponentOptions={{
 
           // }}

@@ -16,9 +16,43 @@ import { useLocation } from "react-router-dom";
 import { useConfirmDialogStore } from "../../../stores/Modal/ConfirmDialogStore";
 import { OpeningHours } from "./Components/OpeningHours";
 import ShowToken from "./Components/ShowToken";
+import { useSiteStore } from "../../../stores/Assets/site";
+import { Pagination } from "../../../Components/Common/DataTableBase/Pagination";
+
+// const Pagination = ({ currentPage, totalRows, rowsPerPage, onPageChange }) => {
+//   const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+//   const handlePageClick = (page) => {
+//     onPageChange(page);
+//   };
+
+//   const renderPageNumbers = () => {
+//     const pageNumbers = [];
+//     for (let i = 1; i <= totalPages; i++) {
+//       pageNumbers.push(
+//         <li
+//           key={i}
+//           className={`page-item ${currentPage === i ? "active" : ""}`}
+//           onClick={() => handlePageClick(i)}
+//         >
+//           <span className="page-link">{i}</span>
+//         </li>
+//       );
+//     }
+//     return pageNumbers;
+//   };
+
+//   return (
+//     <div className="pagination-container">
+//       <ul className="pagination">{renderPageNumbers()}</ul>
+//     </div>
+//   );
+// };
+
 const Kitchens = () => {
   const [totalRows, setTotalRows] = useState(0);
-
+  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const rowsPerPage = 5; // Display 5 rows per page
   document.title = "ClickOrder Admin";
   const location = useLocation();
   // const KitchenId = new URLSearchParams(location.search).get("KitchenId");
@@ -30,6 +64,45 @@ const Kitchens = () => {
   const { getKitchens, isLoading, kitchens, deleteKitchen } = useKitchenStore(
     (state) => state
   );
+  const { getSites } = useSiteStore((state) => state);
+  const [sites, setSites] = useState([]); // State to hold sites
+  const [selectedSiteId, setSelectedSiteId] = useState("All"); // State for selected site
+  const [filteredKitchens, setFilteredKitchens] = useState([]); // State for filtered kitchens
+
+  useEffect(() => {
+    const fetchSites = async () => {
+      const siteList = await getSites(); // Fetch sites
+      setSites(siteList);
+
+      // if (siteList.length > 0) {
+      //   console.log(siteList);
+
+      //   setSelectedSiteId(siteList[0].site_id); // Set the first site as selected by default
+      // }
+    };
+
+    fetchSites(); // Call the fetch function
+
+    getKitchens(); // Fetch kitchens
+  }, [getKitchens, getSites]);
+
+  useEffect(() => {
+    const filterKitchens = () => {
+      if (selectedSiteId === "All") {
+        setFilteredKitchens(kitchens);
+      } else {
+        const filtered = kitchens.filter(
+          (kitchen) => kitchen.site_id === parseInt(selectedSiteId)
+        );
+
+        setFilteredKitchens(filtered);
+      }
+      setTotalRows(filteredKitchens.length);
+    };
+
+    filterKitchens();
+  }, [kitchens, selectedSiteId]);
+
   const handleScheduleClick = (row) => {
     setselectedInfo(row);
     setshowOpeningHoursModal(!showOpeningHoursModal);
@@ -39,19 +112,11 @@ const Kitchens = () => {
     setKitchenID(row?.kitchen_id);
     setShowTokenModal(!showTokenModal);
   };
-  // useEffect(() => {
-  //   if (KitchenId) {
-  //     getKitchens({ search: KitchenId });
-  //   }
-  // }, [KitchenId]);
-  useEffect(() => {
-    getKitchens();
-  }, []);
 
-  useEffect(() => {
-    setTotalRows(kitchens?.length || 0);
-    console.log(kitchens);
-  }, [kitchens]);
+  // useEffect(() => {
+  //   setTotalRows(kitchens?.length || 0);
+  //   console.log(kitchens);
+  // }, [kitchens]);
   const columns = [
     //add id column
     {
@@ -61,6 +126,14 @@ const Kitchens = () => {
       sortable: true,
       wrap: true,
     },
+    {
+      name: t("Site ID"),
+      // width: "100px",
+      selector: (row) => row?.site_id,
+      sortable: true,
+      wrap: true,
+    },
+
     {
       name: t("Name"),
       // width: "100px",
@@ -165,6 +238,7 @@ const Kitchens = () => {
 
   const [showAddKitchenModal, setShowAddKitchenModal] = useState(false);
   const [showEditKitchenModal, setShowEditKitchenModal] = useState(false);
+  const [currentKitchens, setCurrentKitchens] = useState([]);
   const toggleAddKitchenModal = () => {
     setShowAddKitchenModal(!showAddKitchenModal);
   };
@@ -191,14 +265,32 @@ const Kitchens = () => {
       console.log(e);
     }
   };
+  const handleSiteSelect = (e) => {
+    setSelectedSiteId(e.target.value);
+  };
+
+  useEffect(() => {
+    if (filteredKitchens.length > 0) {
+      const curr = filteredKitchens.slice(
+        (currentPage - 1) * rowsPerPage,
+        currentPage * rowsPerPage
+      );
+      setCurrentKitchens(curr);
+    }
+  }, [currentPage, filteredKitchens]);
+
+  const onPageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <>
       <DataTableBase
         tableTitle={"KitchenS"}
-        data={kitchens}
+        data={currentKitchens} // Display current paginated data
         columns={columns}
         loading={isLoading}
-        paginationTotalRows={totalRows}
+        paginationTotalRows={filteredKitchens.length}
         onChangePage={onChangePage}
         // onChangeRowsPerPage={onChangeRowsPerPage}
         onHeaderAddBtnClick={toggleAddKitchenModal}
@@ -237,9 +329,38 @@ const Kitchens = () => {
             </button>
           </>
         )}
+      >
+        {sites.length > 0 && (
+          <div className="d-flex align-items-center mb-3 justify-content-center gap-2">
+            <h5 className="text-nowrap">For Site: </h5>
+            <select
+              className="form-control"
+              value={selectedSiteId}
+              onChange={handleSiteSelect}
+            >
+              <option key={"all"} value={"All"}>
+                {"All"}
+              </option>
+              {sites.map((site) => (
+                <option key={site.site_id} value={site.site_id}>
+                  {site.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </DataTableBase>
+
+      <Pagination
+        currentPage={currentPage}
+        totalRows={filteredKitchens.length}
+        rowsPerPage={rowsPerPage}
+        onPageChange={onPageChange}
       />
+
       {showAddKitchenModal && (
         <AddKitchen
+          siteList={sites}
           toggleAddKitchenModal={toggleAddKitchenModal}
           showAddKitchenModal={showAddKitchenModal}
         />
@@ -261,6 +382,7 @@ const Kitchens = () => {
       )}
       {selectedRow && (
         <EditKitchen
+          siteList={sites}
           toggleEditKitchenModal={toggleEditKitchenModal}
           showEditKitchenModal={showEditKitchenModal}
           info={selectedRow}

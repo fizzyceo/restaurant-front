@@ -15,6 +15,7 @@ import EditMenu from "./Components/EditMenu";
 import { useLocation } from "react-router-dom";
 import { useConfirmDialogStore } from "../../stores/Modal/ConfirmDialogStore";
 import { QRCode } from "react-qrcode-logo";
+import { Pagination } from "../../Components/Common/DataTableBase/Pagination";
 
 const Menu = () => {
   const [totalRows, setTotalRows] = useState(0);
@@ -205,11 +206,29 @@ const Menu = () => {
       console.log(e);
     }
   };
+
+  const [currentMenus, setCurrentMenus] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const rowsPerPage = 5; // Display 5 rows per page
+  useEffect(() => {
+    if (menus.length > 0) {
+      const curr = menus.slice(
+        (currentPage - 1) * rowsPerPage,
+        currentPage * rowsPerPage
+      );
+      setCurrentMenus(curr);
+    }
+  }, [currentPage, menus]);
+
+  const onPageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <>
       <DataTableBase
         tableTitle={"menus"}
-        data={menus}
+        data={currentMenus}
         columns={columns}
         loading={isLoading}
         paginationTotalRows={totalRows}
@@ -251,6 +270,12 @@ const Menu = () => {
             </button>
           </>
         )}
+      />
+      <Pagination
+        currentPage={currentPage}
+        totalRows={menus.length}
+        rowsPerPage={rowsPerPage}
+        onPageChange={onPageChange}
       />
       {showAddMenuModal && (
         <AddMenu

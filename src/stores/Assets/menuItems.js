@@ -7,6 +7,8 @@ export const useMenuItemsStore = create((set, get) => ({
   isLoading: false,
   isError: false,
   error: undefined,
+  currency: "",
+  image_url: "",
   filters: {
     code: "",
     DestProv: "",
@@ -59,13 +61,22 @@ export const useMenuItemsStore = create((set, get) => ({
       set({ isLoading: true });
       console.log(menuId);
 
-      let response = await axiosHelper.get(`/menu/${menuId}/items`, {
+      // let response = await axiosHelper.get(`/menu/${menuId}/items`, {
+      //   headers: { Authorization: `Bearer ${accessToken}` },
+      // });
+      let response = await axiosHelper.get(`/menu/${menuId}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       console.log(response);
 
       // console.log(response.data);
-      set({ items: response, isLoading: false });
+      set({
+        currency: response.currency,
+        image_url: response.image_url,
+        items: response.menu_items,
+        isLoading: false,
+        currency: response.currency,
+      });
     } catch (e) {
       console.log(e);
     } finally {

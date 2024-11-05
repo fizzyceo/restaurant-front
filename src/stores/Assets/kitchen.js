@@ -51,7 +51,7 @@ export const useKitchenStore = create((set, get) => ({
       set({ isLoading: false });
     }
   },
-  getKitchens: async (filters) => {
+  getKitchens: async (siteId) => {
     // set({ filters: filterNonFalseValues(filters) });
     // console.log(filterNonFalseValues(filters));
     // const filtering = {

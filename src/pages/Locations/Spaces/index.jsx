@@ -12,6 +12,7 @@ import { useMenuStore } from "../../../stores/Assets/menu";
 import { useKitchenStore } from "../../../stores/Assets/kitchen";
 import { QRCode } from "react-qrcode-logo";
 import QRmodal from "./Components/QRmodal";
+import { Pagination } from "../../../Components/Common/DataTableBase/Pagination";
 
 const Spaces = () => {
   const title = "BASSEER | SPACES";
@@ -231,12 +232,28 @@ const Spaces = () => {
     getSpaces(id);
   };
 
+  const [currentSpaces, setCurrentSpaces] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const rowsPerPage = 5; // Display 5 rows per page
+  useEffect(() => {
+    if (spaces.length > 0) {
+      const curr = spaces.slice(
+        (currentPage - 1) * rowsPerPage,
+        currentPage * rowsPerPage
+      );
+      setCurrentSpaces(curr);
+    }
+  }, [currentPage, spaces]);
+
+  const onPageChange = (page) => {
+    setCurrentPage(page);
+  };
   return (
     <>
       {selectedSiteId && (
         <DataTableBase
           tableTitle={"SPACES"}
-          data={spaces}
+          data={currentSpaces}
           columns={columns}
           loading={isLoading}
           paginationTotalRows={totalRows}
@@ -289,7 +306,12 @@ const Spaces = () => {
           )}
         </DataTableBase>
       )}
-
+      <Pagination
+        currentPage={currentPage}
+        totalRows={spaces.length}
+        rowsPerPage={rowsPerPage}
+        onPageChange={onPageChange}
+      />
       {showAddSpaceModal && (
         <AddSpace
           siteID={selectedSiteId}

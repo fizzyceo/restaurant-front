@@ -17,6 +17,7 @@ import { useLocation } from "react-router-dom";
 import { useConfirmDialogStore } from "../../stores/Modal/ConfirmDialogStore";
 import { useMenuItemsStore } from "../../stores/Assets/menuItems";
 import { OptionsModal } from "./Components/OptionsModal";
+import { Pagination } from "../../Components/Common/DataTableBase/Pagination";
 const Menu = () => {
   const [totalRows, setTotalRows] = useState(0);
   const { menuid } = useParams();
@@ -25,9 +26,8 @@ const Menu = () => {
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState(null);
 
-  const { getItems, isLoading, items, deleteItem } = useMenuItemsStore(
-    (state) => state
-  );
+  const { getItems, isLoading, items, deleteItem, currency, image_url } =
+    useMenuItemsStore((state) => state);
   const ShowItemsModel = (menu_id) => {
     console.log("display items");
   };
@@ -42,6 +42,7 @@ const Menu = () => {
 
   useEffect(() => {
     setTotalRows(items?.length || 0);
+    console.log(items);
   }, [items]);
 
   const handleOptionsClick = (id) => {
@@ -80,7 +81,7 @@ const Menu = () => {
     },
     {
       name: t("Options"),
-      selector: (row) => row?.menuItem_options.length,
+      selector: (row) => row?.menuItem_options?.length,
       sortable: true,
       wrap: true,
       cell: (row) => (
@@ -115,7 +116,11 @@ const Menu = () => {
       selector: (row) => row?.price,
       sortable: true,
       wrap: true,
-      cell: (row) => <span>{row?.price?.toFixed(2)}</span>,
+      cell: (row) => (
+        <span>
+          {row?.price?.toFixed(2)} {currency}
+        </span>
+      ),
     },
     {
       name: t("Available"),
@@ -127,9 +132,9 @@ const Menu = () => {
     {
       name: t("Image"),
       cell: (row) =>
-        row?.item_images?.[0]?.image_url ? (
+        row?.images.length ? (
           <img
-            src={row.item_images[0].image_url}
+            src={image_url + row.images[0]}
             alt="Item"
             style={{ width: "50px", height: "50px", objectFit: "cover" }}
           />
@@ -198,11 +203,29 @@ const Menu = () => {
       console.log(e);
     }
   };
+
+  const [currenItems, setCurrenItems] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const rowsPerPage = 5; // Display 5 rows per page
+  useEffect(() => {
+    if (items?.length > 0) {
+      const curr = items.slice(
+        (currentPage - 1) * rowsPerPage,
+        currentPage * rowsPerPage
+      );
+      setCurrenItems(curr);
+    }
+  }, [currentPage, items]);
+
+  const onPageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <>
       <DataTableBase
         tableTitle={"Menu-Items"}
-        data={items}
+        data={currenItems}
         columns={columns}
         loading={isLoading}
         paginationTotalRows={totalRows}
@@ -244,6 +267,12 @@ const Menu = () => {
             </button>
           </>
         )}
+      />
+      <Pagination
+        currentPage={currentPage}
+        totalRows={items?.length || 0}
+        rowsPerPage={rowsPerPage}
+        onPageChange={onPageChange}
       />
       {showAddItemModal && (
         <AddItem

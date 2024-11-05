@@ -14,12 +14,19 @@ import {
 import { FormControlLabel, Switch } from "@mui/material";
 import { useKitchenStore } from "../../../../stores/Assets/kitchen";
 
-const AddKitchen = ({ menuId, showAddKitchenModal, toggleAddKitchenModal }) => {
+const AddKitchen = ({
+  siteList,
+  menuId,
+  showAddKitchenModal,
+  toggleAddKitchenModal,
+}) => {
   const [openingHours, setOpeningHours] = useState([
     { dayOfWeek: "MONDAY", openTime: "", closeTime: "", timezone: "+00:00" },
   ]);
   const { createKitchen, isLoading } = useKitchenStore((state) => state);
-
+  const [selectedSiteId, setSelectedSiteId] = useState(
+    siteList[0]?.site_id || null
+  );
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -34,18 +41,20 @@ const AddKitchen = ({ menuId, showAddKitchenModal, toggleAddKitchenModal }) => {
       isWeeklyTimingOn: Yup.boolean().required(t("Required")),
     }),
     onSubmit: async (values) => {
-      if (
-        values.isWeeklyTimingOn &&
-        openingHours.every(
-          (hour) => !hour.dayOfWeek || !hour.openTime || !hour.closeTime
-        )
-      ) {
-        return; // Prevent submission if no opening hours are filled
-      }
+      // if (
+      //   values.isWeeklyTimingOn &&
+      //   openingHours.every(
+      //     (hour) => !hour.dayOfWeek || !hour.openTime || !hour.closeTime
+      //   )
+      // ) {
+      //   return; // Prevent submission if no opening hours are filled
+      // }
+      console.log(values);
 
       let kitchenData = {
         name: values.name,
         name_ar: values.name_ar,
+        site_id: selectedSiteId,
         isOpen: true,
         isWeeklyTimingOn: false,
         openingHours: values.isWeeklyTimingOn ? openingHours : [],
@@ -74,30 +83,30 @@ const AddKitchen = ({ menuId, showAddKitchenModal, toggleAddKitchenModal }) => {
     },
   });
 
-  const addOpeningHour = () => {
-    if (
-      openingHours.some(
-        (hour) => !hour.dayOfWeek || !hour.openTime || !hour.closeTime
-      )
-    ) {
-      return; // Prevent adding a new opening hour if the current one is incomplete
-    }
-    setOpeningHours([
-      ...openingHours,
-      { dayOfWeek: "TUESDAY", openTime: "", closeTime: "", timezone: "+00:00" },
-    ]);
-  };
+  // const addOpeningHour = () => {
+  //   if (
+  //     openingHours.some(
+  //       (hour) => !hour.dayOfWeek || !hour.openTime || !hour.closeTime
+  //     )
+  //   ) {
+  //     return; // Prevent adding a new opening hour if the current one is incomplete
+  //   }
+  //   setOpeningHours([
+  //     ...openingHours,
+  //     { dayOfWeek: "TUESDAY", openTime: "", closeTime: "", timezone: "+00:00" },
+  //   ]);
+  // };
 
-  const handleOpeningHourChange = (index, field, value) => {
-    const newOpeningHours = [...openingHours];
-    newOpeningHours[index][field] = value;
-    setOpeningHours(newOpeningHours);
-  };
+  // const handleOpeningHourChange = (index, field, value) => {
+  //   const newOpeningHours = [...openingHours];
+  //   newOpeningHours[index][field] = value;
+  //   setOpeningHours(newOpeningHours);
+  // };
 
-  const removeOpeningHour = (index) => {
-    const newOpeningHours = openingHours.filter((_, i) => i !== index);
-    setOpeningHours(newOpeningHours);
-  };
+  // const removeOpeningHour = (index) => {
+  //   const newOpeningHours = openingHours.filter((_, i) => i !== index);
+  //   setOpeningHours(newOpeningHours);
+  // };
 
   return (
     <Modal isOpen={showAddKitchenModal} toggle={toggleAddKitchenModal}>
@@ -136,6 +145,24 @@ const AddKitchen = ({ menuId, showAddKitchenModal, toggleAddKitchenModal }) => {
             {formik.errors.name && (
               <div className="text-danger">{formik.errors.name_ar}</div>
             )}
+          </div>
+          <div className="flex-fill mb-2">
+            <Label for="site_id">{t("Select Site")}</Label>
+            <select
+              id="site_id"
+              onChange={(e) => setSelectedSiteId(e.target.value)}
+              value={selectedSiteId}
+              className="form-control"
+            >
+              {formik.errors.name && (
+                <div className="text-danger">{formik.errors.site_id}</div>
+              )}
+              {siteList.map((site) => (
+                <option key={site.site_id} value={site.site_id}>
+                  {site.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* <FormControlLabel

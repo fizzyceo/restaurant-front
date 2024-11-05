@@ -13,6 +13,7 @@ import {
 import AddLink from "./Components/AddLink";
 import { useLocation } from "react-router-dom";
 import { useConfirmDialogStore } from "../../../stores/Modal/ConfirmDialogStore";
+import { Pagination } from "../../../Components/Common/DataTableBase/Pagination";
 
 const Links = () => {
   const [totalRows, setTotalRows] = useState(0);
@@ -32,6 +33,8 @@ const Links = () => {
   useEffect(() => {
     if (links) {
       // Transforming the data format
+      console.log(links);
+
       const formattedData = links.flatMap((space) =>
         space.users.map((user) => ({
           space_id: space.space_id,
@@ -71,7 +74,22 @@ const Links = () => {
   const toggleAddLinkModal = () => {
     setShowAddLink(!showAddLink);
   };
+  const [currentLinks, setCurrentLinks] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const rowsPerPage = 5; // Display 5 rows per page
+  useEffect(() => {
+    if (formattedLinks.length > 0) {
+      const curr = formattedLinks.slice(
+        (currentPage - 1) * rowsPerPage,
+        currentPage * rowsPerPage
+      );
+      setCurrentLinks(curr);
+    }
+  }, [currentPage, formattedLinks]);
 
+  const onPageChange = (page) => {
+    setCurrentPage(page);
+  };
   const deleteLink = async (body) => {
     try {
       await removeLink(body);
@@ -84,10 +102,11 @@ const Links = () => {
     <>
       <DataTableBase
         tableTitle={"LINKS"}
-        data={formattedLinks}
+        data={currentLinks} // Display current paginated data
         columns={columns}
         loading={isLoading}
-        paginationTotalRows={totalRows}
+        paginationTotalRows={formattedLinks.length}
+        // onChangePage={onPageChange}
         onHeaderAddBtnClick={toggleAddLinkModal}
         showSearch={true}
         showSubHeader={true}
@@ -110,6 +129,12 @@ const Links = () => {
             </button>
           </>
         )}
+      />
+      <Pagination
+        currentPage={currentPage}
+        totalRows={formattedLinks.length}
+        rowsPerPage={rowsPerPage}
+        onPageChange={onPageChange}
       />
       {showAddLink && (
         <AddLink

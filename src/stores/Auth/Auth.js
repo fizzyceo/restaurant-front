@@ -38,7 +38,13 @@ export const useAuth = create((set) => ({
           })
           .then((response2) => {
             // Print the accessToken and response2 for debugging
-
+            if (
+              response2.role?.toUpperCase() === "USER" ||
+              response2.role?.toUpperCase() === "NORMAL_USER"
+            ) {
+              set({ errorMsg: "Not Allowed" });
+              return;
+            }
             // Calculate the expiration date
             const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 

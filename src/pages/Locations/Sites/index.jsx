@@ -14,6 +14,7 @@ import { AddSite } from "./Components/AddSite";
 import { EditSite } from "./Components/EditSite";
 import { useLocation } from "react-router-dom";
 import { useConfirmDialogStore } from "../../../stores/Modal/ConfirmDialogStore";
+import { Pagination } from "../../../Components/Common/DataTableBase/Pagination";
 const Sites = () => {
   const [totalRows, setTotalRows] = useState(0);
 
@@ -219,11 +220,29 @@ const Sites = () => {
       console.log(e);
     }
   };
+
+  const [currentSites, setCurrentSites] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const rowsPerPage = 5; // Display 5 rows per page
+  useEffect(() => {
+    if (sites.length > 0) {
+      const curr = sites.slice(
+        (currentPage - 1) * rowsPerPage,
+        currentPage * rowsPerPage
+      );
+      setCurrentSites(curr);
+    }
+  }, [currentPage, sites]);
+
+  const onPageChange = (page) => {
+    setCurrentPage(page);
+  };
+
   return (
     <>
       <DataTableBase
         tableTitle={"SITES"}
-        data={sites}
+        data={currentSites}
         columns={columns}
         loading={isLoading}
         paginationTotalRows={totalRows}
@@ -266,7 +285,12 @@ const Sites = () => {
           </>
         )}
       />
-
+      <Pagination
+        currentPage={currentPage}
+        totalRows={sites.length}
+        rowsPerPage={rowsPerPage}
+        onPageChange={onPageChange}
+      />
       <AddSite
         toggleAddSiteModal={toggleAddSiteModal}
         showAddSiteModal={showAddSiteModal}

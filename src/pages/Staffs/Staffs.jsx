@@ -5,6 +5,7 @@ import { useStaffStore } from "../../stores/Staffs";
 import { useConfirmDialogStore } from "../../stores/Modal/ConfirmDialogStore";
 import EditUser from "./components/EditUser";
 import AddUser from "./components/AddUser";
+import moment from "moment";
 
 export const StaffsPage = () => {
   const title = "Users";
@@ -16,20 +17,46 @@ export const StaffsPage = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [showEditingModal, setshowEditingModal] = useState(false);
   const [showAddingModal, setshowAddingModal] = useState(false);
+
+  // Pagination State
+  const [totalRows, setTotalRows] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [tableDataPerPage, setTableDataPerPage] = useState([]);
+
   useEffect(() => {
     getAllUsers();
   }, []);
-
   useEffect(() => {
-    console.log(users);
+    setTotalRows(users.length);
   }, [users]);
 
-  // role, canCallTeaboy, image_url, name,email,user_id,phone, isVerified,
+  const displayRole = (role) => {
+    let formattedRole = role?.toUpperCase();
+    if (formattedRole === "SUPER_ADMIN") {
+      return "ROOT";
+    } else if (formattedRole === "ADMIN") {
+      return "ADMIN";
+    } else if (formattedRole === "NORMAL_USER" || formattedRole === "USER") {
+      return "USER";
+    }
+    return "";
+  };
+
+  // Calculate the current data slice
+
   const columns = [
     {
-      name: t("User ID"),
+      name: t("ID"),
       width: "100px",
       selector: (row) => row.user_id,
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: t("Created"),
+      width: "120px",
+      selector: (row) => moment(row?.created_at).format("YY/MM/DD hh:mm"),
       sortable: true,
       wrap: true,
     },
@@ -46,25 +73,45 @@ export const StaffsPage = () => {
       sortable: true,
       wrap: true,
     },
-
     {
       name: t("Role"),
-      width: "150px",
+      width: "90px",
       selector: (row) => row.role,
       sortable: true,
       wrap: true,
+      cell: (row) => <div>{displayRole(row.role)}</div>,
     },
     {
-      name: t("Can Call Teaboy"),
-      selector: (row) => (row.canCallTeaboy ? t("Yes") : t("No")),
+      name: t("Call Teaboy"),
+      selector: (row) => row.canCallTeaboy,
       sortable: true,
       wrap: true,
+      cell: (row) => (
+        <div
+          style={{ fontSize: "14px" }}
+          className={`badge cursor-normal bg-soft-${
+            row.canCallTeaboy ? "success" : "danger"
+          } text-${row.canCallTeaboy ? "success" : "danger"}`}
+        >
+          {row.canCallTeaboy ? "Yes" : "No"}
+        </div>
+      ),
     },
     {
-      name: t("Signup"),
-      selector: (row) => (row.signedUp ? t("Yes") : t("No")),
+      name: t("Registered"),
+      selector: (row) => row.signedUp,
       sortable: true,
       wrap: true,
+      cell: (row) => (
+        <div
+          style={{ fontSize: "14px" }}
+          className={`badge cursor-normal bg-soft-${
+            row.signedUp ? "success" : "danger"
+          } text-${row.signedUp ? "success" : "danger"}`}
+        >
+          {row.signedUp ? "Yes" : "No"}
+        </div>
+      ),
     },
     {
       name: t("Image"),
@@ -79,7 +126,6 @@ export const StaffsPage = () => {
         ),
       wrap: true,
     },
-
     {
       name: t("Phone"),
       selector: (row) => row.phone,
@@ -88,11 +134,22 @@ export const StaffsPage = () => {
     },
     {
       name: t("Verified"),
-      selector: (row) => (row.isVerified ? t("Verified") : t("Not Verified")),
+      selector: (row) => row.isVerified,
       sortable: true,
       wrap: true,
+      cell: (row) => (
+        <div
+          style={{ fontSize: "14px" }}
+          className={`badge cursor-normal bg-soft-${
+            row.isVerified ? "success" : "danger"
+          } text-${row.isVerified ? "success" : "danger"}`}
+        >
+          {row.isVerified ? "Yes" : "No"}
+        </div>
+      ),
     },
   ];
+
   const toggleEditUserModal = (row) => {
     setSelectedRow(row);
     setshowEditingModal(!showEditingModal);
@@ -109,23 +166,25 @@ export const StaffsPage = () => {
       console.log(e);
     }
   };
+  const onChangePage = (page) => {};
+  useEffect(() => {
+    setTotalRows(users.length);
+  }, [users]);
   return (
     <>
       <DataTableBase
         tableTitle={title}
-        data={users}
+        data={users} // Pass only the current slice of data
         columns={columns}
         loading={isLoading}
-        // paginationTotalRows={total}
-        // onChangePage={onChangePage}
-        // onChangeRowsPerPage={onChangeRowsPerPage}
+        paginationTotalRows={users.length}
+        onChangePage={onChangePage} // Handle page change
+        // onChangeRowsPerPage={onChangeRowsPerPage} // Handle rows per page change
+        pagination
         onHeaderAddBtnClick={toggleCreateModal}
         onHeaderDeleteBtnClick={() => {
           alert("Soon");
         }}
-        // onRowEditBtnClick={setToFalsePositive}
-        // onRowDeleteBtnClick={deleteDevice}
-        // onSearchIconClick={searchHandler}
         actionColWidth="100px"
         customActionBtns={(row) => (
           <>
@@ -149,9 +208,8 @@ export const StaffsPage = () => {
               <i className="ri-delete-bin-line"></i>
             </button>
           </>
-        )} // showSearch={true}
+        )}
         showSubHeader={true}
-        // showActionButtons={true}
         showActionColumn={true}
       />
 
