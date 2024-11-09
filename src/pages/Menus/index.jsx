@@ -119,6 +119,13 @@ const Menu = () => {
       ),
     },
     {
+      name: t("VAT"),
+      // width: "100px",
+      selector: (row) => row?.VAT,
+      sortable: true,
+      wrap: true,
+    },
+    {
       name: t("Ask For Name"),
       // width: "100px",
       selector: (row) => row?.ask_for_name,

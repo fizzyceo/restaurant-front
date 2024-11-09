@@ -24,6 +24,9 @@ const AddMenu = ({ showAddMenuModal, toggleAddMenuModal }) => {
       name_ar: "",
       currency: "",
       currency_ar: "",
+      ask: "",
+      ask_ar: "",
+      VAT: 0,
       ask_for_table: false,
       ask_for_name: true,
     },
@@ -32,24 +35,28 @@ const AddMenu = ({ showAddMenuModal, toggleAddMenuModal }) => {
       name_ar: Yup.string().optional(),
       currency: Yup.string().required(),
       currency_ar: Yup.string().optional(),
+      VAT: Yup.number().optional(),
+      ask_ar: Yup.string().optional(),
+      ask: Yup.string().optional(),
       ask_for_table: Yup.boolean().required(t("Required")),
       ask_for_name: Yup.boolean().required(t("Required")),
     }),
     onSubmit: async (values) => {
-      console.log("Submitting form with values:", values);
-
       // Prepare JSON object
       const json = {
         name: values.name,
         name_ar: values.name_ar,
         currency: values.currency,
         currency_ar: values.currency_ar,
+        VAT: values.VAT,
+        ask: values.ask,
+        ask_ar: values.ask_ar,
         ask_for_table: values.ask_for_table,
         ask_for_name: values.ask_for_name,
       };
 
       // Debug log to see JSON contents
-      console.log("JSON to send:", JSON.stringify(json, null, 2));
+      console.log("Submitting form with values:", json);
 
       // Call the API with JSON object
       const result = await createMenu(json);
@@ -93,6 +100,27 @@ const AddMenu = ({ showAddMenuModal, toggleAddMenuModal }) => {
               {RenderFormikInput(formik, {
                 fieldName: "currency_ar",
                 label: "Currency (AR)",
+                fullWidth: true,
+              })}
+            </div>
+            <div className="flex-fill mb-2 w-100">
+              {RenderFormikInput(formik, {
+                fieldName: "VAT",
+                label: "VAT",
+                fullWidth: true,
+              })}
+            </div>
+            <div className="flex-fill mb-2 w-100">
+              {RenderFormikInput(formik, {
+                fieldName: "ask",
+                label: "Ask",
+                fullWidth: true,
+              })}
+            </div>
+            <div className="flex-fill mb-2 w-100">
+              {RenderFormikInput(formik, {
+                fieldName: "ask_ar",
+                label: "Ask (AR)",
                 fullWidth: true,
               })}
             </div>

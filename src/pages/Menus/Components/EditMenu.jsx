@@ -21,6 +21,7 @@ import {
 } from "reactstrap";
 import { FormControlLabel, Switch } from "@mui/material";
 import { useMenuStore } from "../../../stores/Assets/menu";
+import { RenderFormikInput } from "../../../Components/Common/Forms/FormikInputHelper";
 
 const EditMenu = ({ rowData, showEditMenuModal, toggleEditMenuModal }) => {
   const [images, setImages] = useState([]);
@@ -36,6 +37,10 @@ const EditMenu = ({ rowData, showEditMenuModal, toggleEditMenuModal }) => {
         name_ar: rowData?.name_ar || "",
         ask_for_table: rowData?.ask_for_table,
         ask_for_name: rowData?.ask_for_name,
+        ask: rowData?.ask || "",
+        ask_ar: rowData?.ask_ar || "",
+        VAT: rowData?.VAT || 0,
+
         currency: rowData?.currency || "",
         currency_ar: rowData?.currency_ar || "",
       });
@@ -48,6 +53,10 @@ const EditMenu = ({ rowData, showEditMenuModal, toggleEditMenuModal }) => {
       name_ar: rowData?.name_ar || "",
       currency: rowData?.currency || "",
       currency_ar: rowData?.currency_ar || "",
+      ask: rowData?.ask || "",
+      ask_ar: rowData?.ask_ar || "",
+      VAT: rowData?.VAT || 0,
+
       ask_for_table: rowData?.ask_for_table,
       ask_for_name: rowData?.ask_for_name,
     },
@@ -55,6 +64,10 @@ const EditMenu = ({ rowData, showEditMenuModal, toggleEditMenuModal }) => {
       name: Yup.string().required(t("Required")),
       name_ar: Yup.string().optional(),
       currency: Yup.string().required(t("Required")),
+      VAT: Yup.number().optional(),
+
+      ask_ar: Yup.string().optional(),
+      ask: Yup.string().optional(),
       currency_ar: Yup.string().optional(),
       ask_for_table: Yup.boolean(),
       ask_for_name: Yup.boolean(),
@@ -146,6 +159,27 @@ const EditMenu = ({ rowData, showEditMenuModal, toggleEditMenuModal }) => {
             }
             placeholder={t("Enter Currency (ar)")}
           />
+          <div className="flex-fill mb-2 w-100">
+            {RenderFormikInput(formik, {
+              fieldName: "VAT",
+              label: "VAT",
+              fullWidth: true,
+            })}
+          </div>
+          <div className="flex-fill mb-2 w-100">
+            {RenderFormikInput(formik, {
+              fieldName: "ask",
+              label: "Ask",
+              fullWidth: true,
+            })}
+          </div>
+          <div className="flex-fill mb-2 w-100">
+            {RenderFormikInput(formik, {
+              fieldName: "ask_ar",
+              label: "Ask (AR)",
+              fullWidth: true,
+            })}
+          </div>
 
           <FormControlLabel
             control={

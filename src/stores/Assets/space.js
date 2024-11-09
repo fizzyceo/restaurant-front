@@ -70,6 +70,8 @@ export const useSpaceStore = create((set, get) => ({
         set({ spaces: [], isLoading: false });
         return;
       }
+      const endpointStartTime = Date.now(); // DB response time starts
+
       const accessToken = await tokenHelper.getToken();
 
       // Fetch data from the existing endpoint
@@ -90,6 +92,9 @@ export const useSpaceStore = create((set, get) => ({
         // If a match is found, merge the objects
         return matchingItem ? { ...space, ...matchingItem } : space;
       });
+
+      const endpointEndTime = Date.now(); // DB response time starts
+      console.log(`Backend Latency: ${endpointEndTime - endpointStartTime} ms`);
 
       // Update state with combined results
       set({ spaces: combinedSpaces, isLoading: false });

@@ -53,7 +53,7 @@ const Menu = () => {
   const columns = [
     {
       name: t("ID"),
-      selector: (row) => row?.menu_item_id,
+      selector: (row) => row?.item_id,
       sortable: true,
       wrap: true,
     },
@@ -81,30 +81,30 @@ const Menu = () => {
     },
     {
       name: t("Options"),
-      selector: (row) => row?.menuItem_options?.length,
+      selector: (row) => row?.options?.length,
       sortable: true,
       wrap: true,
       cell: (row) => (
-        <div className="cursor-pointer" id={`anchor-${row?.menu_item_id}`}>
+        <div className="cursor-pointer" id={`anchor-${row?.item_id}`}>
           <span
             style={{ fontSize: "14px" }}
             className={`badge bg-soft-${
-              row?.menuItem_options?.length > 0 ? "info" : "warning"
+              row?.options?.length > 0 ? "info" : "warning"
             } cursor-pointer text-${
-              row?.menuItem_options?.length > 0 ? "success" : "warning"
+              row?.options?.length > 0 ? "success" : "warning"
             } text-uppercase`}
-            onClick={() => handleOptionsClick(row.menu_item_id)}
+            onClick={() => handleOptionsClick(row.item_id)}
           >
-            {row?.menuItem_options?.length > 0 && (
+            {row?.options?.length > 0 && (
               <i className="ri-external-link-line"></i>
             )}{" "}
-            {row?.menuItem_options?.length > 0 ? "Check" : "No Options"}
+            {row?.options?.length > 0 ? "Check" : "No Options"}
           </span>
           <UncontrolledTooltip
             placement="top"
-            target={`anchor-${row?.menu_item_id}`}
+            target={`anchor-${row?.item_id}`}
           >
-            {row?.menuItem_options?.length > 0
+            {row?.options?.length > 0
               ? "Check Associated Options"
               : "No options available"}
           </UncontrolledTooltip>
@@ -258,7 +258,7 @@ const Menu = () => {
               className="btn btn-sm btn-danger"
               onClick={() => {
                 showConfirm(() => {
-                  deleteItemFun(row?.menu_item_id);
+                  deleteItemFun(row?.item_id);
                 });
               }}
               title="Delete"

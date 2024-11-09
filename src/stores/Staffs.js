@@ -51,7 +51,7 @@ export const useStaffStore = create((set, get) => ({
       const accessToken = await tokenHelper.getToken();
 
       // Post the site creation request
-      const response = await axiosHelper.get("/user", {
+      const response = await axiosHelper.get("/v2/user", {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 

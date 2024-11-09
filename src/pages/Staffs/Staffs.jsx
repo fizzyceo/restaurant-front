@@ -33,7 +33,7 @@ export const StaffsPage = () => {
 
   const displayRole = (role) => {
     let formattedRole = role?.toUpperCase();
-    if (formattedRole === "SUPER_ADMIN") {
+    if (formattedRole === "SUPER_ADMIN" || formattedRole === "ROOT") {
       return "ROOT";
     } else if (formattedRole === "ADMIN") {
       return "ADMIN";

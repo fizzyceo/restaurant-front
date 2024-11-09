@@ -35,7 +35,12 @@ const customIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-const EditItem = ({ rowData, showEditItemModal, toggleEditItemModal }) => {
+const EditItem = ({
+  menuId,
+  rowData,
+  showEditItemModal,
+  toggleEditItemModal,
+}) => {
   const [images, setImages] = useState([]);
   const [options, setOptions] = useState([]);
   const [newOption, setNewOption] = useState("");
@@ -78,9 +83,6 @@ const EditItem = ({ rowData, showEditItemModal, toggleEditItemModal }) => {
       available: Yup.boolean().optional(),
     }),
     onSubmit: async (values) => {
-      console.log("Submitting form with values:", values);
-      console.log("Submitting form with values:", values);
-
       // Create a JSON object directly from values
       const json = {
         title: values.title,
@@ -90,14 +92,12 @@ const EditItem = ({ rowData, showEditItemModal, toggleEditItemModal }) => {
         available: values.available,
       };
 
-      console.log("JSON data:", json);
-
       // formData.append("description", values.description);
       // formData.append("price", Number(values.price));
       // formData.append("available", Number(values.available));
 
       try {
-        await updateItem(rowData?.menu_id, rowData?.menu_item_id, json);
+        await updateItem(menuId, rowData?.item_id, json);
         formik.resetForm();
         toggleEditItemModal();
       } catch (error) {
