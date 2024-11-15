@@ -16,6 +16,7 @@ import { useLocation } from "react-router-dom";
 import { useConfirmDialogStore } from "../../stores/Modal/ConfirmDialogStore";
 import { QRCode } from "react-qrcode-logo";
 import { Pagination } from "../../Components/Common/DataTableBase/Pagination";
+import { useSiteStore } from "../../stores/Assets/site";
 
 const Menu = () => {
   const [totalRows, setTotalRows] = useState(0);
@@ -26,14 +27,20 @@ const Menu = () => {
   const { getMenus, isLoading, menus, deleteMenu } = useMenuStore(
     (state) => state
   );
+  const { getSites } = useSiteStore((state) => state);
+  const [sites, setSites] = useState([]);
+  const [selectedSiteId, setSelectedSiteId] = useState("All");
+  const [filteredMenus, setFilteredMenus] = useState([]);
   const ShowItemsModel = (menu_id) => {
     console.log("display items");
   };
-  // useEffect(() => {
-  //   if (menuId) {
-  //     getMenus({ search: menuId });
-  //   }
-  // }, [menuId]);
+  useEffect(() => {
+    const fetchSites = async () => {
+      const siteList = await getSites();
+      setSites(siteList);
+    };
+    fetchSites();
+  }, [getSites]);
   useEffect(() => {
     getMenus();
   }, []);
@@ -46,13 +53,28 @@ const Menu = () => {
   const columns = [
     {
       name: t("ID"),
-      // width: "100px",
+      width: "70px",
       selector: (row) => row?.menu_id,
       sortable: true,
       wrap: true,
       cell: (row) => (
         <div className="d-flex flex-row justify-content-center align-items-center gap-2">
           <span>{row?.menu_id}</span>
+        </div>
+      ),
+    },
+    {
+      name: t("Site"),
+      // width: "100px",
+      selector: (row) => row?.sites.length > 0 && row?.sites[0]?.site_id,
+      sortable: true,
+      wrap: true,
+      cell: (row) => (
+        <div className="d-flex flex-row justify-content-center align-items-center gap-2">
+          <span>
+            {row?.sites.length > 0 &&
+              `${row?.sites[0]?.name} (id: ${row?.sites[0]?.site_id}) `}
+          </span>
         </div>
       ),
     },
@@ -81,74 +103,105 @@ const Menu = () => {
       ),
     },
     {
+      name: t("Ask"),
+      selector: (row) => row?.ask,
+      sortable: true,
+      wrap: true,
+      cell: (row) => {
+        const truncatedAsk = row?.ask
+          ? row?.ask?.slice(0, 25) + (row?.ask?.length > 25 ? "..." : "")
+          : ""; // Truncate to first 5 characters with ellipsis if longer
+
+        return (
+          <div
+            className="d-flex flex-row justify-content-center align-items-center gap-2"
+            // id={`anchor-${row?.ask}`} // Unique ID for the tooltip
+          >
+            <span>{truncatedAsk}</span>
+            {/* <UncontrolledTooltip placement="top" target={`anchor-${row?.ask}`}>
+              {row?.ask}
+            </UncontrolledTooltip> */}
+          </div>
+        );
+      },
+    },
+    {
+      name: t("Ask (AR)"),
+      // width: "100px",
+      selector: (row) => row?.ask_ar,
+      sortable: true,
+      wrap: true,
+    },
+    {
       name: t("Currency"),
       // width: "100px",
       selector: (row) => row?.currency,
       sortable: true,
       wrap: true,
-    },
-    {
-      name: t("Currency (AR)"),
-      // width: "100px",
-      selector: (row) => row?.currency_ar,
-      sortable: true,
-      wrap: true,
-    },
-    {
-      name: t("Ask For Table"),
-      // width: "100px",
-      selector: (row) => row?.ask_for_table,
-      sortable: true,
-      wrap: true,
       cell: (row) => (
         <div className="d-flex flex-row justify-content-center align-items-center gap-2">
           <span>
-            {row?.ask_for_table ? (
-              <i
-                className="ri-checkbox-circle-fill text-success "
-                style={{ fontSize: "28px" }}
-              ></i>
-            ) : (
-              <i
-                className="ri-close-circle-fill text-danger"
-                style={{ fontSize: "28px" }}
-              ></i>
-            )}
+            {row?.currency} {row?.currency_ar && `(${row?.currency_ar})`}
           </span>
         </div>
       ),
     },
+
+    // {
+    //   name: t("Ask For Table"),
+    //   // width: "100px",
+    //   selector: (row) => row?.ask_for_table,
+    //   sortable: true,
+    //   wrap: true,
+    //   cell: (row) => (
+    //     <div className="d-flex flex-row justify-content-center align-items-center gap-2">
+    //       <span>
+    //         {row?.ask_for_table ? (
+    //           <i
+    //             className="ri-checkbox-circle-fill text-success "
+    //             style={{ fontSize: "28px" }}
+    //           ></i>
+    //         ) : (
+    //           <i
+    //             className="ri-close-circle-fill text-danger"
+    //             style={{ fontSize: "28px" }}
+    //           ></i>
+    //         )}
+    //       </span>
+    //     </div>
+    //   ),
+    // },
     {
       name: t("VAT"),
-      // width: "100px",
+      width: "80px",
       selector: (row) => row?.VAT,
       sortable: true,
       wrap: true,
     },
-    {
-      name: t("Ask For Name"),
-      // width: "100px",
-      selector: (row) => row?.ask_for_name,
-      sortable: true,
-      wrap: true,
-      cell: (row) => (
-        <div className="d-flex flex-row justify-content-center align-items-center gap-2">
-          <span>
-            {row?.ask_for_name ? (
-              <i
-                className="ri-checkbox-circle-fill text-success "
-                style={{ fontSize: "28px" }}
-              ></i>
-            ) : (
-              <i
-                className="ri-close-circle-fill text-danger"
-                style={{ fontSize: "28px" }}
-              ></i>
-            )}
-          </span>
-        </div>
-      ),
-    },
+    // {
+    //   name: t("Ask For Name"),
+    //   // width: "100px",
+    //   selector: (row) => row?.ask_for_name,
+    //   sortable: true,
+    //   wrap: true,
+    //   cell: (row) => (
+    //     <div className="d-flex flex-row justify-content-center align-items-center gap-2">
+    //       <span>
+    //         {row?.ask_for_name ? (
+    //           <i
+    //             className="ri-checkbox-circle-fill text-success "
+    //             style={{ fontSize: "28px" }}
+    //           ></i>
+    //         ) : (
+    //           <i
+    //             className="ri-close-circle-fill text-danger"
+    //             style={{ fontSize: "28px" }}
+    //           ></i>
+    //         )}
+    //       </span>
+    //     </div>
+    //   ),
+    // },
 
     {
       name: t("Items"),
@@ -214,23 +267,49 @@ const Menu = () => {
     }
   };
 
+  const handleSiteSelect = (e) => {
+    const id = e.target.value;
+    setSelectedSiteId(id);
+  };
+
   const [currentMenus, setCurrentMenus] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); // Track the current page
   const rowsPerPage = 5; // Display 5 rows per page
   useEffect(() => {
-    if (menus.length > 0) {
-      const curr = menus.slice(
+    if (filteredMenus.length > 0) {
+      const curr = filteredMenus.slice(
         (currentPage - 1) * rowsPerPage,
         currentPage * rowsPerPage
       );
       setCurrentMenus(curr);
+    } else {
+      setCurrentMenus([]);
     }
-  }, [currentPage, menus]);
+  }, [currentPage, filteredMenus]);
 
   const onPageChange = (page) => {
     setCurrentPage(page);
   };
 
+  useEffect(() => {
+    const filterMenus = () => {
+      if (selectedSiteId === "All") {
+        setFilteredMenus(menus);
+      } else {
+        const filtered = menus.filter(
+          (menu) =>
+            menu?.sites.length > 0 &&
+            menu?.sites[0].site_id === parseInt(selectedSiteId)
+        );
+        console.log(filtered);
+
+        setFilteredMenus(filtered);
+      }
+      setTotalRows(filteredMenus.length);
+    };
+
+    filterMenus();
+  }, [menus, selectedSiteId]);
   return (
     <>
       <DataTableBase
@@ -238,7 +317,7 @@ const Menu = () => {
         data={currentMenus}
         columns={columns}
         loading={isLoading}
-        paginationTotalRows={totalRows}
+        paginationTotalRows={filteredMenus.length}
         onChangePage={onChangePage}
         // onChangeRowsPerPage={onChangeRowsPerPage}
         onHeaderAddBtnClick={toggleAddMenuModal}
@@ -249,7 +328,7 @@ const Menu = () => {
         // onRowDeleteBtnClick={toggleDeleteMenuModal}
         onSearchIconClick={searchHandler}
         actionColWidth="100px"
-        showSearch={true}
+        showSearch={false}
         showSubHeader={true}
         showActionButtons={true}
         customActionBtns={(row) => (
@@ -277,15 +356,36 @@ const Menu = () => {
             </button>
           </>
         )}
-      />
+      >
+        {sites.length > 0 && (
+          <div className="d-flex align-items-center mb-3 justify-content-center gap-2">
+            <h5 className="text-nowrap">For Site: </h5>
+            <select
+              className="form-control"
+              value={selectedSiteId}
+              onChange={handleSiteSelect}
+            >
+              <option key={"all"} value={"All"}>
+                {"All"}
+              </option>
+              {sites.map((site) => (
+                <option key={site.site_id} value={site.site_id}>
+                  {site.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </DataTableBase>
       <Pagination
         currentPage={currentPage}
-        totalRows={menus.length}
+        totalRows={filteredMenus.length}
         rowsPerPage={rowsPerPage}
         onPageChange={onPageChange}
       />
       {showAddMenuModal && (
         <AddMenu
+          siteList={sites}
           toggleAddMenuModal={toggleAddMenuModal}
           showAddMenuModal={showAddMenuModal}
         />
@@ -293,6 +393,7 @@ const Menu = () => {
 
       {selectedRow && (
         <EditMenu
+          siteList={sites}
           toggleEditMenuModal={toggleEditMenuModal}
           showEditMenuModal={showEditMenuModal}
           rowData={selectedRow}

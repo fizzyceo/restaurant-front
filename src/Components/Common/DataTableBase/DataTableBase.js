@@ -62,7 +62,7 @@ export default function DataTableBase({
   onRowDeleteBtnClick,
   onActivate,
   onSuspend,
-  showSelectBox = true,
+  showSelectBox = false,
   showActionColumn = true,
   showActionButtons,
   showSearch,

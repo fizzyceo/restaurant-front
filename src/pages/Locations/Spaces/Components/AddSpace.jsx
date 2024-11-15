@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { t } from "i18next";
@@ -43,6 +43,24 @@ const AddSpace = ({
   );
   const { createSpace, isLoading } = useSpaceStore((state) => state);
 
+  const [currKitchens, setCurrentKitchens] = useState([]);
+  const [currMenus, setCurrMenus] = useState([]);
+  useEffect(() => {
+    if (selectedSiteId) {
+      console.log(kitchenList, menuList, selectedSiteId);
+
+      const filteredKitchens = kitchenList.filter(
+        (kitchen) => kitchen?.site?.site_id === parseInt(selectedSiteId)
+      );
+      const filteredMenus = menuList.filter(
+        (menu) =>
+          menu?.sites.length > 0 &&
+          menu?.sites[0].site_id === parseInt(selectedSiteId)
+      );
+      setCurrMenus(filteredMenus);
+      setCurrentKitchens(filteredKitchens);
+    }
+  }, [selectedSiteId]);
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -99,45 +117,49 @@ const AddSpace = ({
               value={selectedSiteId}
               className="form-control"
             >
+              <option value="">Select</option>
               {siteList.map((site) => (
                 <option key={site.site_id} value={site.site_id}>
-                  {site.name}
+                  {site.site_id} - {site.name}
                 </option>
               ))}
             </select>
           </div>
+          {selectedSiteId && (
+            <>
+              <div className="flex-fill mb-2">
+                <Label for="Kitchen">{t("Select Kitchen")}</Label>
+                <select
+                  id="Kitchen"
+                  onChange={(e) => setSelectedKichenId(e.target.value)}
+                  value={selectedKichenId}
+                  className="form-control"
+                >
+                  {currKitchens.map((kitchen) => (
+                    <option key={kitchen.kitchen_id} value={kitchen.kitchen_id}>
+                      {kitchen.kitchen_id} - {kitchen.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-          <div className="flex-fill mb-2">
-            <Label for="Kitchen">{t("Select Kitchen")}</Label>
-            <select
-              id="Kitchen"
-              onChange={(e) => setSelectedKichenId(e.target.value)}
-              value={selectedKichenId}
-              className="form-control"
-            >
-              {kitchenList.map((kitchen) => (
-                <option key={kitchen.kitchen_id} value={kitchen.kitchen_id}>
-                  {kitchen.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex-fill mb-2">
-            <Label for="Menu">{t("Select Menu")}</Label>
-            <select
-              id="Menu"
-              onChange={(e) => setSelectedMenuId(e.target.value)}
-              value={selectedMenuId}
-              className="form-control"
-            >
-              {menuList.map((menu) => (
-                <option key={menu.menu_id} value={menu.menu_id}>
-                  {menu.menu_id} - {menu.name}
-                </option>
-              ))}
-            </select>
-          </div>
+              <div className="flex-fill mb-2">
+                <Label for="Menu">{t("Select Menu")}</Label>
+                <select
+                  id="Menu"
+                  onChange={(e) => setSelectedMenuId(e.target.value)}
+                  value={selectedMenuId}
+                  className="form-control"
+                >
+                  {currMenus.map((menu) => (
+                    <option key={menu.menu_id} value={menu.menu_id}>
+                      {menu.menu_id} - {menu.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </>
+          )}
 
           <div className="flex-fill mb-2">
             <Label for="name">{t("Name")}</Label>

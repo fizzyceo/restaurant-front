@@ -108,7 +108,7 @@ const Links = () => {
         paginationTotalRows={formattedLinks.length}
         // onChangePage={onPageChange}
         onHeaderAddBtnClick={toggleAddLinkModal}
-        showSearch={true}
+        showSearch={false}
         showSubHeader={true}
         showActionButtons={true}
         customActionBtns={(row) => (

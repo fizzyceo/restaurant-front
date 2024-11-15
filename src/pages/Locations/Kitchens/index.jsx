@@ -121,17 +121,24 @@ const Kitchens = () => {
     //add id column
     {
       name: t("ID"),
-      // width: "100px",
+      width: "80px",
       selector: (row) => row?.kitchen_id,
       sortable: true,
       wrap: true,
     },
     {
-      name: t("Site ID"),
+      name: t("Site"),
       // width: "100px",
       selector: (row) => row?.site_id,
       sortable: true,
       wrap: true,
+      cell: (row) => (
+        <div className="d-flex flex-row justify-content-center align-items-center gap-2">
+          <span>
+            {row?.site?.name} (id: {row?.site?.site_id})
+          </span>
+        </div>
+      ),
     },
 
     {
@@ -161,7 +168,7 @@ const Kitchens = () => {
     },
     {
       name: t("isOpen"),
-      width: "100px",
+      width: "90px",
       selector: (row) => row?.isOpen,
       sortable: true,
       wrap: true,
@@ -179,6 +186,8 @@ const Kitchens = () => {
 
     {
       name: t("OpeningHours"),
+      width: "150px",
+
       selector: (row) => row?.isWeeklyTimingOn,
       sortable: true,
       wrap: true,
@@ -194,7 +203,7 @@ const Kitchens = () => {
             onClick={() => handleScheduleClick(row)}
           >
             {<i className="ri-external-link-line"></i>}{" "}
-            {row?.isWeeklyTimingOn ? "Opening Hours" : "No Opening Hours"}
+            {row?.isWeeklyTimingOn ? "Hours" : "None"}
           </span>
           <UncontrolledTooltip
             placement="top"
@@ -209,6 +218,8 @@ const Kitchens = () => {
     },
     {
       name: t("Token"),
+      width: "110px",
+
       selector: (row) => row?.token,
       sortable: true,
       wrap: true,
@@ -219,7 +230,7 @@ const Kitchens = () => {
             className={`badge bg-soft-success cursor-pointer text-success text-uppercase`}
             onClick={() => handleTokenClick(row)}
           >
-            {<i className="ri-external-link-line"></i>} View Token
+            {<i className="ri-external-link-line"></i>} Token
           </span>
           <UncontrolledTooltip placement="top" target={`anchor-${row?.token}`}>
             Check Associated Token
@@ -276,6 +287,8 @@ const Kitchens = () => {
         currentPage * rowsPerPage
       );
       setCurrentKitchens(curr);
+    } else {
+      setCurrentKitchens([]);
     }
   }, [currentPage, filteredKitchens]);
 
@@ -301,7 +314,7 @@ const Kitchens = () => {
         // onRowDeleteBtnClick={toggleDeleteKitchenModal}
         onSearchIconClick={searchHandler}
         actionColWidth="100px"
-        showSearch={true}
+        showSearch={false}
         showSubHeader={true}
         showActionButtons={true}
         customActionBtns={(row) => (

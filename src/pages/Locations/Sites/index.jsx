@@ -42,7 +42,7 @@ const Sites = () => {
   const columns = [
     {
       name: t("ID"),
-      // width: "100px",
+      width: "80px",
       selector: (row) => row?.site_id,
       sortable: true,
       wrap: true,
@@ -256,7 +256,7 @@ const Sites = () => {
         // onRowDeleteBtnClick={toggleDeleteSiteModal}
         onSearchIconClick={searchHandler}
         actionColWidth="100px"
-        showSearch={true}
+        showSearch={false}
         showSubHeader={true}
         showActionButtons={true}
         customActionBtns={(row) => (

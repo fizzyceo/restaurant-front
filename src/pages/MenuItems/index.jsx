@@ -239,7 +239,7 @@ const Menu = () => {
         // onRowDeleteBtnClick={toggleDeleteMenuModal}
         onSearchIconClick={searchHandler}
         actionColWidth="100px"
-        showSearch={true}
+        showSearch={false}
         showSubHeader={true}
         showActionButtons={true}
         customActionBtns={(row) => (

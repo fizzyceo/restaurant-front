@@ -101,7 +101,8 @@ const Spaces = () => {
     },
     {
       name: t("Site"),
-      selector: (row) => row?.site_name, // Assuming `site_name` is the property
+      width: "150px",
+      selector: (row) => `${row?.site_name} (id: ${row?.site_id})`, // Assuming `site_name` is the property
       sortable: true,
       wrap: true,
     },
@@ -118,6 +119,13 @@ const Spaces = () => {
       wrap: true,
     },
     {
+      name: t("Order Distance"),
+      // width: "100px",
+      selector: (row) => row?.allowedOrderDistance,
+      sortable: true,
+      wrap: true,
+    },
+    {
       name: t("Type"),
       selector: (row) => row?.type,
       sortable: true,
@@ -130,33 +138,29 @@ const Spaces = () => {
       wrap: true,
     },
     {
-      name: t("Menu ID"),
+      name: t("Menu "),
       selector: (row) => row?.menu_id, // Assuming `menu_name` is the property
-      width: "110px",
 
       sortable: true,
       wrap: true,
+      cell: (row) => (
+        <div>{row.menu_id && `${row.menu_name} (id: ${row.menu_id})`}</div>
+      ),
     },
+
     {
-      name: t("Menu Name"),
-      selector: (row) => row?.menu_name, // Assuming `menu_name` is the property
-      sortable: true,
-      wrap: true,
-    },
-    {
-      name: t("Kitchen ID"),
+      name: t("Kitchen "),
       selector: (row) => row?.kitchen_id,
-      width: "120px",
 
       sortable: true,
       wrap: true,
+      cell: (row) => (
+        <div>
+          {row.kitchen_id && `${row.kitchen_name} (id: ${row.kitchen_id})`}
+        </div>
+      ),
     },
-    {
-      name: t("Kitchen Name"),
-      selector: (row) => row?.kitchen_name, // Assuming `kitchen_name` is the property
-      sortable: true,
-      wrap: true,
-    },
+
     {
       name: t("QR Code"),
       // width: "95px",
@@ -261,7 +265,7 @@ const Spaces = () => {
           onHeaderAddBtnClick={toggleAddSpaceModal}
           onSearchIconClick={() => {}}
           actionColWidth="100px"
-          showSearch={true}
+          showSearch={false}
           showSubHeader={true}
           showActionButtons={true}
           customActionBtns={(row) => (

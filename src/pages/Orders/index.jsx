@@ -16,6 +16,9 @@ import Flatpickr from "react-flatpickr";
 
 import { useConfirmDialogStore } from "../../stores/Modal/ConfirmDialogStore";
 import { useOrderStore } from "../../stores/Orders";
+import moment from "moment";
+import { useSiteStore } from "../../stores/Assets/site";
+import { useKitchenStore } from "../../stores/Assets/kitchen";
 const Orders = () => {
   const [totalRows, setTotalRows] = useState(0);
   const [orderList, setOrderList] = useState([]);
@@ -31,14 +34,69 @@ const Orders = () => {
   const { getOrders, isLoading, orders, deleteOrder } = useOrderStore(
     (state) => state
   );
-  const ShowItemsModel = (Order_id) => {
-    console.log("display items");
+
+  const [kitchenList, setKitchenList] = useState([]);
+  const [siteList, setSiteList] = useState([]);
+  const [selectedSiteId, setSelectedSiteId] = useState("All");
+  const [selectedKitchenId, setSelectedKitchenId] = useState("All");
+  const { getSites } = useSiteStore((state) => state);
+  const { getKitchens, kitchens } = useKitchenStore((state) => state);
+  const handleKitchenChange = (e) => {
+    setSelectedKitchenId(e.target.value);
   };
-  // useEffect(() => {
-  //   if (OrderId) {
-  //     getOrders({ search: OrderId });
-  //   }
-  // }, [OrderId]);
+
+  const handleSiteChange = (e) => {
+    setSelectedSiteId(e.target.value);
+  };
+  useEffect(() => {
+    const fetchSites = async () => {
+      const siteList = await getSites(); // Fetch sites
+      setSiteList(siteList);
+    };
+
+    fetchSites(); // Call the fetch function
+
+    getKitchens(); // Fetch kitchens
+  }, [getSites]);
+  useEffect(() => {
+    if (kitchens.length > 0) {
+      setKitchenList(kitchens);
+    }
+  }, [kitchens]);
+
+  useEffect(() => {
+    const filterOrderList = () => {
+      if (selectedSiteId === "All") {
+        setFilteredOrderList(orderList);
+      } else {
+        const filtered = orderList.filter(
+          (order) => order?.space?.site_id === parseInt(selectedSiteId)
+        );
+
+        setFilteredOrderList(filtered);
+      }
+      setTotalRows(filteredOrderList.length);
+    };
+
+    filterOrderList();
+  }, [orderList, selectedSiteId]);
+  useEffect(() => {
+    const filterOrderList = () => {
+      if (selectedKitchenId === "All") {
+        setFilteredOrderList(orderList);
+      } else {
+        const filtered = orderList.filter(
+          (order) => order?.space?.kitchen_id === parseInt(selectedKitchenId)
+        );
+
+        setFilteredOrderList(filtered);
+      }
+      setTotalRows(filteredOrderList.length);
+    };
+
+    filterOrderList();
+  }, [orderList, selectedKitchenId]);
+
   useEffect(() => {
     getOrders();
   }, []);
@@ -106,6 +164,7 @@ const Orders = () => {
     });
     setFilteredOrderList(filtered);
   }, [orderList, selectedStatus, startDate, endDate]);
+
   function processingTime(createdAt, updatedAt) {
     // Ensure both dates are valid
     if (!createdAt || !updatedAt) {
@@ -131,13 +190,13 @@ const Orders = () => {
     if (minutes > 0) result += `${minutes} m, `;
     if (seconds > 0) result += `${seconds} s`;
 
-    return result || "0 seconds";
+    return result || "N/A";
   }
 
   const columns = [
     {
       name: t("ID"),
-      // width: "100px",
+      width: "80px",
       selector: (row) => row?.order_number,
       sortable: true,
       wrap: true,
@@ -148,14 +207,16 @@ const Orders = () => {
       ),
     },
     {
-      name: t("Space ID"),
+      name: t("Space"),
       // width: "100px",
       selector: (row) => row?.spaceId,
       sortable: true,
       wrap: true,
       cell: (row) => (
         <div className="d-flex flex-row justify-content-center align-items-center gap-2">
-          <span>{row?.spaceId}</span>
+          <span>
+            {row?.space?.name} (id: {row?.space?.space_id})
+          </span>
         </div>
       ),
     },
@@ -185,7 +246,7 @@ const Orders = () => {
     // },
     {
       name: t("Quantity"),
-      // width: "100px",
+      width: "110px",
       selector: (row) => row?.quantity,
       sortable: true,
       wrap: true,
@@ -204,11 +265,11 @@ const Orders = () => {
       wrap: true,
       cell: (row) => (
         <div className="d-flex flex-row justify-content-center align-items-center gap-2">
-          <img
+          {/* <img
             src={row?.menu_item?.item_images[0].image_url}
             width={48}
             alt=""
-          />
+          /> */}
           <span>{row?.menu_item?.title}</span>
         </div>
       ),
@@ -230,6 +291,34 @@ const Orders = () => {
         </div>
       ),
     },
+    {
+      name: t("Source"),
+      width: "100px",
+      selector: (row) => row?.userId,
+      sortable: true,
+      wrap: true,
+      cell: (row) => (
+        <div
+          style={{ fontSize: "14px" }}
+          className={`badge cursor-normal bg-soft-${
+            row.userId ? "success" : "danger"
+          } text-${row.userId ? "success" : "secondary"}`}
+        >
+          {row.userId ? "Mobile" : "QR"}
+        </div>
+      ),
+    },
+    {
+      name: t("Time"),
+      // width: "100px",
+      selector: (row) => row?.status,
+      sortable: true,
+      wrap: true,
+      cell: (row) => (
+        <div>{moment(row?.created_at).format("YY/MM/DD hh:ss")}</div>
+      ),
+    },
+
     {
       name: t("Processing Time"),
       // width: "100px",
@@ -292,7 +381,7 @@ const Orders = () => {
         // onRowDeleteBtnClick={toggleDeleteOrderModal}
         onSearchIconClick={searchHandler}
         actionColWidth="100px"
-        // showSearch={true}
+        showSearch={false}
         // showSubHeader={true}
         // showActionButtons={true}
         customActionBtns={(row) => (
@@ -333,6 +422,46 @@ const Orders = () => {
                 {statusOptions.map((status, indx) => (
                   <option key={indx} value={status.value}>
                     {status.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {siteList.length > 0 && (
+            <div className="d-flex align-items-center mb-3 justify-content-start gap-2 w-25">
+              <h5 className="">Site </h5>
+              <select
+                className="form-control"
+                value={selectedSiteId}
+                onChange={handleSiteChange}
+              >
+                <option key={"all"} value={"All"}>
+                  {"All"}
+                </option>
+                {siteList.map((site, indx) => (
+                  <option key={indx} value={site.value}>
+                    {site.site_id} - {site.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {kitchenList.length > 0 && (
+            <div className="d-flex align-items-center mb-3 justify-content-start gap-2 w-25">
+              <h5 className="">Kitchen </h5>
+              <select
+                className="form-control"
+                value={selectedKitchenId}
+                onChange={handleKitchenChange}
+              >
+                <option key={"all"} value={"All"}>
+                  {"All"}
+                </option>
+                {kitchenList.map((kitchen, indx) => (
+                  <option key={indx} value={kitchen.value}>
+                    {kitchen.kitchen_id} -{kitchen.name}
                   </option>
                 ))}
               </select>
