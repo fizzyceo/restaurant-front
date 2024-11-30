@@ -346,9 +346,16 @@ const Menu = () => {
             <button
               className="btn btn-sm btn-danger"
               onClick={() => {
-                showConfirm(() => {
-                  deleteMenuFun(row.menu_id);
-                });
+                showConfirm(
+                  () => {
+                    deleteMenuFun(row.menu_id);
+                  },
+                  () => {
+                    console.log("Cancelled");
+                  },
+                  "Confirmation", // Title of the confirmation dialog
+                  `Are you sure you want to delete the Menu?` // Question displayed in the dialog
+                );
               }}
               title="Delete"
             >

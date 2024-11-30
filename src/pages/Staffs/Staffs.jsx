@@ -199,9 +199,16 @@ export const StaffsPage = () => {
             <button
               className="btn btn-sm btn-danger"
               onClick={() => {
-                showConfirm(() => {
-                  deleteUserFun(row.user_id);
-                });
+                showConfirm(
+                  () => {
+                    deleteUserFun(row.user_id);
+                  },
+                  () => {
+                    console.log("Cancelled");
+                  },
+                  "Confirmation", // Title of the confirmation dialog
+                  `Are you sure you want to delete this account?` // Question displayed in the dialog
+                );
               }}
               title="Delete"
             >

@@ -230,9 +230,16 @@ export const OptionsModal = ({ isOpen, toggle, itemId }) => {
                           <button
                             className="btn btn-sm btn-danger"
                             onClick={() => {
-                              showConfirm(() => {
-                                handleDeleteOption(opt?.menu_item_option_id);
-                              });
+                              showConfirm(
+                                () => {
+                                  handleDeleteOption(opt?.menu_item_option_id);
+                                },
+                                () => {
+                                  console.log("Cancelled");
+                                },
+                                "Confirmation", // Title of the confirmation dialog
+                                `Are you sure you want to delete the option?` // Question displayed in the dialog
+                              );
                             }}
                             title="Delete"
                           >

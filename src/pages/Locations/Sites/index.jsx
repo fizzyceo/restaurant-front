@@ -274,9 +274,16 @@ const Sites = () => {
             <button
               className="btn btn-sm btn-danger"
               onClick={() => {
-                showConfirm(() => {
-                  deleteSiteFun(row.site_id);
-                });
+                showConfirm(
+                  () => {
+                    deleteSiteFun(row.site_id);
+                  },
+                  () => {
+                    console.log("Cancelled");
+                  },
+                  "Confirmation", // Title of the confirmation dialog
+                  `Are you sure you want to delete the site?` // Question displayed in the dialog
+                );
               }}
               title="Delete"
             >

@@ -49,33 +49,20 @@ export const useMenuItemsStore = create((set, get) => ({
     }
   },
   getItems: async (menuId) => {
-    // set({ filters: filterNonFalseValues(filters) });
-    // console.log(filterNonFalseValues(filters));
-    // const filtering = {
-    //   // search: filterNonFalseValues(filters) || "",
-    //   ...filters,
-
-    // };
     try {
       const accessToken = await tokenHelper.getToken();
       set({ isLoading: true });
       console.log(menuId);
 
-      // let response = await axiosHelper.get(`/menu/${menuId}/items`, {
-      //   headers: { Authorization: `Bearer ${accessToken}` },
-      // });
-      let response = await axiosHelper.get(`/menu/${menuId}`, {
+      let response = await axiosHelper.get(`/v2/menu/${menuId}`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-      console.log(response);
 
-      // console.log(response.data);
       set({
-        currency: response.currency,
-        image_url: response.image_url,
-        items: response.menu_items,
+        currency: response.data.currency,
+        image_url: response.data.image_url,
+        items: response.data.menu_items,
         isLoading: false,
-        currency: response.currency,
       });
     } catch (e) {
       console.log(e);
@@ -86,8 +73,6 @@ export const useMenuItemsStore = create((set, get) => ({
   updateItem: async (menuid, id, info) => {
     try {
       const accessToken = await tokenHelper.getToken();
-
-      console.log("id: ", id, " info: ", info);
 
       set({ isLoading: true });
       let response = await axiosHelper.patch(`/menu-item/${id}`, info, {

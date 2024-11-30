@@ -332,9 +332,16 @@ const Kitchens = () => {
             <button
               className="btn btn-sm btn-danger"
               onClick={() => {
-                showConfirm(() => {
-                  deleteKitchenFun(row.kitchen_id);
-                });
+                showConfirm(
+                  () => {
+                    deleteKitchenFun(row.kitchen_id);
+                  },
+                  () => {
+                    console.log("Cancelled");
+                  },
+                  "Confirmation", // Title of the confirmation dialog
+                  `Are you sure you want to delete kitchen with ID ${row.kitchen_id}?` // Question displayed in the dialog
+                );
               }}
               title="Delete"
             >

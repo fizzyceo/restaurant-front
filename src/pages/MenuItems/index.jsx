@@ -28,14 +28,7 @@ const Menu = () => {
 
   const { getItems, isLoading, items, deleteItem, currency, image_url } =
     useMenuItemsStore((state) => state);
-  const ShowItemsModel = (menu_id) => {
-    console.log("display items");
-  };
-  // useEffect(() => {
-  //   if (menuId) {
-  //     getMenus({ search: menuId });
-  //   }
-  // }, [menuId]);
+
   useEffect(() => {
     getItems(menuid);
   }, [menuid]);
@@ -142,32 +135,6 @@ const Menu = () => {
           <span>No Image</span>
         ),
     },
-    // {
-    //   name: t("Actions"),
-    //   cell: (row) => (
-    //     <div className="d-flex gap-2">
-    //       <a href={`/menu-items/${row?.menu_item_id}`} className="btn btn-sm btn-info">
-    //         <i className="ri-eye-fill"></i>
-    //       </a>
-    //       <button
-    //         className="btn btn-sm btn-warning"
-    //         onClick={() => toggleEditItemModal(row)}
-    //         title="Edit"
-    //       >
-    //         <i className="ri-edit-fill"></i>
-    //       </button>
-    //       <button
-    //         className="btn btn-sm btn-danger"
-    //         onClick={() => {
-    //           showConfirm(() => deleteMenuFun(row.menu_item_id));
-    //         }}
-    //         title="Delete"
-    //       >
-    //         <i className="ri-delete-bin-line"></i>
-    //       </button>
-    //     </div>
-    //   ),
-    // },
   ];
 
   const searchHandler = (searchText) => {
@@ -213,6 +180,7 @@ const Menu = () => {
         (currentPage - 1) * rowsPerPage,
         currentPage * rowsPerPage
       );
+
       setCurrenItems(curr);
     }
   }, [currentPage, items]);
@@ -257,9 +225,16 @@ const Menu = () => {
             <button
               className="btn btn-sm btn-danger"
               onClick={() => {
-                showConfirm(() => {
-                  deleteItemFun(row?.item_id);
-                });
+                showConfirm(
+                  () => {
+                    deleteItemFun(row?.item_id);
+                  },
+                  () => {
+                    console.log("Cancelled");
+                  },
+                  "Confirmation", // Title of the confirmation dialog
+                  `Are you sure you want to delete the menu Item?` // Question displayed in the dialog
+                );
               }}
               title="Delete"
             >
